@@ -44,6 +44,7 @@ Package.onUse(function(api) {
   api.addFiles('client/templates/dashboard/settlements/list/settlementsList.less', 'client');
 
   api.addFiles('common/schemas/settlements.js');
+  api.addFiles('common/schemas/orders.js');
   api.addFiles('common/collections/collections.js');
 
   api.addFiles('server/publications/settlements.js', 'server');

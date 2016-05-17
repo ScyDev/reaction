@@ -15,7 +15,7 @@ Template.dashboardSettlementsList.events({
     event.stopPropagation();
 
     // trigger click on add product button in user menu
-    
+    Meteor.call("settlements/createSettlementForSeller", "NnrdkaqNKnkNQfzkW");
   }
 });
 
