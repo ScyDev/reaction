@@ -183,7 +183,6 @@ retry@1.0.4
 risul:moment-timezone@0.5.0_5
 routepolicy@1.0.6
 sacha:spin@0.1.6
-scydev:reaction-email-templates-custom@0.2.0
 scydev:reaction-p2p-marketplace@0.0.1
 scydev:reaction-p2p-marketplace-locations@0.0.1
 scydev:reaction-p2p-marketplace-profile@0.0.1

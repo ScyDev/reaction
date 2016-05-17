@@ -50,7 +50,6 @@ Package.onUse(function (api) {
   api.use("underscorestring:underscore.string@3.2.2");
   api.use("reactioncommerce:reaction-logger@0.1.0");
   api.use("reactioncommerce:reaction-collections@2.0.1");
-  api.use("scydev:reaction-email-templates-custom@0.1.0");
   api.use("aldeed:template-extension@4.0.0", "client");
   api.use("aldeed:autoform@5.8.1");
   api.use("momentjs:moment@2.11.1");
@@ -69,7 +68,6 @@ Package.onUse(function (api) {
   api.imply("service-configuration");
   api.imply("reactioncommerce:reaction-logger");
   api.imply("reactioncommerce:reaction-collections");
-  api.imply("scydev:reaction-email-templates-custom");
   api.imply("aldeed:autoform");
   api.imply("aldeed:template-extension");
   api.imply("mdg:validated-method");
