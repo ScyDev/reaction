@@ -39,6 +39,7 @@ Meteor.publish("ProfileUser", function (userId) {
         _id: 1,
         userId: 1,
         "profile.name": 1,
+        "profile.description": 1,
       }
     }
   );
