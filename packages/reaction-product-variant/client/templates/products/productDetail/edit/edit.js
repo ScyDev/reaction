@@ -32,6 +32,7 @@ Template.productDetailEdit.events({
       $(event.currentTarget).val(),
       (error, result) => {
         if (error) {
+          Alerts.removeSeen();
           Alerts.removeType("error");
           return Alerts.inline(`${i18next.t("productDetail."+ReactionCore.toI18nKey(error.reason))} `, "error", {
             placement: "productManagement",

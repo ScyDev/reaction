@@ -103,7 +103,7 @@ function initDatepickers() {
 
   $('.datetimepicker-forSaleOnDate').off();
   $('.datetimepicker-forSaleOnDate').on("dp.change", function(event) {
-    console.log("datetimepicker-forSaleOnDate changed: ",event.date);
+    //console.log("datetimepicker-forSaleOnDate changed: ",event.date);
 
     let fixedDatetime = event.date;
     $('.forSaleOnDate-edit-input').val(fixedDatetime.format("DD.MM.YYYY"));
