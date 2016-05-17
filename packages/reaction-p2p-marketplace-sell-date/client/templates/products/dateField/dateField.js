@@ -106,8 +106,8 @@ function initDatepickers() {
     console.log("datetimepicker-forSaleOnDate changed: ",event.date);
 
     let fixedDatetime = event.date;
-
     $('.forSaleOnDate-edit-input').val(fixedDatetime.format("DD.MM.YYYY"));
+		Alerts.removeSeen();
     $('.forSaleOnDate-edit-input').trigger("change");
   });
 
@@ -140,8 +140,8 @@ function initDatepickers() {
     //console.log("datetimepicker changed: ",event.date);
 
     let fixedDatetime = event.date;
-
     $('.latestOrderDate-edit-input').val(fixedDatetime.format("DD.MM.YYYY HH:mm"));
+		Alerts.removeSeen();
     $('.latestOrderDate-edit-input').trigger("change");
   });
 
@@ -193,6 +193,7 @@ Template.registerHelpers(
       initDatepickers();
     },*/
     prettifyDate: function(inDate) {
+			//console.log("prettifyDate");
       //return new Date(inDate).toString('dd.mm.yyyy')
 
 //			var deMoment = moment(inDate);
@@ -204,6 +205,7 @@ Template.registerHelpers(
 			return moment(inDate).format('DD.MM.YYYY');
     },
     prettifyDateTime: function(inDate) {
+			//console.log("prettifyDateTime");
       //return new Date(inDate).toString('dd.mm.yyyy')
       return moment(inDate).utcOffset('+0000').format('DD.MM.YYYY HH:mm'); // UTC+0000 corresponds to GMT+0200 ?
     }
