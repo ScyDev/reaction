@@ -1,130 +1,142 @@
 
-// inherit helpers from template productDetail so we can use fieldComponent in this here template
+
+function processRelativeTime(number, withoutSuffix, key, isFuture) {
+    var format = {
+        'm': ['eine Minute', 'einer Minute'],
+        'h': ['eine Stunde', 'einer Stunde'],
+        'd': ['ein Tag', 'einem Tag'],
+        'dd': [number + ' Tage', number + ' Tagen'],
+        'M': ['ein Monat', 'einem Monat'],
+        'MM': [number + ' Monate', number + ' Monaten'],
+        'y': ['ein Jahr', 'einem Jahr'],
+        'yy': [number + ' Jahre', number + ' Jahren']
+    };
+    return withoutSuffix ? format[key][0] : format[key][1];
+}
+
+var dtpLocaleDe = moment.locale("de",
+		{
+				months : 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
+				monthsShort : 'Jan._Febr._Mrz._Apr._Mai_Jun._Jul._Aug._Sept._Okt._Nov._Dez.'.split('_'),
+				weekdays : 'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split('_'),
+				weekdaysShort : 'So._Mo._Di._Mi._Do._Fr._Sa.'.split('_'),
+				weekdaysMin : 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
+				longDateFormat : {
+						LT: 'HH:mm',
+						LTS: 'HH:mm:ss',
+						L : 'DD.MM.YYYY',
+						LL : 'D. MMMM YYYY',
+						LLL : 'D. MMMM YYYY HH:mm',
+						LLLL : 'dddd, D. MMMM YYYY HH:mm'
+				},
+				calendar : {
+						sameDay: '[heute um] LT [Uhr]',
+						sameElse: 'L',
+						nextDay: '[morgen um] LT [Uhr]',
+						nextWeek: 'dddd [um] LT [Uhr]',
+						lastDay: '[gestern um] LT [Uhr]',
+						lastWeek: '[letzten] dddd [um] LT [Uhr]'
+				},
+				relativeTime : {
+						future : 'in %s',
+						past : 'vor %s',
+						s : 'ein paar Sekunden',
+						m : processRelativeTime,
+						mm : '%d Minuten',
+						h : processRelativeTime,
+						hh : '%d Stunden',
+						d : processRelativeTime,
+						dd : processRelativeTime,
+						M : processRelativeTime,
+						MM : processRelativeTime,
+						y : processRelativeTime,
+						yy : processRelativeTime
+				},
+				ordinalParse: /\d{1,2}\./,
+				ordinal : '%d.',
+				week : {
+						dow : 1, // Monday is the first day of the week.
+						doy : 4  // The week that contains Jan 4th is the first week of the year.
+				}
+		}
+);
+var dtpTooltipsDe = {
+		today: 'Heute anzeigen',
+		clear: 'Auswahl löschen',
+		close: 'Schliessen',
+		selectMonth: 'Monat wählen',
+		prevMonth: 'Vorheriger Monat',
+		nextMonth: 'Nächster Monat',
+		selectYear: 'Jahr wählen',
+		prevYear: 'Vorheriges Jahr',
+		nextYear: 'Nächstes Jahr',
+		selectDecade: 'Dekade wählen',
+		prevDecade: 'Vorherige Dekade',
+		nextDecade: 'Nächste Dekade',
+		prevCentury: 'Vorheriges Jahrhundert',
+		nextCentury: 'Nächstes Jahrhundert'
+};
+
 
 function initDatepickers() {
 
-	//$(".forSaleOnDate-edit-input").val(moment().add(1, 'days').format('DD.MM.YYYY'));
-
-  // api.use("rajit:bootstrap3-datepicker-de"); didn't change anything, so we define DE here
-	$.fn.datepicker.dates['de'] = {
-		days: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"],
-		daysShort: ["Son", "Mon", "Die", "Mit", "Don", "Fre", "Sam"],
-		daysMin: ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"],
-		months: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
-		monthsShort: ["Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez"],
-		today: "Heute",
-		monthsTitle: "Monate",
-		clear: "Löschen",
-		weekStart: 1,
-		format: "dd.mm.yyyy"
-	};
-
-  $(".forSaleOnDate-edit-input").datepicker({
-    format: "dd.mm.yyyy",
-    language: "de",
-		autoclose: true
-  });
-
-  function processRelativeTime(number, withoutSuffix, key, isFuture) {
-      var format = {
-          'm': ['eine Minute', 'einer Minute'],
-          'h': ['eine Stunde', 'einer Stunde'],
-          'd': ['ein Tag', 'einem Tag'],
-          'dd': [number + ' Tage', number + ' Tagen'],
-          'M': ['ein Monat', 'einem Monat'],
-          'MM': [number + ' Monate', number + ' Monaten'],
-          'y': ['ein Jahr', 'einem Jahr'],
-          'yy': [number + ' Jahre', number + ' Jahren']
-      };
-      return withoutSuffix ? format[key][0] : format[key][1];
-  }
-
 	// set date from real input field
-  let dateTimePickerDefaultDate = $('.latestOrderDate-edit-input').val();
-	console.log("read dateTimePickerDefaultDate: ",dateTimePickerDefaultDate);
-	if (dateTimePickerDefaultDate == null || dateTimePickerDefaultDate == "") {
-		//dateTimePickerDefaultDate = moment().add(1, 'days').hour(8)
+	let dateTimePickerDefaultDate_forSaleOnDate = $('.forSaleOnDate-edit-input').val();
+	//console.log("read dateTimePickerDefaultDate_forSaleOnDate: ",dateTimePickerDefaultDate_forSaleOnDate);
+	if (dateTimePickerDefaultDate_forSaleOnDate == null || dateTimePickerDefaultDate_forSaleOnDate == "") {
+		//dateTimePickerDefaultDate_forSaleOnDate = moment().add(1, 'days').hour(8)
 	}
 	else {
-		dateTimePickerDefaultDate = moment(dateTimePickerDefaultDate, "DD.MM.YYYY HH:mm")
+		dateTimePickerDefaultDate_forSaleOnDate = moment(dateTimePickerDefaultDate_forSaleOnDate, "DD.MM.YYYY HH:mm")
 	}
-	console.log("new dateTimePickerDefaultDate: ",dateTimePickerDefaultDate);
+	//console.log("new dateTimePickerDefaultDate_forSaleOnDate: ",dateTimePickerDefaultDate_forSaleOnDate);
 
-
-  let initializedDTP = $('.datetimepicker').datetimepicker({
-    format: "DD.MM.YYYY HH:mm", //
-    locale: moment.locale("de",
-        {
-            months : 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
-            monthsShort : 'Jan._Febr._Mrz._Apr._Mai_Jun._Jul._Aug._Sept._Okt._Nov._Dez.'.split('_'),
-            weekdays : 'Sonntag_Montag_Dienstag_Mittwoch_Donnerstag_Freitag_Samstag'.split('_'),
-            weekdaysShort : 'So._Mo._Di._Mi._Do._Fr._Sa.'.split('_'),
-            weekdaysMin : 'So_Mo_Di_Mi_Do_Fr_Sa'.split('_'),
-            longDateFormat : {
-                LT: 'HH:mm',
-                LTS: 'HH:mm:ss',
-                L : 'DD.MM.YYYY',
-                LL : 'D. MMMM YYYY',
-                LLL : 'D. MMMM YYYY HH:mm',
-                LLLL : 'dddd, D. MMMM YYYY HH:mm'
-            },
-            calendar : {
-                sameDay: '[heute um] LT [Uhr]',
-                sameElse: 'L',
-                nextDay: '[morgen um] LT [Uhr]',
-                nextWeek: 'dddd [um] LT [Uhr]',
-                lastDay: '[gestern um] LT [Uhr]',
-                lastWeek: '[letzten] dddd [um] LT [Uhr]'
-            },
-            relativeTime : {
-                future : 'in %s',
-                past : 'vor %s',
-                s : 'ein paar Sekunden',
-                m : processRelativeTime,
-                mm : '%d Minuten',
-                h : processRelativeTime,
-                hh : '%d Stunden',
-                d : processRelativeTime,
-                dd : processRelativeTime,
-                M : processRelativeTime,
-                MM : processRelativeTime,
-                y : processRelativeTime,
-                yy : processRelativeTime
-            },
-            ordinalParse: /\d{1,2}\./,
-            ordinal : '%d.',
-            week : {
-                dow : 1, // Monday is the first day of the week.
-                doy : 4  // The week that contains Jan 4th is the first week of the year.
-            }
-        }
-    ),
-    //sideBySide: true,
-    tooltips: {
-        today: 'Heute anzeigen',
-        clear: 'Auswahl löschen',
-        close: 'Schliessen',
-        selectMonth: 'Monat wählen',
-        prevMonth: 'Vorheriger Monat',
-        nextMonth: 'Nächster Monat',
-        selectYear: 'Jahr wählen',
-        prevYear: 'Vorheriges Jahr',
-        nextYear: 'Nächstes Jahr',
-        selectDecade: 'Dekade wählen',
-        prevDecade: 'Vorherige Dekade',
-        nextDecade: 'Nächste Dekade',
-        prevCentury: 'Vorheriges Jahrhundert',
-        nextCentury: 'Nächstes Jahrhundert'
-    },
+  $('.datetimepicker-forSaleOnDate').datetimepicker({
+    format: "DD.MM.YYYY", //
+    locale: dtpLocaleDe,
+		showClose: true,
+    tooltips: dtpTooltipsDe,
 		keepInvalid: true,
 		useCurrent: false,
-		defaultDate: dateTimePickerDefaultDate
+		defaultDate: dateTimePickerDefaultDate_forSaleOnDate
   });
 
-  //console.log("initializedDTP: ",initializedDTP);
+  $('.datetimepicker-forSaleOnDate').off();
+  $('.datetimepicker-forSaleOnDate').on("dp.change", function(event) {
+    console.log("datetimepicker-forSaleOnDate changed: ",event.date);
 
-  $('.datetimepicker').off();
-  $('.datetimepicker').on("dp.change", function(event) {
+    let fixedDatetime = event.date;
+
+    $('.forSaleOnDate-edit-input').val(fixedDatetime.format("DD.MM.YYYY"));
+    $('.forSaleOnDate-edit-input').trigger("change");
+  });
+
+	// ######################################################################
+
+	// set date from real input field
+  let dateTimePickerDefaultDate_latestOrderDate = $('.latestOrderDate-edit-input').val();
+	//console.log("read dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
+	if (dateTimePickerDefaultDate_latestOrderDate == null || dateTimePickerDefaultDate_latestOrderDate == "") {
+		//dateTimePickerDefaultDate_latestOrderDate = moment().add(1, 'days').hour(8)
+	}
+	else {
+		dateTimePickerDefaultDate_latestOrderDate = moment(dateTimePickerDefaultDate_latestOrderDate, "DD.MM.YYYY HH:mm")
+	}
+	//console.log("new dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
+
+  $('.datetimepicker-latestOrderDate').datetimepicker({
+    format: "DD.MM.YYYY HH:mm", //
+    locale: dtpLocaleDe,
+    sideBySide: true,
+		showClose: true,
+    tooltips: dtpTooltipsDe,
+		keepInvalid: true,
+		useCurrent: false,
+		defaultDate: dateTimePickerDefaultDate_latestOrderDate
+  });
+
+  $('.datetimepicker-latestOrderDate').off();
+  $('.datetimepicker-latestOrderDate').on("dp.change", function(event) {
     //console.log("datetimepicker changed: ",event.date);
 
     let fixedDatetime = event.date;
