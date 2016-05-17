@@ -16,7 +16,9 @@ ReactionCore.Schemas.Product = new SimpleSchema([
       label: "Quantity",
       optional: true
     },
+    soldOne: {
+      type: Boolean,
+      defaultValue: false
+    },
   }
 ]);
-
-//ReactionCore.Schemas.Product.i18n("schemas.products");

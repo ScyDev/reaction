@@ -57,6 +57,12 @@ Template.registerHelper("belongsToCurrentUser", function (productId) {
   return ((productBelongingToCurrUser != null) || ReactionCore.hasAdminAccess());
 });
 
+Template.productDetail.onRendered(function(){
+  let productId = ReactionRouter.current().params.handle;
+
+  Meteor.call("products/checkIfExpired", productId);
+});
+
 Template.productDetail.onDestroyed(function(){
   console.log("Template productDetail destroyed! showing ReactionProduct: ",ReactionProduct);
 

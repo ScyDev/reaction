@@ -228,7 +228,8 @@
         "forSaleOnDateIsNoDate": "For sale date is not a date",
 		"latestOrderDateMustBeADate": "Latest order date must be a date",
         "notLoggedIn": "Not logged in",
-		"youNeedToLogIn": "You need to log in or register."
+		"youNeedToLogIn": "You need to log in or register.",
+        "cantChangeOrderedProduct": "Can't change a product that has already been ordered."
       },
       "products": {
         "all": "ALL",

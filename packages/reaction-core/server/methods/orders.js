@@ -573,7 +573,8 @@ Meteor.methods({
         }, {
           $set: {
             isSoldOut: isSoldOut,
-            copiedInventoryQuantity: currVariant.inventoryQuantity - item.quantity
+            copiedInventoryQuantity: currVariant.inventoryQuantity - item.quantity,
+            soldOne: true
           }
         }, { selector: { type: "simple" } });
       }

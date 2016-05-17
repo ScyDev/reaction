@@ -27,7 +27,7 @@
 					"authorizenetDescription": "Authorize.net payments",
 					"shippingLabel": "Shipping",
 					"shippingDescription": "Provide shipping rates",
-					"braintreeLabel": "Kreditkarte",
+					"braintreeLabel": "Kreditkarte (Mastercard und Visa)",
 					"braintreeDescription": "Braintree payments",
 					"catalogLabel": "Catalog",
 					"catalogDescription": "Allows to create simple products",
@@ -228,7 +228,8 @@
 				"forSaleOnDateIsNoDate": "Verkaufsdatum ist kein Datum",
 				"latestOrderDateMustBeADate": "Letzte Bestellung muss ein Datum sein",
 				"notLoggedIn": "Hunger?",
-				"youNeedToLogIn": "Melde Dich an und die Mahlzeit gehört Dir."
+				"youNeedToLogIn": "Melde Dich an und die Mahlzeit gehört Dir.",
+		    "cantChangeOrderedProduct": "Eine Mahlzeit die bereits bestellt wurde kann nicht mehr geändert werden."
 			},
 			"products": {
 				"all": "ALLE",

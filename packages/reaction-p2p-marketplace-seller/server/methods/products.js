@@ -12,7 +12,7 @@ function belongsToCurrentUser(productId) {
 
   let productBelongingToCurrUser = ReactionCore.Collections.Products.findOne({_id:productId, userId:Meteor.userId()})
   ReactionCore.Log.info("Product ",productId," belongs to ",Meteor.userId(),"?");
-  ReactionCore.Log.info("productBelongingToCurrUser ",productBelongingToCurrUser);
+  //ReactionCore.Log.info("productBelongingToCurrUser ",productBelongingToCurrUser);
 
   return ((productBelongingToCurrUser != null) || ReactionCore.hasAdminAccess());
 }
@@ -167,6 +167,26 @@ Meteor.methods({
       ReactionCore.Log.warn("Unable to send email, check configuration and port.", e);
     }
   },
+  "products/checkIfExpired": function (productId) {
+    check(productId, String);
+
+    var product = ReactionCore.Collections.Products.findOne({_id: productId});
+    //ReactionCore.Log.info("is",moment(product.latestOrderDate).utcOffset('+0000')," < ",moment().utcOffset('+0200'),"?");
+    if (product && product.soldOne && moment(product.latestOrderDate).utcOffset('+0000').isBefore(moment().utcOffset('+0200'))) {
+      ReactionCore.Log.info("Method products/checkIfExpired() product expired: ",productId);
+      ReactionCore.Collections.Products.update(productId,
+        {
+          $set: {
+            soldOne: false
+          }
+        },
+        { selector: { type: "simple" } }
+      );
+    }
+    else {
+      ReactionCore.Log.info("Method products/checkIfExpired() product not yet expired: ",productId," ",product.latestOrderDate);
+    }
+  },
 });
 
 /**
@@ -222,15 +242,27 @@ ReactionCore.MethodHooks.before('products/deleteProduct', function(options) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/deleteProduct') Access Denied!");
     throw new Meteor.Error(403, "Access Denied");
   }
+
+  var product = ReactionCore.Collections.Products.findOne({_id: productId});
+  if (product.soldOne) {
+    ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') Product was sold. Deny changes!");
+    throw new Meteor.Error(403, "Can't change ordered product");
+  }
 });
 
 ReactionCore.MethodHooks.before('products/updateProductField', function(options) {
-  ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') options: ", options);
+  //ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') options: ", options);
   var productId = options.arguments[0];
 
   if (!belongsToCurrentUser(productId)) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') Access Denied!");
     throw new Meteor.Error(403, "Access Denied");
+  }
+
+  var product = ReactionCore.Collections.Products.findOne({_id: productId});
+  if (product.soldOne) {
+    ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') Product was sold. Deny changes!");
+    throw new Meteor.Error(403, "Can't change ordered product");
   }
 
 /*
@@ -260,8 +292,21 @@ ReactionCore.MethodHooks.before('products/updateProductField', function(options)
 */
 });
 
+ReactionCore.MethodHooks.before('products/updateVariant', function(options) {
+  //ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateVariant') options: ", options);
+  var variant = options.arguments[0];
+  var fullVariant = ReactionCore.Collections.Products.findOne({_id: variant._id});
+  //ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateVariant') fullVariant: ", fullVariant);
+
+  var product = ReactionCore.Collections.Products.findOne({_id: {$in:fullVariant.ancestors} });
+  if (product.soldOne) {
+    ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateVariant') Product was sold. Deny changes!");
+    throw new Meteor.Error(403, "Can't change ordered product");
+  }
+});
+
 ReactionCore.MethodHooks.after('products/updateProductField', function(options) {
-  ReactionCore.Log.info("ReactionCore.MethodHooks.after('products/updateProductField') options: ", options);
+  //ReactionCore.Log.info("ReactionCore.MethodHooks.after('products/updateProductField') options: ", options);
   var productId = options.arguments[0];
   var productField = options.arguments[1];
 
@@ -317,6 +362,12 @@ ReactionCore.MethodHooks.before('products/updateProductTags', function(options) 
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductTags') Access Denied!");
     throw new Meteor.Error(403, "Access Denied");
   }
+
+  var product = ReactionCore.Collections.Products.findOne({_id: productId});
+  if (product.soldOne) {
+    ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductTags') Product was sold. Deny changes!");
+    throw new Meteor.Error(403, "Can't change ordered product");
+  }
 });
 
 ReactionCore.MethodHooks.before('products/removeProductTag', function(options) {
@@ -326,6 +377,12 @@ ReactionCore.MethodHooks.before('products/removeProductTag', function(options) {
   if (!belongsToCurrentUser(productId)) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/removeProductTag') Access Denied!");
     throw new Meteor.Error(403, "Access Denied");
+  }
+
+  var product = ReactionCore.Collections.Products.findOne({_id: productId});
+  if (product.soldOne) {
+    ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductTags') Product was sold. Deny changes!");
+    throw new Meteor.Error(403, "Can't change ordered product");
   }
 });
 
@@ -380,8 +437,18 @@ ReactionCore.MethodHooks.before('products/publishProduct', function(options) {
 });
 
 ReactionCore.Collections.Media.on('uploaded', function (fileObj) {
-  //ReactionCore.Log.info("ReactionCore.Collections.Media.on('uploaded') fileObj: ", fileObj);
+  ReactionCore.Log.info("ReactionCore.Collections.Media.on('uploaded') fileObj: ", fileObj);
   var productId = fileObj.metadata.productId;
+
+  var product = ReactionCore.Collections.Products.findOne({_id: productId });
+  if (product.soldOne) {
+    ReactionCore.Log.info("ReactionCore.Collections.Media.on('uploaded') Product was sold. Deny changes!");
+    //throw new Meteor.Error(403, "Can't change ordered product");
+
+    ReactionCore.Collections.Media.remove({
+      _id: fileObj._id
+    });
+  }
 
   if(productId != undefined) {
     setProductInvisibleAndInactive(productId);

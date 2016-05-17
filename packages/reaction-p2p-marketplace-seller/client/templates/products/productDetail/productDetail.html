@@ -46,6 +46,14 @@
       {{/if}}
     {{/unless}}
 
+    {{#if soldOne}}
+      <div class="row">
+        <div class="alert alert-warning">
+          <span> {{i18n 'productDetail.cantChangeOrderedProduct' "Can't change a product that has already been ordered."}}</span>
+        </div>
+      </div>
+    {{/if}}
+
     <span id="product-management-alerts">{{> inlineAlerts placement="productManagement"}}</span>
 
   {{else}}
