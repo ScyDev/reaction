@@ -7,10 +7,10 @@ ReactionCore.registerPackage({
   settings: {},
   registry: [
     {
-      route: "/dashboard/transactions",
-      template: "dashboardTransactionsList",
-      name: "dashboard/transactions",
-      label: "Transactions",
+      route: "/dashboard/settlements",
+      template: "dashboardSettlementsList",
+      name: "dashboard/settlements",
+      label: "Settlements",
       icon: "fa fa-money",
       provides: "userAccountDropdown"
     },

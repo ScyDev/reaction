@@ -52,7 +52,8 @@
           "stripeLabel": "Stripe",
           "stripeDescription": "Stripe payments",
           "filtrationLabel": "Filtration",
-          "filtrationDescription": "Products filtration for Reaction"
+          "filtrationDescription": "Products filtration for Reaction",
+          "transactionsLabel": "Settlements"
         },
         "groups": {
           "appearance": "Appearance",

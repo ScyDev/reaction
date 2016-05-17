@@ -1,5 +1,5 @@
 
-ReactionCore.Schemas.SellerTransaction = new SimpleSchema(
+ReactionCore.Schemas.SellerSettlement = new SimpleSchema(
   {
     sellerId: {
       type: String,
@@ -35,7 +35,7 @@ ReactionCore.Schemas.SellerTransaction = new SimpleSchema(
       defaultValue: 0
     },
     snaxterFee: {
-      label: "Snaxter fee",
+      label: "Our fee",
       type: Number,
       decimal: true,
       min: 0,
