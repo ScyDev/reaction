@@ -22,7 +22,9 @@ Template.productDetailEdit.events({
     const self = this;
     const productId = ReactionProduct.selectedProductId();
 
-    if((self.field == "title" || self.field == "description") && ReactionProduct.selectedProduct().isActive) {
+    if( (self.field == "title" || self.field == "description")
+        && ReactionProduct.selectedProduct().isActive
+        && !ReactionProduct.selectedProduct().soldOne ) {
       Alerts.toast(i18next.t("productDetail.needsReview", "Product changed, it needs to be activated again."), "info");
     }
 
@@ -31,6 +33,7 @@ Template.productDetailEdit.events({
       (error, result) => {
         if (error) {
           Alerts.removeSeen();
+          Alerts.removeType("error");
           return Alerts.inline(`${i18next.t("productDetail."+ReactionCore.toI18nKey(error.reason))} `, "error", {
             placement: "productManagement",
             i18nKey: "productDetail.errorMsg",
@@ -39,7 +42,7 @@ Template.productDetailEdit.events({
         }
         if (result) {
           Alerts.removeSeen();
-          
+
           // redirect to new url on title change
           if (self.field === "title") {
             Meteor.call("products/setHandle", productId,

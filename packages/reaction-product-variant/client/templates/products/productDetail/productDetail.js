@@ -238,7 +238,9 @@ Template.productDetail.events({
     }
   },
   "click .delete-product-link": function () {
-    ReactionProduct.maybeDeleteProduct(this);
+    if (!ReactionProduct.selectedProduct().soldOne) {
+      ReactionProduct.maybeDeleteProduct(this);
+    }
   },
   "click .fa-facebook": function () {
     if (ReactionCore.hasPermission("createProduct") && Blaze._globalHelpers.belongsToCurrentUser(ReactionProduct.selectedProduct()._id)) {
