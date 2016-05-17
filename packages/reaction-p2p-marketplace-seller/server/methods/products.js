@@ -242,6 +242,12 @@ ReactionCore.MethodHooks.before('products/deleteProduct', function(options) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/deleteProduct') Access Denied!");
     throw new Meteor.Error(403, "Access Denied");
   }
+
+  var product = ReactionCore.Collections.Products.findOne({_id: productId});
+  if (product.soldOne) {
+    ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') Product was sold. Deny changes!");
+    throw new Meteor.Error(403, "Can't change ordered product");
+  }
 });
 
 ReactionCore.MethodHooks.before('products/updateProductField', function(options) {
