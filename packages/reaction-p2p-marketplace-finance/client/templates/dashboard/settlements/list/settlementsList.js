@@ -1,5 +1,5 @@
 
-Template.dashboardTransactionsList.helpers({
+Template.dashboardSettlementsList.helpers({
   products: function (data) { // override to show only this users products
     //let SellerProducts = Meteor.subscribe("SellerProducts");
     if (ReactionCore.MeteorSubscriptions_SellerProducts.ready()) {
@@ -9,18 +9,17 @@ Template.dashboardTransactionsList.helpers({
   },
 });
 
-Template.dashboardTransactionsList.events({
-  "click .btn-add-product": function (event, template) {
+Template.dashboardSettlementsList.events({
+  "click .btn-add-settlement": function (event, template) {
     event.preventDefault();
     event.stopPropagation();
 
     // trigger click on add product button in user menu
-    $(".dropdown-toggle").dropdown("toggle");
-    $('#dropdown-apps-createProduct').trigger('click');
+    
   }
 });
 
-Template.dashboardTransactionsList.onCreated(function() {
+Template.dashboardSettlementsList.onCreated(function() {
   this.cleaned = false;
   ReactionCore.MeteorSubscriptions_SellerProducts = Meteor.subscribe("SellerProducts");
 
@@ -52,7 +51,7 @@ Template.dashboardTransactionsList.onCreated(function() {
   });
 });
 
-Template.dashboardTransactionsList.onDestroyed(function() {
+Template.dashboardSettlementsList.onDestroyed(function() {
   // stop that subscription, because we want it only on this page, not on any other
   if (ReactionCore.MeteorSubscriptions_SellerProducts != null) {
     ReactionCore.MeteorSubscriptions_SellerProducts.stop();

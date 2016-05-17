@@ -53,7 +53,8 @@
 					"stripeDescription": "Stripe payments",
 					"filtrationLabel": "Filtration",
 					"filtrationDescription": "Products filtration for Reaction",
-          "transactionsLabel": "Abrechnungen"
+          "settlementsLabel": "Abrechnungen",
+					"addSettlement": "Neue Abrechnung"
 				},
 				"groups": {
 					"appearance": "Appearance",
@@ -674,7 +675,8 @@
           "noAddress": "Keine Adresse",
           "youNeedToEnterYourAddress": "Du musst Deine Adresse eingeben.",
           "imageTooBig": "Bild ist zu gross",
-          "imageTooBigText": "Bitte versuchs mit einem kleineren Bild. Max {{maxKb}} KB."
+          "imageTooBigText": "Bitte versuchs mit einem kleineren Bild. Max {{maxKb}} KB.",
+          "noSettlementsFound": "Keine Abrechnungen gefunden"
 				},
         "mails": {
           "welcome": {

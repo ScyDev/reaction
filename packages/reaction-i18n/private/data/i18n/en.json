@@ -53,7 +53,8 @@
           "stripeDescription": "Stripe payments",
           "filtrationLabel": "Filtration",
           "filtrationDescription": "Products filtration for Reaction",
-          "transactionsLabel": "Settlements"
+          "settlementsLabel": "Settlements",
+          "addSettlement": "Add settlement"
         },
         "groups": {
           "appearance": "Appearance",
@@ -666,7 +667,8 @@
           "noAddress": "No address",
           "youNeedToEnterYourAddress": "You need to enter your address.",
           "imageTooBig": "Image too big",
-          "imageTooBigText": "Please try a smaller image. Max {{maxKb}} KB."
+          "imageTooBigText": "Please try a smaller image. Max {{maxKb}} KB.",
+          "noSettlementsFound": "No settlements found"
         },
         "mails": {
           "welcome": {

@@ -39,9 +39,9 @@ Package.onUse(function(api) {
 
   api.addFiles('reaction-p2p-marketplace-finance.js');
 
-  api.addFiles('client/templates/dashboard/transactions/list/settlementsList.html', 'client');
-  api.addFiles('client/templates/dashboard/transactions/list/settlementsList.js', 'client');
-  api.addFiles('client/templates/dashboard/transactions/list/settlementsList.less', 'client');
+  api.addFiles('client/templates/dashboard/settlements/list/settlementsList.html', 'client');
+  api.addFiles('client/templates/dashboard/settlements/list/settlementsList.js', 'client');
+  api.addFiles('client/templates/dashboard/settlements/list/settlementsList.less', 'client');
 
   api.addFiles('common/schemas/settlements.js');
   api.addFiles('common/collections/collections.js');

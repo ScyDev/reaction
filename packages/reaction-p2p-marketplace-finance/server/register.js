@@ -4,7 +4,11 @@ ReactionCore.registerPackage({
   name: "reaction-p2p-marketplace-finance",
   icon: "fa fa-money",
   autoEnable: true,
-  settings: {},
+  settings: {
+    settlements: {
+      ourFeePercent: "10",
+    },
+  },
   registry: [
     {
       route: "/dashboard/settlements",
