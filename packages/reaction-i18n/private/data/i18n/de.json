@@ -382,7 +382,7 @@
 				"selectBillingAddress": "Bitte Rechnungsadresse wählen"
 			},
 			"addressBookAdd": {
-				"addAddress": "Neuen Adresse anlegen",
+				"addAddress": "Neue Adresse anlegen",
 				"createAddress": "Standardadresse festlegen"
 			},
 			"addressBookEdit": {
@@ -457,6 +457,7 @@
 
 			},
 			"address": {
+				"switzerlandForm": "Schweiz",
 				"country": "Land",
 				"fullName": "Vor- und Nachname",
 				"address1": "Strasse",

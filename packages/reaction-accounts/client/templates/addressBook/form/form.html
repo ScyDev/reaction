@@ -2,7 +2,7 @@
 <div class="row">
   <div class="col-md-6 form-group{{#if afFieldIsInvalid name='country'}} has-error{{/if}}">
       <label class="control-label">{{afFieldLabelText name='country'}}</label>
-      {{>afFieldInput name="country" options=countryOptions value=country}}
+      {{>afFieldInput name="country" firstOption=(i18n 'app.selectOne' 'SelectOneThisIsDummyDefaultText') options=countryOptions value="CH"}}
       {{#if afFieldIsInvalid name="country"}}
       <span class="help-block">{{afFieldMessage name="country"}}</span>
       {{/if}}
