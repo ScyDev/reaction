@@ -3,8 +3,7 @@ Meteor.methods({
   "settlements/createSettlementForSeller": function (sellerId) {
     check(sellerId, String);
 
-    ReactionCore.Subscriptions.Orders = ReactionSubscriptions.subscribe("Orders");
-    if (ReactionCore.Subscriptions.Orders.ready()) {
+    if (ReactionCore.hasAdminAccess()) {
       let unsettledOrderItems = ReactionCore.Collections.Orders.find(
         {
           "items.sellerId": sellerId,
