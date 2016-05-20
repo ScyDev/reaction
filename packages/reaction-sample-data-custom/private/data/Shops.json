@@ -469,7 +469,7 @@
     },
     "countries": {
       "CH": {
-        "name": "Switzerland",
+        "name": "Schweiz",
         "native": "Schweiz",
         "phone": "41",
         "continent": "EU",
@@ -1570,7 +1570,7 @@
         "languages": "fr,ln"
       },
       "CH": {
-        "name": "Switzerland",
+        "name": "Schweiz",
         "native": "Schweiz",
         "phone": "41",
         "continent": "EU",
