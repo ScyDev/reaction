@@ -11,11 +11,11 @@
 
         <!-- this is the real, invisible input field -->
         <span id="forSaleOnDate" itemprop="forSaleOnDate" style="display:none;">
-          {{>fieldComponent field="forSaleOnDate" value=(prettifyDateTime forSaleOnDate) }}
+          {{>fieldComponent field="forSaleOnDate" value=(prettifyDate forSaleOnDate) }}
         </span>
       {{else}}
         <span id="forSaleOnDate" itemprop="forSaleOnDate">
-          {{>fieldComponent field="forSaleOnDate" value=(prettifyDateTime forSaleOnDate) }}
+          {{>fieldComponent field="forSaleOnDate" value=(prettifyDate forSaleOnDate) }}
         </span>
       {{/if}}
     </div>

@@ -188,25 +188,10 @@ Template.productDetailDateField.onRendered(
 
 Template.registerHelpers(
   {
-    /*
-    initDatepickers: function() {
-      initDatepickers();
-    },*/
     prettifyDate: function(inDate) {
-			//console.log("prettifyDate");
-      //return new Date(inDate).toString('dd.mm.yyyy')
-
-//			var deMoment = moment(inDate);
-//			deMoment.locale('en', {
-//				weekdays: ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"]
-//			});
-//      return deMoment.format('dddd DD.MM.YYYY');
-
-			return moment(inDate).format('DD.MM.YYYY');
+			return moment(inDate).locale("de").format('dddd DD.MM.YYYY');
     },
     prettifyDateTime: function(inDate) {
-			//console.log("prettifyDateTime");
-      //return new Date(inDate).toString('dd.mm.yyyy')
       return moment(inDate).utcOffset('+0000').format('DD.MM.YYYY HH:mm'); // UTC+0000 corresponds to GMT+0200 ?
     }
   }
