@@ -26,7 +26,7 @@ Template.dashboardProductsList.events({
 
 Template.dashboardProductsList.onCreated(function() {
   this.cleaned = false;
-  ReactionCore.MeteorSubscriptions_SellerProducts = Meteor.subscribe("SellerProducts");
+  ReactionCore.MeteorSubscriptions_SellerProducts = Meteor.subscribe("SellerProducts", Meteor.userId());
 
   this.autorun(() => {
     if (this.cleaned == false && ReactionCore.MeteorSubscriptions_SellerProducts.ready()) {
