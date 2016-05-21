@@ -92,7 +92,7 @@ function initDatepickers() {
 	//console.log("new dateTimePickerDefaultDate_forSaleOnDate: ",dateTimePickerDefaultDate_forSaleOnDate);
 
   $('.datetimepicker-forSaleOnDate').datetimepicker({
-    format: "DD.MM.YYYY", //
+    format: "dddd DD.MM.YYYY", //
     locale: dtpLocaleDe,
 		showClose: true,
     tooltips: dtpTooltipsDe,
@@ -125,7 +125,7 @@ function initDatepickers() {
 	//console.log("new dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
 
   $('.datetimepicker-latestOrderDate').datetimepicker({
-    format: "DD.MM.YYYY HH:mm", //
+    format: "dddd DD.MM.YYYY HH:mm", //
     locale: dtpLocaleDe,
     sideBySide: true,
 		showClose: true,
@@ -192,7 +192,7 @@ Template.registerHelpers(
 			return moment(inDate).locale("de").format('dddd DD.MM.YYYY');
     },
     prettifyDateTime: function(inDate) {
-      return moment(inDate).utcOffset('+0000').format('DD.MM.YYYY HH:mm'); // UTC+0000 corresponds to GMT+0200 ?
+      return moment(inDate).locale("de").utcOffset('+0000').format('dddd DD.MM.YYYY HH:mm'); // UTC+0000 corresponds to GMT+0200 ?
     }
   }
 );
