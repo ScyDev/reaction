@@ -437,11 +437,11 @@ ReactionCore.MethodHooks.before('products/publishProduct', function(options) {
 });
 
 ReactionCore.Collections.Media.on('uploaded', function (fileObj) {
-  ReactionCore.Log.info("ReactionCore.Collections.Media.on('uploaded') fileObj: ", fileObj);
+  //ReactionCore.Log.info("ReactionCore.Collections.Media.on('uploaded') fileObj: ", fileObj);
   var productId = fileObj.metadata.productId;
 
   var product = ReactionCore.Collections.Products.findOne({_id: productId });
-  if (product.soldOne) {
+  if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.Collections.Media.on('uploaded') Product was sold. Deny changes!");
     //throw new Meteor.Error(403, "Can't change ordered product");
 
