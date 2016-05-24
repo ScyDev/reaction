@@ -200,10 +200,12 @@ ReactionCore.MethodHooks.after('products/createProduct', function(options) {
   ReactionCore.Log.info("setting userId on prod: %o", product);
   //product.userId = Meteor.userId();
 
-  const type = product.type;
-  const result = ReactionCore.Collections.Products.update(productId, {
-    $set: {userId: Meteor.userId()}
-  }, { selector: { type: type } });
+  if (product != null) {
+    const type = product.type;
+    const result = ReactionCore.Collections.Products.update(productId, {
+      $set: {userId: Meteor.userId()}
+    }, { selector: { type: type } });
+  }
 
   // To be safe, return the options.result in an after hook.
   return options.result;
