@@ -38,10 +38,17 @@ Meteor.methods({
       Meteor.users.update(Meteor.userId(),
         {
           "$set": {
+            "roles": user.roles
+          }
+        }
+      );
+
+      ReactionCore.Collections.Accounts.update(Meteor.userId(),
+        {
+          "$set": {
             isSeller: isSeller,
             acceptedTerms: acceptedTerms,
-            "profile.isDecided": true,
-            "roles": user.roles
+            isDecided: true
           }
         }
       );

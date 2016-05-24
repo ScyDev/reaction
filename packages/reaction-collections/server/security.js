@@ -85,6 +85,14 @@ Security.defineMethod("ifSessionIdMatches", {
 /**
  * Define all security rules
  */
+ Security.defineMethod('ifNotProtecedFields', {
+   fetch: ['isDecided','isSeller', 'acceptedTerms'],
+   deny: function(type, arg, userId, doc, fields, modifier) {
+     if (_.intersection(fields, ['isDecided', 'isSeller', 'acceptedTerms']).length > 0) {
+       return true;
+     }
+   }
+ });
 
 /**
  * admin security
@@ -168,7 +176,7 @@ Cart.permit(["insert", "update", "remove"]).ifHasRole({
 Accounts.permit(["insert", "update"]).ifHasRole({
   role: ["anonymous", "guest"],
   group: ReactionCore.getShopId()
-}).ifUserIdMatches().apply();
+}).ifUserIdMatches().ifNotProtecedFields().apply();
 
 /*
  * apply download permissions to file collections
