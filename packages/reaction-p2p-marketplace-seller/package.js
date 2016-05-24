@@ -68,6 +68,7 @@ Package.onUse(function(api) {
   api.addFiles('client/templates/products/productDetail/variants/variantForm/variantForm.js', 'client');
   api.addFiles('client/templates/addressBook/addressBook.html', 'client');
   api.addFiles('client/templates/addressBook/addressBook.js', 'client');
+  api.addFiles('client/helpers/globals.js', 'client');
 
   api.addFiles("public/images/decision_deco.jpg", ["client"], {isAsset: true});
 
