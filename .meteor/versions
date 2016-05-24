@@ -182,6 +182,8 @@ reload@1.1.4
 retry@1.0.4
 risul:moment-timezone@0.5.0_5
 routepolicy@1.0.6
+rzymek:moment@2.8.3_10
+rzymek:moment-locale-de@2.9.0
 sacha:spin@0.1.6
 scydev:reaction-p2p-marketplace@0.0.1
 scydev:reaction-p2p-marketplace-locations@0.0.1

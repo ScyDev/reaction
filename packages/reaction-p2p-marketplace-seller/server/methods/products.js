@@ -200,10 +200,12 @@ ReactionCore.MethodHooks.after('products/createProduct', function(options) {
   ReactionCore.Log.info("setting userId on prod: %o", product);
   //product.userId = Meteor.userId();
 
-  const type = product.type;
-  const result = ReactionCore.Collections.Products.update(productId, {
-    $set: {userId: Meteor.userId()}
-  }, { selector: { type: type } });
+  if (product != null) {
+    const type = product.type;
+    const result = ReactionCore.Collections.Products.update(productId, {
+      $set: {userId: Meteor.userId()}
+    }, { selector: { type: type } });
+  }
 
   // To be safe, return the options.result in an after hook.
   return options.result;
@@ -437,11 +439,11 @@ ReactionCore.MethodHooks.before('products/publishProduct', function(options) {
 });
 
 ReactionCore.Collections.Media.on('uploaded', function (fileObj) {
-  ReactionCore.Log.info("ReactionCore.Collections.Media.on('uploaded') fileObj: ", fileObj);
+  //ReactionCore.Log.info("ReactionCore.Collections.Media.on('uploaded') fileObj: ", fileObj);
   var productId = fileObj.metadata.productId;
 
   var product = ReactionCore.Collections.Products.findOne({_id: productId });
-  if (product.soldOne) {
+  if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.Collections.Media.on('uploaded') Product was sold. Deny changes!");
     //throw new Meteor.Error(403, "Can't change ordered product");
 

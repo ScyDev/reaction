@@ -42,8 +42,6 @@ Meteor.publish("ShopMembers", function () {
         "services.github.name": 1,
         "services.github.email": 1,
         "services.github.username": 1,
-        isSeller: 1,
-        acceptedTerms: 1,
         "profile.name": 1
       }
     };
