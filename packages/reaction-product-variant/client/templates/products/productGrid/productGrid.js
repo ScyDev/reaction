@@ -56,9 +56,6 @@ Template.productGrid.onCreated(function () {
     }
 
     const queryParams = Object.assign({}, tags, ReactionRouter.current().queryParams, dateFilter, locationFilter);
-    if (ReactionCore.MeteorSubscriptions_Products != null){
-      ReactionCore.MeteorSubscriptions_Products.stop();
-    }
     ReactionCore.MeteorSubscriptions_Products = Meteor.subscribe("Products", Session.get("productScrollLimit"), queryParams);
   });
 
