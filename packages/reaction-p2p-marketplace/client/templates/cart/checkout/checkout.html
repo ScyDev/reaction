@@ -1,33 +1,41 @@
 <template name="cartCheckoutMarketplace">
-  {{#if cart.items}}
+  {{#if isCheckoutSubReady}}
+    {{#if cart.items}}
 
-    <div class="checkout-progress">
-      <div class="container">
-        {{>checkoutProgressBar}}
-      </div>
-    </div>
-
-    <div class="checkout">
-      <div class="container container-lg">
-        <div class="checkout-steps">
-          <div class="checkout-steps-main">
-            {{#each reactionTemplate workflow="coreCartWorkflow" container="checkout-steps-main"}}
-              {{> checkoutSteps}}
-            {{/each}}
-
-            {{#each reactionTemplate workflow="coreCartWorkflow" container="checkout-steps-side"}}
-              {{> checkoutSteps}}
-            {{/each}}
-          </div>
-
-          <!--
-          <div class="checkout-steps-side">
-          </div>
-          -->
+      <div class="checkout-progress">
+        <div class="container">
+          {{>checkoutProgressBar}}
         </div>
       </div>
-    </div>
+
+      <div class="checkout">
+        <div class="container container-lg">
+          <div class="checkout-steps">
+            <div class="checkout-steps-main">
+              {{#each reactionTemplate workflow="coreCartWorkflow" container="checkout-steps-main"}}
+                {{> checkoutSteps}}
+              {{/each}}
+
+              {{#each reactionTemplate workflow="coreCartWorkflow" container="checkout-steps-side"}}
+                {{> checkoutSteps}}
+              {{/each}}
+            </div>
+
+            <!--
+            <div class="checkout-steps-side">
+            </div>
+            -->
+          </div>
+        </div>
+      </div>
+    {{else}}
+      {{> emptyCheckoutCart}}
+    {{/if}}
   {{else}}
-    {{> emptyCheckoutCart}}
+    <div class="spinnerBox">
+      {{>spinner}}
+      <!-- For some strange reason the i18n helper isn't called -->
+      <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}Lade Daten</p>
+    </div>
   {{/if}}
 </template>

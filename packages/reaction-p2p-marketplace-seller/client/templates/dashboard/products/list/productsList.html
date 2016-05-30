@@ -1,6 +1,6 @@
 <template name="dashboardProductsList">
-
-      <div cla_ss="flex-item">
+  {{#if isProdsSubReady}}
+        <div cla_ss="flex-item">
         <div class="panel panel-default">
           <div class="panel-heading">
             <h3 class="panel-title" data-i18n="admin.dashboard.sellerProductsLabel">Products</h3>
@@ -60,6 +60,10 @@
           </div>
         </div>
       </div>
-
-
+      {{else}}
+        <div class="spinnerBox">
+          {{>spinner}}
+        <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
+      </div>
+    {{/if}}
 </template>
