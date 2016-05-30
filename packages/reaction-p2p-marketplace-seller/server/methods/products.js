@@ -267,31 +267,19 @@ ReactionCore.MethodHooks.before('products/updateProductField', function(options)
     throw new Meteor.Error(403, "Can't change ordered product");
   }
 
-/*
-  unfortunately, this gives error:  Exception while invoking method 'products/updateProductField' Error: Did not check() all arguments during call to 'products/updateProductField'
-  moving this to core for the time being.
-
-  // translate date to US format for saving
   if (options.arguments.length >= 3) {
-    if (options.arguments[1] == "forSaleOnDate") {
-      //ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') from:",options.arguments[2]);
-
-      // this seems to provoke: Exception while invoking method 'products/updateProductField' Error: Did not check() all arguments during call to 'products/updateProductField'
-      // but the value is still saved...
-      options.arguments[2] = moment(options.arguments[2], "DD.MM.YYYY").format('MM/DD/YYYY');
-
-      //ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') to:",options.arguments[2]);
-    }
     if (options.arguments[1] == "latestOrderDate") {
-      // this seems to provoke: Exception while invoking method 'products/updateProductField' Error: Did not check() all arguments during call to 'products/updateProductField'
-      // but the value is still saved...
-      options.arguments[2] = moment(options.arguments[2], "DD.MM.YYYY HH:mm").format('MM/DD/YYYY HH:mm');
+      let latestOrderDateValue = moment(options.arguments[2], "DD.MM.YYYY HH:mm");
+      let pickupDateTime = moment(
+                            moment(product.forSaleOnDate).format("DD.MM.YYYY")+" "+product.pickupTimeFrom,
+                            "DD.MM.YYYY HH:mm"
+                          );
+      if (latestOrderDateValue.isAfter(pickupDateTime)) {
+        ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') latestOrderDateValue ",latestOrderDateValue.toString()," can't be after pickupDateTime ",pickupDateTime.toString());
+        throw new Meteor.Error(403, "latestOrderDateValue after pickupDateTime");
+      }
     }
   }
-  check(options.arguments[0], String);
-  check(options.arguments[1], String);
-  check(options.arguments[2], Match.OneOf(String, Object, Array, Boolean, Date));
-*/
 });
 
 ReactionCore.MethodHooks.before('products/updateVariant', function(options) {

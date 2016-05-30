@@ -223,13 +223,14 @@
         "tagsAdd": "Add tag",
         "location": "Location",
         "needsReview": "Product changed, it needs to be activated again.",
-		"pickupTimeFromIsRequired": "Pickup time 'from' is required",
-		"pickupTimeToIsRequired": "Pickup time 'to' is required",
+		    "pickupTimeFromIsRequired": "Pickup time 'from' is required",
+		    "pickupTimeToIsRequired": "Pickup time 'to' is required",
         "forSaleOnDateIsNoDate": "For sale date is not a date",
-		"latestOrderDateMustBeADate": "Latest order date must be a date",
+		    "latestOrderDateMustBeADate": "Latest order date must be a date",
         "notLoggedIn": "Not logged in",
-		"youNeedToLogIn": "You need to log in or register.",
-        "cantChangeOrderedProduct": "Can't change a product that has already been ordered."
+		    "youNeedToLogIn": "You need to log in or register.",
+        "cantChangeOrderedProduct": "Can't change a product that has already been ordered.",
+        "latestOrderDateValueAfterPickupDateTime": "Latest order time can't be after pickup time."
       },
       "products": {
         "all": "ALL",

@@ -229,7 +229,8 @@
 				"latestOrderDateMustBeADate": "Letzte Bestellung muss ein Datum sein",
 				"notLoggedIn": "Hunger?",
 				"youNeedToLogIn": "Melde Dich an und die Mahlzeit gehört Dir.",
-		    "cantChangeOrderedProduct": "Eine Mahlzeit die bereits bestellt wurde kann nicht mehr geändert werden."
+		    "cantChangeOrderedProduct": "Eine Mahlzeit die bereits bestellt wurde kann nicht mehr geändert werden.",
+				"latestOrderDateValueAfterPickupDateTime": "Letzter Bestellzeitpunkt darf nicht nach Abholzeit liegen."
 			},
 			"products": {
 				"all": "ALLE",
