@@ -230,7 +230,8 @@
         "notLoggedIn": "Not logged in",
 		    "youNeedToLogIn": "You need to log in or register.",
         "cantChangeOrderedProduct": "Can't change a product that has already been ordered.",
-        "latestOrderDateValueAfterPickupDateTime": "Latest order time can't be after pickup time."
+        "latestOrderDateValueAfterPickupDateTime": "Latest order time can't be after pickup time.",
+        "latestOrderDateNotOnSaleDate": "The latest order date is not on for sale date . Are you sure?"
       },
       "products": {
         "all": "ALL",

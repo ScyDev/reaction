@@ -26,17 +26,47 @@ Template.productDetail.events({ // for some strange reason our custom event need
         i18nKey: "productDetail.errorMsg"
       });
     } else {
-      Meteor.call("products/activateProduct", self._id, function (error) {
-        if (error) {
-          errorMsg = `${i18next.t("error.noProfileAddress")} `;
+      function execMeteorCallActivateProduct() {
+        Meteor.call("products/activateProduct", self._id, function (error) {
+          if (error) {
+            errorMsg = `${i18next.t("error.noProfileAddress")} `;
 
-          return Alerts.inline(errorMsg, "error", {
-            placement: "productManagement",
-            //id: self._id, // this doesn't work on existing prodcuts?
-            i18nKey: "productDetail.errorMsg"
-          });
-        }
-      });
+            return Alerts.inline(errorMsg, "error", {
+              placement: "productManagement",
+              //id: self._id, // this doesn't work on existing prodcuts?
+              i18nKey: "productDetail.errorMsg"
+            });
+          }
+        });
+      }
+
+      let productId = ReactionProduct.selectedProductId();
+      let productBelongingToCurrUser = ReactionCore.Collections.Products.findOne({_id:productId, userId:Meteor.userId()})
+      if (productBelongingToCurrUser.isActive
+          || moment(productBelongingToCurrUser.forSaleOnDate).isSame(moment(productBelongingToCurrUser.latestOrderDate), "day")) {
+        execMeteorCallActivateProduct();
+      }
+      else {
+        //console.log(moment(productBelongingToCurrUser.forSaleOnDate).toString()+" vs. "+moment(productBelongingToCurrUser.latestOrderDate).toString());
+
+        Alerts.alert({
+          title: i18next.t("productDetail.areYouSure", "Are you sure?"),
+          text: i18next.t("productDetail.latestOrderDateNotOnSaleDate", "The latest order date is not on for sale date . Are you sure?"),
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: i18next.t("productDetail.yes", "Yes"),
+          cancelButtonText: i18next.t("productDetail.no", "No"),
+          closeOnConfirm: true,
+          closeOnCancel: true
+        },
+        function(isConfirm){
+          if (isConfirm) {
+            execMeteorCallActivateProduct();
+          }
+        });
+      }
+
     }
   },
   "click .save-product-link": function (event, template) {

@@ -137,8 +137,6 @@ ReactionProduct.maybeDeleteProduct = function (productOrArray) {
           Alerts.toast(i18next.t("productDetail.deletedAlert") + " " + title, "info");
         }
       });
-    } else {
-  	  //Alerts.alert("Cancelled", "Your imaginary file is safe :)", "error");
     }
   });
 
