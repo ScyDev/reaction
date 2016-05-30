@@ -18,6 +18,9 @@ Installation, configuration and development documentation is available on [docs.
 The Reaction documentation source is located in the [reaction-docs](https://github.com/reactioncommerce/reaction-docs) repository, while the documentation site is the [reactioncommerce/redoc](https://github.com/reactioncommerce/redoc) application.
 
 ## Installation
+
+Once you've cloned this repo, make sure to do `git submodule init` and `git submodule update` before trying to run Reaction.
+
 > Reaction requires [Meteor](https://www.meteor.com/install), [Node](http://nodejs.org/), [npm](https://www.npmjs.com/) and [ImageMagick](http://www.imagemagick.org/script/binary-releases.php)
 
 Developers using **Windows** should review the [Windows specific installation requirements for Meteor and Reaction](https://docs.reactioncommerce.com/reaction-docs/development/requirements).
