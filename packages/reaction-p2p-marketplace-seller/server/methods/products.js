@@ -246,7 +246,7 @@ ReactionCore.MethodHooks.before('products/deleteProduct', function(options) {
   }
 
   var product = ReactionCore.Collections.Products.findOne({_id: productId});
-  if (product.soldOne) {
+  if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') Product was sold. Deny changes!");
     throw new Meteor.Error(403, "Can't change ordered product");
   }
@@ -262,7 +262,7 @@ ReactionCore.MethodHooks.before('products/updateProductField', function(options)
   }
 
   var product = ReactionCore.Collections.Products.findOne({_id: productId});
-  if (product.soldOne) {
+  if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') Product was sold. Deny changes!");
     throw new Meteor.Error(403, "Can't change ordered product");
   }
@@ -289,7 +289,7 @@ ReactionCore.MethodHooks.before('products/updateVariant', function(options) {
   //ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateVariant') fullVariant: ", fullVariant);
 
   var product = ReactionCore.Collections.Products.findOne({_id: {$in:fullVariant.ancestors} });
-  if (product.soldOne) {
+  if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateVariant') Product was sold. Deny changes!");
     throw new Meteor.Error(403, "Can't change ordered product");
   }
@@ -354,7 +354,7 @@ ReactionCore.MethodHooks.before('products/updateProductTags', function(options) 
   }
 
   var product = ReactionCore.Collections.Products.findOne({_id: productId});
-  if (product.soldOne) {
+  if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductTags') Product was sold. Deny changes!");
     throw new Meteor.Error(403, "Can't change ordered product");
   }
@@ -370,7 +370,7 @@ ReactionCore.MethodHooks.before('products/removeProductTag', function(options) {
   }
 
   var product = ReactionCore.Collections.Products.findOne({_id: productId});
-  if (product.soldOne) {
+  if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductTags') Product was sold. Deny changes!");
     throw new Meteor.Error(403, "Can't change ordered product");
   }
