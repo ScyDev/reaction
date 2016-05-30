@@ -31,7 +31,7 @@ ReactionCore.Schemas.Product = new SimpleSchema([
         tomorrow.setDate(tomorrow.getDate() + 1);
         return tomorrow;
       },*/
-      defaultValue: new Date(new Date(new Date().toDateString()+" 08:00:00").getTime() + 1000*60*60*24*2),
+      defaultValue: new Date(new Date(new Date().toDateString()+" 09:30:00").getTime() + 1000*60*60*24*2),
       optional: false
     },
   }
