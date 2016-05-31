@@ -1,4 +1,6 @@
-
+[submodule "packages/snaxter-template"]
+	path = packages/snaxter-template
+	url = https://github.com/ScyDev/snaxter-template
 [submodule "packages/meteor-collection2"]
 	path = packages/meteor-collection2
 	url = https://github.com/ScyDev/meteor-collection2
