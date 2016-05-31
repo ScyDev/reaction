@@ -26,17 +26,80 @@ Template.productDetail.events({ // for some strange reason our custom event need
         i18nKey: "productDetail.errorMsg"
       });
     } else {
-      Meteor.call("products/activateProduct", self._id, function (error) {
-        if (error) {
-          errorMsg = `${i18next.t("error.noProfileAddress")} `;
+      function execMeteorCallActivateProduct() {
+        Meteor.call("products/activateProduct", self._id, function (error) {
+          if (error) {
+            errorMsg = `${i18next.t("error.noProfileAddress")} `;
 
-          return Alerts.inline(errorMsg, "error", {
-            placement: "productManagement",
-            //id: self._id, // this doesn't work on existing prodcuts?
-            i18nKey: "productDetail.errorMsg"
-          });
-        }
-      });
+            return Alerts.inline(errorMsg, "error", {
+              placement: "productManagement",
+              //id: self._id, // this doesn't work on existing prodcuts?
+              i18nKey: "productDetail.errorMsg"
+            });
+          }
+        });
+      }
+
+      let productId = ReactionProduct.selectedProductId();
+      let productBelongingToCurrUser = ReactionCore.Collections.Products.findOne({_id:productId, userId:Meteor.userId()})
+
+      console.log("diffing ",moment(
+                      moment(productBelongingToCurrUser.forSaleOnDate).utcOffset('+0200').format("DD.MM.YYYY")+" "+productBelongingToCurrUser.pickupTimeFrom
+                      , "DD.MM.YYYY HH:mm").utcOffset('+0000').toString(), moment(productBelongingToCurrUser.latestOrderDate).utcOffset('+0000').toString()
+                    );
+      console.log("diff: ",moment(
+                      moment(productBelongingToCurrUser.forSaleOnDate).utcOffset('+0200').format("DD.MM.YYYY")+" "+productBelongingToCurrUser.pickupTimeFrom
+                      , "DD.MM.YYYY HH:mm").utcOffset('+0000').diff(moment(productBelongingToCurrUser.latestOrderDate).utcOffset('+0000'), "minutes")
+                    );
+
+      if (productBelongingToCurrUser.isActive) {
+        execMeteorCallActivateProduct();
+      }
+      else if (!moment(productBelongingToCurrUser.forSaleOnDate).isSame(moment(productBelongingToCurrUser.latestOrderDate), "day")) {
+        //console.log(moment(productBelongingToCurrUser.forSaleOnDate).toString()+" vs. "+moment(productBelongingToCurrUser.latestOrderDate).toString());
+
+        Alerts.alert({
+          title: i18next.t("productDetail.areYouSure", "Are you sure?"),
+          text: i18next.t("productDetail.latestOrderDateNotOnSaleDate", "The latest order date is not on for sale date. Are you sure?"),
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: i18next.t("productDetail.yes", "Yes"),
+          cancelButtonText: i18next.t("productDetail.no", "No"),
+          closeOnConfirm: true,
+          closeOnCancel: true
+        },
+        function(isConfirm){
+          if (isConfirm) {
+            execMeteorCallActivateProduct();
+          }
+        });
+      }/*
+      else if (!moment(
+                      moment(productBelongingToCurrUser.forSaleOnDate).format("DD.MM.YYYY")+" "+productBelongingToCurrUser.pickupTimeFrom
+                      , "DD.MM.YYYY HH:mm").diff(moment(productBelongingToCurrUser.latestOrderDate), "minutes") > 60) {
+
+        Alerts.alert({
+          title: i18next.t("productDetail.areYouSure", "Are you sure?"),
+          text: i18next.t("productDetail.latestOrderDateNearPickupTime", "The latest order date is very near the pickup time. Are you sure?"),
+          type: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: i18next.t("productDetail.yes", "Yes"),
+          cancelButtonText: i18next.t("productDetail.no", "No"),
+          closeOnConfirm: true,
+          closeOnCancel: true
+        },
+        function(isConfirm){
+          if (isConfirm) {
+            execMeteorCallActivateProduct();
+          }
+        });
+      }*/
+      else {
+        execMeteorCallActivateProduct();
+      }
+
     }
   },
   "click .save-product-link": function (event, template) {

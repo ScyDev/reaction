@@ -109,6 +109,11 @@ function initDatepickers() {
     $('.forSaleOnDate-edit-input').val(fixedDatetime.format("DD.MM.YYYY"));
 		Alerts.removeSeen();
     $('.forSaleOnDate-edit-input').trigger("change");
+
+    // automatically set latest order date to same day
+    $('.latestOrderDate-dummy-input').val(moment(fixedDatetime).add(9.5, "hours").format("DD.MM.YYYY HH:mm"));
+    $('.latestOrderDate-edit-input').val(moment(fixedDatetime).add(9.5, "hours").format("DD.MM.YYYY HH:mm"));
+    $('.latestOrderDate-edit-input').trigger("change");
   });
 
 	// ######################################################################
