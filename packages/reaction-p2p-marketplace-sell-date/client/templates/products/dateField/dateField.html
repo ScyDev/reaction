@@ -23,8 +23,8 @@
     <div class="row col-md-11">
       <h2><span class="pickupTime-text" data-i18n="productDetail.pickupTime">Pickup time</span></h2>
 
-      <span class="pickupTime-label"><span data-i18n="productDetail.pickupTimeFrom">From</span>: </span><span id="pickupTimeFrom" itemprop="pickupTimeFrom">{{>fieldComponent field="pickupTimeFrom" value=pickupTimeFrom }}</span>
-      <span class="pickupTime-label"><span data-i18n="productDetail.pickupTimeTo">To</span>: </span><span id="pickupTimeTo" itemprop="pickupTimeTo">{{>fieldComponent field="pickupTimeTo" value=pickupTimeTo }}</span>
+      <span class="pickupTime-label"><span data-i18n="productDetail.pickupTimeFrom">From</span>: </span><span id="pickupTimeFrom" itemprop="pickupTimeFrom">{{>fieldComponent field="pickupTimeFrom" value=pickupTimeFrom type="time" pattern="[0-9]{2}:[0-9]{2}" maxlength="5"}}</span>
+      <span class="pickupTime-label"><span data-i18n="productDetail.pickupTimeTo">To</span>: </span><span id="pickupTimeTo" itemprop="pickupTimeTo">{{>fieldComponent field="pickupTimeTo" value=pickupTimeTo type="time" pattern="[0-9]{2}:[0-9]{2}" maxlength="5"}}</span>
     </div>
 
     <div class="row col-md-11">

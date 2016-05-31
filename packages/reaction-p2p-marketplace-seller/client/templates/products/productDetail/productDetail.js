@@ -6,19 +6,29 @@ Template.productDetail.events({ // for some strange reason our custom event need
     Alerts.removeSeen();
     let errorMsg = "";
     const self = this;
+
+    const productId = ReactionProduct.selectedProductId();
+    const productBelongingToCurrUser = ReactionCore.Collections.Products.findOne({_id:productId, userId:Meteor.userId()})
+
     if (!self.title) {
-      errorMsg += `${i18next.t("error.isRequired", { field: i18next.t("productDetailEdit.title") })} `;
+      errorMsg += `${i18next.t("error.isRequired", { field: i18next.t("productDetailEdit.title") })}\n`;
       template.$(".title-edit-input").focus();
     }
     const variants = ReactionProduct.getVariants(self._id);
     for (let variant of variants) {
       let index = _.indexOf(variants, variant);
       if (!variant.title) {
-        errorMsg += `${i18next.t("error.variantFieldIsRequired", { field: i18next.t("productVariant.title"), number: index + 1 })} `;
+        errorMsg += `${i18next.t("error.variantFieldIsRequired", { field: i18next.t("productVariant.title"), number: index + 1 })}\n`;
       }
       if (!variant.price) {
-        errorMsg += `${i18next.t("error.variantFieldIsRequired", { field: i18next.t("productVariant.price"), number: index + 1 })} `;
+        errorMsg += `${i18next.t("error.variantFieldIsRequired", { field: i18next.t("productVariant.price"), number: index + 1 })}\n`;
       }
+    }
+    if( ! /^\d{2}:\d{2}$/.test(productBelongingToCurrUser.pickupTimeFrom) ) {
+      errorMsg += `${i18next.t("productDetail.pickupTimeFromIsRequired", { field: i18next.t("productDetail.pickupTimeFrom") })}\n`;
+    }
+    if( ! /^\d{2}:\d{2}$/.test(productBelongingToCurrUser.pickupTimeTo) ) {
+      errorMsg += `${i18next.t("productDetail.pickupTimeToIsRequired", { field: i18next.t("productDetail.pickupTimeTo") })}\n`;
     }
     if (errorMsg.length > 0) {
       Alerts.inline(errorMsg, "error", {
@@ -29,7 +39,7 @@ Template.productDetail.events({ // for some strange reason our custom event need
       function execMeteorCallActivateProduct() {
         Meteor.call("products/activateProduct", self._id, function (error) {
           if (error) {
-            errorMsg = `${i18next.t("error.noProfileAddress")} `;
+            errorMsg = `${i18next.t("error.noProfileAddress")}\n`;
 
             return Alerts.inline(errorMsg, "error", {
               placement: "productManagement",
@@ -40,17 +50,17 @@ Template.productDetail.events({ // for some strange reason our custom event need
         });
       }
 
-      let productId = ReactionProduct.selectedProductId();
-      let productBelongingToCurrUser = ReactionCore.Collections.Products.findOne({_id:productId, userId:Meteor.userId()})
-
-      console.log("diffing ",moment(
-                      moment(productBelongingToCurrUser.forSaleOnDate).utcOffset('+0200').format("DD.MM.YYYY")+" "+productBelongingToCurrUser.pickupTimeFrom
-                      , "DD.MM.YYYY HH:mm").utcOffset('+0000').toString(), moment(productBelongingToCurrUser.latestOrderDate).utcOffset('+0000').toString()
-                    );
-      console.log("diff: ",moment(
-                      moment(productBelongingToCurrUser.forSaleOnDate).utcOffset('+0200').format("DD.MM.YYYY")+" "+productBelongingToCurrUser.pickupTimeFrom
-                      , "DD.MM.YYYY HH:mm").utcOffset('+0000').diff(moment(productBelongingToCurrUser.latestOrderDate).utcOffset('+0000'), "minutes")
-                    );
+      const pickupDate = moment( productBelongingToCurrUser.forSaleOnDate )
+      const latestOrderDate = moment( productBelongingToCurrUser.latestOrderDate )
+      
+      const lastestOrderDateTooLate = latestOrderDate.format( "YYYY-MM-DD" ) > pickupDate.format( "YYYY-MM-DD" )
+      delta = 1000;
+      if( pickupDate.format( "YYYY-MM-DD" ) == latestOrderDate.format( "YYYY-MM-DD" ) ) {
+        const fromHours = parseInt( productBelongingToCurrUser.pickupTimeFrom.slice(0, 2) );
+        const fromMinutes = parseInt( productBelongingToCurrUser.pickupTimeFrom.slice(3) );
+        delta = ( fromHours * 60 + fromMinutes ) - ( latestOrderDate.hours() * 60 + latestOrderDate.minutes() );
+        console.log( "Time difference:", delta, "minutes" );
+      }
 
       if (productBelongingToCurrUser.isActive) {
         execMeteorCallActivateProduct();
@@ -74,10 +84,8 @@ Template.productDetail.events({ // for some strange reason our custom event need
             execMeteorCallActivateProduct();
           }
         });
-      }/*
-      else if (!moment(
-                      moment(productBelongingToCurrUser.forSaleOnDate).format("DD.MM.YYYY")+" "+productBelongingToCurrUser.pickupTimeFrom
-                      , "DD.MM.YYYY HH:mm").diff(moment(productBelongingToCurrUser.latestOrderDate), "minutes") > 60) {
+      }
+      else if ( delta <= 60 || lastestOrderDateTooLate ) {
 
         Alerts.alert({
           title: i18next.t("productDetail.areYouSure", "Are you sure?"),
@@ -95,7 +103,7 @@ Template.productDetail.events({ // for some strange reason our custom event need
             execMeteorCallActivateProduct();
           }
         });
-      }*/
+      }
       else {
         execMeteorCallActivateProduct();
       }

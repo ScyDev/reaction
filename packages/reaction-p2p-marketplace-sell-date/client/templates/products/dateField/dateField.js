@@ -105,7 +105,7 @@ function initDatepickers() {
   $('.datetimepicker-forSaleOnDate').on("dp.change", function(event) {
     //console.log("datetimepicker-forSaleOnDate changed: ",event.date);
 
-    let fixedDatetime = event.date;
+    const fixedDatetime = event.date;
     $('.forSaleOnDate-edit-input').val(fixedDatetime.format("DD.MM.YYYY"));
 		Alerts.removeSeen();
     $('.forSaleOnDate-edit-input').trigger("change");
@@ -120,14 +120,14 @@ function initDatepickers() {
 
 	// set date from real input field
   let dateTimePickerDefaultDate_latestOrderDate = $('.latestOrderDate-edit-input').val();
-	//console.log("read dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
+	console.log("read dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
 	if (dateTimePickerDefaultDate_latestOrderDate == null || dateTimePickerDefaultDate_latestOrderDate == "") {
 		//dateTimePickerDefaultDate_latestOrderDate = moment().add(1, 'days').hour(8)
 	}
 	else {
 		dateTimePickerDefaultDate_latestOrderDate = moment(dateTimePickerDefaultDate_latestOrderDate, "DD.MM.YYYY HH:mm")
 	}
-	//console.log("new dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
+	// console.log("new dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
 
   $('.datetimepicker-latestOrderDate').datetimepicker({
     format: "dddd DD.MM.YYYY HH:mm", //
@@ -139,7 +139,9 @@ function initDatepickers() {
 		useCurrent: false,
 		defaultDate: dateTimePickerDefaultDate_latestOrderDate
   });
-
+	const picker = $('.datetimepicker-latestOrderDate').data('datetimepicker');
+	console.log( "picker:",  picker)
+	
   $('.datetimepicker-latestOrderDate').off();
   $('.datetimepicker-latestOrderDate').on("dp.change", function(event) {
     //console.log("datetimepicker changed: ",event.date);
@@ -197,7 +199,7 @@ Template.registerHelpers(
 			return moment(inDate).locale("de").format('dddd DD.MM.YYYY');
     },
     prettifyDateTime: function(inDate) {
-      return moment(inDate).locale("de").utcOffset('+0000').format('dddd DD.MM.YYYY HH:mm'); // UTC+0000 corresponds to GMT+0200 ?
+      return moment(inDate).locale("de").format('dddd DD.MM.YYYY HH:mm');
     }
   }
 );
