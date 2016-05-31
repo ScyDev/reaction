@@ -5,6 +5,14 @@
 
 
 Template.cartCheckout.helpers({
+  isCheckoutSubReady: function () {
+    if (ReactionCore.Subscriptions.Cart.ready()) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
   cart: function () {
     if (ReactionCore.Subscriptions.Cart.ready()) {
       return ReactionCore.Collections.Cart.findOne();

@@ -326,7 +326,6 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
         $gte: 0
       }
     });*/
-
     return Products.find(selector, {
       sort: sort,
       limit: productScrollLimit

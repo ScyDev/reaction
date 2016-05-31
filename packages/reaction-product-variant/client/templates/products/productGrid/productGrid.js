@@ -109,6 +109,14 @@ Template.productGrid.helpers({
   loadMoreProducts: function () {
     return ReactionCore.Collections.Products.find().count() >= Session.get("productScrollLimit");
   },
+  isProdsSubReady: function () {
+    if (ReactionCore.MeteorSubscriptions_Products.ready()) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
   products: function () {
     if (ReactionCore.MeteorSubscriptions_Products.ready()) {
       /*

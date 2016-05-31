@@ -8,6 +8,14 @@ Template.productList.helpers({
   products: function () {
     return ReactionProduct.getProductsByTag(this.tag);
   },
+  isProdsSubReady: function () {
+    if (ReactionCore.MeteorSubscriptions_Products.ready()) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
   media: function () {
     const media = ReactionCore.Collections.Media.findOne({
       "metadata.productId": this._id,

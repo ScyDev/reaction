@@ -1,19 +1,26 @@
 <template name="sellerOrders">
-  {{#if hasPermission 'account/seller/sellerorders'}}
-    <div class="seller-orders container-fluid-sm">
-      <div class="panel-heading">
-        <h3 class="panel-title" data-i18n="admin.dashboard.sellerOrdersLabel">Orders</h3>
-      </div>
-
-      {{#each order in sellerOrders}}
-        {{> sellerOrdersListItem order}}
-      {{else}}
-
-        <div class="empty-view-message">
-            <i class="fa fa-shopping-bag"></i>
-            <p>{{i18n 'order.ordersNotFound' 'No orders found'}}</p>
+  {{#if isProdsSubReady}}
+    {{#if hasPermission 'account/seller/sellerorders'}}
+      <div class="seller-orders container-fluid-sm">
+        <div class="panel-heading">
+          <h3 class="panel-title" data-i18n="admin.dashboard.sellerOrdersLabel">Orders</h3>
         </div>
-      {{/each}}
+
+        {{#each order in sellerOrders}}
+          {{> sellerOrdersListItem order}}
+        {{else}}
+
+          <div class="empty-view-message">
+              <i class="fa fa-shopping-bag"></i>
+              <p>{{i18n 'order.ordersNotFound' 'No orders found'}}</p>
+          </div>
+        {{/each}}
+      </div>
+    {{/if}}
+  {{else}}
+    <div class="spinnerBox">
+      {{>spinner}}
+      <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
     </div>
   {{/if}}
 </template>

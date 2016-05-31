@@ -11,6 +11,14 @@ Template.dashboardProductsList.helpers({
       return ReactionCore.Collections.Products.find({userId: Meteor.userId()});
     }
   },
+  isProdsSubReady: function () {
+    if (ReactionCore.MeteorSubscriptions_SellerProducts.ready()) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
 });
 
 Template.dashboardProductsList.events({
