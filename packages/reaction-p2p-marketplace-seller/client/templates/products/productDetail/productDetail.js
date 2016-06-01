@@ -24,10 +24,10 @@ Template.productDetail.events({ // for some strange reason our custom event need
         errorMsg += `${i18next.t("error.variantFieldIsRequired", { field: i18next.t("productVariant.price"), number: index + 1 })}\n`;
       }
     }
-    if( ! /^\d{2}:\d{2}$/.test(productBelongingToCurrUser.pickupTimeFrom) ) {
+    if( ! /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(productBelongingToCurrUser.pickupTimeFrom) ) {
       errorMsg += `${i18next.t("productDetail.pickupTimeFromIsRequired", { field: i18next.t("productDetail.pickupTimeFrom") })}\n`;
     }
-    if( ! /^\d{2}:\d{2}$/.test(productBelongingToCurrUser.pickupTimeTo) ) {
+    if( ! /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(productBelongingToCurrUser.pickupTimeTo) ) {
       errorMsg += `${i18next.t("productDetail.pickupTimeToIsRequired", { field: i18next.t("productDetail.pickupTimeTo") })}\n`;
     }
     if (errorMsg.length > 0) {

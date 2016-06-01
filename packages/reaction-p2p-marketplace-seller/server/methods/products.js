@@ -172,7 +172,9 @@ Meteor.methods({
 
     var product = ReactionCore.Collections.Products.findOne({_id: productId});
     //ReactionCore.Log.info("is",moment(product.latestOrderDate).utcOffset('+0000')," < ",moment().utcOffset('+0200'),"?");
-    if (product && product.soldOne && moment(product.latestOrderDate).utcOffset('+0000').isBefore(moment().utcOffset('+0200'))) {
+    /* Assuming it is not necessary to shift time anymore */
+    // if (product && product.soldOne && moment(product.latestOrderDate).utcOffset('+0000').isBefore(moment().utcOffset('+0200'))) {
+    if (product && product.soldOne && moment(product.latestOrderDate).isBefore(moment())) {
       ReactionCore.Log.info("Method products/checkIfExpired() product expired: ",productId);
       ReactionCore.Collections.Products.update(productId,
         {
