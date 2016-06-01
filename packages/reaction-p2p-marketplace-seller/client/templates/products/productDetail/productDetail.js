@@ -49,7 +49,6 @@ Template.productDetail.events({ // for some strange reason our custom event need
           }
         });
       }
-
       const pickupDate = moment( productBelongingToCurrUser.forSaleOnDate )
       const latestOrderDate = moment( productBelongingToCurrUser.latestOrderDate )
       

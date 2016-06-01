@@ -103,7 +103,7 @@ function initDatepickers() {
 
   $('.datetimepicker-forSaleOnDate').off();
   $('.datetimepicker-forSaleOnDate').on("dp.change", function(event) {
-    //console.log("datetimepicker-forSaleOnDate changed: ",event.date);
+    console.log("datetimepicker-forSaleOnDate changed: ",event.date);
 
     const fixedDatetime = event.date;
     $('.forSaleOnDate-edit-input').val(fixedDatetime.format("DD.MM.YYYY"));
@@ -120,7 +120,7 @@ function initDatepickers() {
 
 	// set date from real input field
   let dateTimePickerDefaultDate_latestOrderDate = $('.latestOrderDate-edit-input').val();
-	console.log("read dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
+	// console.log("read dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
 	if (dateTimePickerDefaultDate_latestOrderDate == null || dateTimePickerDefaultDate_latestOrderDate == "") {
 		//dateTimePickerDefaultDate_latestOrderDate = moment().add(1, 'days').hour(8)
 	}
@@ -139,12 +139,10 @@ function initDatepickers() {
 		useCurrent: false,
 		defaultDate: dateTimePickerDefaultDate_latestOrderDate
   });
-	const picker = $('.datetimepicker-latestOrderDate').data('datetimepicker');
-	console.log( "picker:",  picker)
-	
+
   $('.datetimepicker-latestOrderDate').off();
   $('.datetimepicker-latestOrderDate').on("dp.change", function(event) {
-    //console.log("datetimepicker changed: ",event.date);
+    // console.log("datetimepicker changed: ",event.date);
 
     let fixedDatetime = event.date;
     $('.latestOrderDate-edit-input').val(fixedDatetime.format("DD.MM.YYYY HH:mm"));
@@ -155,11 +153,31 @@ function initDatepickers() {
 	// also save manual changes to date and time
 	$('.latestOrderDate-dummy-input').off("keyup");
 	$('.latestOrderDate-dummy-input').on("keyup", function(event) {
-    //console.log("latestOrderDate-dummy-input changed: ",event);
+    // console.log("latestOrderDate-dummy-input changed: ",event);
 
 		$('.latestOrderDate-edit-input').val(event.target.value);
     $('.latestOrderDate-edit-input').trigger("change");
   });
+
+
+	const initTimePicker = (name) => {
+		const pickerChangeHandler = ( event, input ) => {
+			input.val(event.target.value);
+			Alerts.removeSeen();
+	    input.trigger("change");
+		}
+		const dummyInput = $( `.${name}-dummy-input` );
+		const realInput = $( `.${name}-edit-input` );
+		dummyInput.datetimepicker({ format: "HH:mm" });
+		dummyInput.val(realInput.val());
+	  dummyInput.on("dp.change", event => pickerChangeHandler(event, realInput) );
+		// also save manual changes to date and time
+		dummyInput.off("keyup");
+		dummyInput.on("keyup", event => pickerChangeHandler(event, realInput) );
+	}
+	
+	initTimePicker("pickupTimeFrom");
+	initTimePicker("pickupTimeTo");
 
   console.log("activated datepicker");
 }
