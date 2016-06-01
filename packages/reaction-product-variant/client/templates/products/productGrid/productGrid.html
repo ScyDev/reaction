@@ -26,9 +26,14 @@
       {{/if}}
 
   {{else}}
-    <div class="spinnerBox">
+  <!--   
+  If this following block is implemented, a second spinnerBox with text appears, but {{#if isProdsSubReady}} is needed,
+  because otherwise there would be the expected spinnerBox AND the message that there's no product as long as it's loading
+  (So just do nothing in this else-case)
+  <div class="spinnerBox">
       {{>spinner}}
       <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
     </div>
+  -->
   {{/if}}
 </template>
