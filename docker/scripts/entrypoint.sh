@@ -23,5 +23,12 @@ if [[ "${MONGO_URL}" == *"127.0.0.1"* ]]; then
   mongod --smallfiles --fork --logpath /var/log/mongodb.log
 fi
 
+echo "Setting Timezone ..."
+apt-get update
+apt-get --assume-yes install --reinstall tzdata
+TZ="Europe/Zurich"
+ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+dpkg-reconfigure -f noninteractive tzdata # this at least needs to be run again, mabye the last two cmds too
+
 # Run meteor
 exec node ./main.js

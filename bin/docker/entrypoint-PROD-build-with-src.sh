@@ -29,7 +29,6 @@ TZ="Europe/Zurich"
 ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 dpkg-reconfigure -f noninteractive tzdata # this at least needs to be run again, mabye the last two cmds too
 
-
 if [[ "${REACTION_ENVIRONMENT}" == "dev" ]]; then
   echo "Running Reaction in DEV mode ..."
   # DEV
