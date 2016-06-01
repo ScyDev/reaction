@@ -109,6 +109,7 @@ Template.sellerOrders.onCreated(() => {
  * orders helpers
  */
 Template.sellerOrders.helpers({
+
   sellerOrders() {
     ReactionCore.Subscriptions.SellerOrders = ReactionSubscriptions.subscribe("SellerOrders");
     if (ReactionCore.Subscriptions.SellerOrders.ready()) {
@@ -145,6 +146,15 @@ Template.sellerOrders.helpers({
       return "panel-info";
     }
     return "panel-default";
+  },
+  isProdsSubReady: function () {
+    ReactionCore.Subscriptions.SellerOrders = ReactionSubscriptions.subscribe("SellerOrders");
+    if (ReactionCore.Subscriptions.SellerOrders.ready()) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 });
 

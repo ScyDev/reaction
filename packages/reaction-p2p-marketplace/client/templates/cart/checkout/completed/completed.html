@@ -36,6 +36,9 @@
   {{else}}
     <br/>
     <br/>
-    {{>spinner}}
+    <div class="spinnerBox">
+      {{>spinner}}
+      <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
+    </div>
   {{/with}}
 </template>

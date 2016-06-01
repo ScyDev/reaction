@@ -1,22 +1,39 @@
 <template name="productGrid">
+  <!--
+  https://forums.meteor.com/t/if-template-subscriptionsready-is-firing-too-soon/8752/10
+  Use a specific helper instead of Template.subscriptionsReady 
+  -->
+  {{#if isProdsSubReady}}
 
-  <div class="product-grid" data-event-category="grid" data-event-action="generic-click" data-event-label="product grid click">
-    <ul class="product-grid-list list-unstyled" id="product-grid-list">
-    {{#each products}}
-      {{> productGridItems}}
-    {{else}}
-      <div class="no-products-found">
-        <h3>
-          <i class="fa fa-cutlery"></i> <span>{{i18n 'shop.search.noProductsFound' 'No products found'}}</span>
-        </h3>
+      <div class="product-grid" data-event-category="grid" data-event-action="generic-click" data-event-label="product grid click">
+        <ul class="product-grid-list list-unstyled" id="product-grid-list">
+          {{#each products}}
+            {{> productGridItems}}
+          {{else}}
+            <div class="no-products-found">
+              <h3>
+                <i class="fa fa-cutlery"></i> <span>{{i18n 'shop.search.noProductsFound' 'No products found'}}</span>
+              </h3>
+            </div>
+          {{/each}}
+        </ul>
       </div>
-    {{/each}}
-    </ul>
-  </div>
 
-  {{#if loadMoreProducts}}
-    <div class="row" id="productScrollLimitLoader">
-        <button class="btn btn-default btn-block" data-i18n="app.loadMoreProducts" data-event-action="loadMoreProducts">Load more products</button>
+      {{#if loadMoreProducts}}
+      <div class="row" id="productScrollLimitLoader">
+          <button class="btn btn-default btn-block" data-i18n="app.loadMoreProducts" data-event-action="loadMoreProducts">Load more products</button>
+      </div>
+      {{/if}}
+
+  {{else}}
+  <!--   
+  If this following block is implemented, a second spinnerBox with text appears, but {{#if isProdsSubReady}} is needed,
+  because otherwise there would be the expected spinnerBox AND the message that there's no product as long as it's loading
+  (So just do nothing in this else-case)
+  <div class="spinnerBox">
+      {{>spinner}}
+      <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
     </div>
+  -->
   {{/if}}
 </template>
