@@ -54,8 +54,10 @@ Template.productGrid.onCreated(function () {
     if (locationFilter.location == null || locationFilter.location.trim() == "") {
       locationFilter = {};
     }
+    const mealTimeFilter = { mealTime: Session.get('productFilters/mealTime') }
 
-    const queryParams = Object.assign({}, tags, ReactionRouter.current().queryParams, dateFilter, locationFilter);
+    const queryParams = Object.assign({}, tags, ReactionRouter.current().queryParams, dateFilter, locationFilter, mealTimeFilter);
+    console.log( "queryParams:", queryParams );
     ReactionCore.MeteorSubscriptions_Products = Meteor.subscribe("Products", Session.get("productScrollLimit"), queryParams);
   });
 

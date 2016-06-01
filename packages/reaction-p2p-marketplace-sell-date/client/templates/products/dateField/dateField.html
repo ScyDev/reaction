@@ -24,22 +24,30 @@
       <h2><span class="pickupTime-text" data-i18n="productDetail.pickupTime">Pickup time</span></h2>
 
       <span class="pickupTime-label"><span data-i18n="productDetail.pickupTimeFrom">From</span>: </span><span id="pickupTimeFrom" itemprop="pickupTimeFrom">
-        <!-- just dummy field for time -->
-        <input class="pickupTimeFrom-dummy-input form-control" type="text"/>
-        <!-- this is the real, invisible input field -->
-        <span id="pickupTimeFrom" itemprop="pickupTimeFrom" style="display:none;">
-          <!--{{>fieldComponent field="pickupTimeFrom" value=(prettifyTime pickupTimeFrom) }}-->
+        {{#if belongsToCurrentUser _id }}
+          <!-- just dummy field for time -->
+          <input class="pickupTimeFrom-dummy-input form-control" type="text"/>
+          <!-- this is the real, invisible input field -->
+          <span id="pickupTimeFrom" itemprop="pickupTimeFrom" style="display:none;">
+            <!--{{>fieldComponent field="pickupTimeFrom" value=(prettifyTime pickupTimeFrom) }}-->
+            {{>fieldComponent field="pickupTimeFrom" value=pickupTimeFrom pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$" maxlength="5"}}
+          </span>
+        {{else}}
           {{>fieldComponent field="pickupTimeFrom" value=pickupTimeFrom pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$" maxlength="5"}}
-        </span>
+        {{/if}}
       </span>
       <span class="pickupTime-label"><span data-i18n="productDetail.pickupTimeTo">To</span>: </span><span id="pickupTimeTo" itemprop="pickupTimeTo">
-        <!-- just dummy field for time -->
-        <input class="pickupTimeTo-dummy-input form-control" type="text"/>
-        <!-- this is the real, invisible input field -->
-        <span id="pickupTimeTo" itemprop="pickupTimeTo" style="display:none;">
-          <!--{{>fieldComponent field="pickupTimeTo" value=(prettifyTime pickupTimeTo) }}-->
+        {{#if belongsToCurrentUser _id }}
+          <!-- just dummy field for time -->
+          <input class="pickupTimeTo-dummy-input form-control" type="text"/>
+          <!-- this is the real, invisible input field -->
+          <span id="pickupTimeTo" itemprop="pickupTimeTo" style="display:none;">
+            <!--{{>fieldComponent field="pickupTimeTo" value=(prettifyTime pickupTimeTo) }}-->
+            {{>fieldComponent field="pickupTimeTo" value=pickupTimeTo pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$" maxlength="5"}}
+          </span>
+        {{else}}
           {{>fieldComponent field="pickupTimeTo" value=pickupTimeTo pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$" maxlength="5"}}
-        </span>
+        {{/if}}
       </span>
     </div>
 

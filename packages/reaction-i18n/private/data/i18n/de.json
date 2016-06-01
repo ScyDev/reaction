@@ -451,11 +451,14 @@
 					"isCommercial": "Das ist eine Geschäftsadresse"
 				},
 				"search": {
-          "searchBoxDateLabel": "Wann möchtest Du essen?",
+					"searchBoxDateLabel": "Wann möchtest Du essen?",
 					"searchBoxDatePlaceholder": "Tag auswählen...",
-          "searchBoxLocationLabel": "Wo möchtest Du essen",
-          "searchBoxLocationPlaceholder": "PLZ oder Ort...",
-          "noProductsFound": "Leider keine Mahlzeiten gefunden, probier es mit anderen Suchkriterien."
+					"searchBoxLocationLabel": "Wo möchtest Du essen",
+					"searchBoxMealTimeLabel": "Essenszeit",
+					"searchBoxLunch": "Mittagessen",
+					"searchBoxDinner": "Abendessen",
+					"searchBoxLocationPlaceholder": "PLZ oder Ort...",
+					"noProductsFound": "Leider keine Mahlzeiten gefunden, probier es mit anderen Suchkriterien."
         }
 
 			},

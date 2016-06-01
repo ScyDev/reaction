@@ -457,6 +457,9 @@
           "searchBoxDateLabel": "Date",
           "searchBoxDatePlaceholder": "Choose date...",
           "searchBoxLocationLabel": "Place",
+          "searchBoxMealTimeLabel": "Meal Time",
+          "searchBoxLunch": "Lunch",
+          "searchBoxDinner": "Dinner",
           "searchBoxLocationPlaceholder": "City name...",
           "noProductsFound": "No products found"
         }
