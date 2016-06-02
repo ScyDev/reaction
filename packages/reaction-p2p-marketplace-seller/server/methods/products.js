@@ -71,6 +71,17 @@ Meteor.methods({
     }).fetch();
     let variantValidator = true;
 
+    // check if latestOrderDate is after pickupTime
+    let latestOrderDateValue = moment(product.latestOrderDate);
+    let pickupDateTime = moment(
+                          moment(product.forSaleOnDate).format("DD.MM.YYYY")+" "+product.pickupTimeFrom,
+                          "DD.MM.YYYY HH:mm"
+                        );
+    if (latestOrderDateValue.isAfter(pickupDateTime)) {
+      ReactionCore.Log.info("'products/activateProduct' latestOrderDateValue ",latestOrderDateValue.toString()," can't be after pickupDateTime ",pickupDateTime.toString());
+      throw new Meteor.Error(403, "productDetail.latestOrderDateValueAfterPickupDateTime");
+    }
+
     if (typeof product === "object" && product.title.length > 1) {
       if (variants.length > 0) {
         variants.map(variant => {
@@ -267,20 +278,6 @@ ReactionCore.MethodHooks.before('products/updateProductField', function(options)
   if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') Product was sold. Deny changes!");
     throw new Meteor.Error(403, "Can't change ordered product");
-  }
-
-  if (options.arguments.length >= 3) {
-    if (options.arguments[1] == "latestOrderDate") {
-      let latestOrderDateValue = moment(options.arguments[2], "DD.MM.YYYY HH:mm");
-      let pickupDateTime = moment(
-                            moment(product.forSaleOnDate).format("DD.MM.YYYY")+" "+product.pickupTimeFrom,
-                            "DD.MM.YYYY HH:mm"
-                          );
-      if (latestOrderDateValue.isAfter(pickupDateTime)) {
-        ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') latestOrderDateValue ",latestOrderDateValue.toString()," can't be after pickupDateTime ",pickupDateTime.toString());
-        throw new Meteor.Error(403, "latestOrderDateValue after pickupDateTime");
-      }
-    }
   }
 });
 

@@ -39,7 +39,7 @@ Template.productDetail.events({ // for some strange reason our custom event need
       function execMeteorCallActivateProduct() {
         Meteor.call("products/activateProduct", self._id, function (error) {
           if (error) {
-            errorMsg = `${i18next.t("error.noProfileAddress")}\n`;
+            errorMsg = `${i18next.t(error.reason)}\n`;
 
             return Alerts.inline(errorMsg, "error", {
               placement: "productManagement",
@@ -51,7 +51,7 @@ Template.productDetail.events({ // for some strange reason our custom event need
       }
       const pickupDate = moment( productBelongingToCurrUser.forSaleOnDate )
       const latestOrderDate = moment( productBelongingToCurrUser.latestOrderDate )
-      
+
       const lastestOrderDateTooLate = latestOrderDate.format( "YYYY-MM-DD" ) > pickupDate.format( "YYYY-MM-DD" )
       delta = 1000;
       if( pickupDate.format( "YYYY-MM-DD" ) == latestOrderDate.format( "YYYY-MM-DD" ) ) {
