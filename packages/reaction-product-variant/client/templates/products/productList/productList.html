@@ -1,6 +1,6 @@
 <template name="productList">
-  {{#if isProdsSubReady}}
-    <div class="product-list">
+  <div class="product-list">
+    {{#if isProdsSubReady}}
       <table class="table table-hover">
         <tbody>
           {{#each products}}
@@ -48,13 +48,13 @@
                 </div>
               </tr>
             {{/each}}
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    {{else}}
+      <div class="spinnerBox">
+        {{>spinner}}
+        <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
+      </div>
+    {{/if}}
   </div>
-  {{else}}
-    <div class="spinnerBox">
-      {{>spinner}}
-      <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
-    </div>
-  {{/if}}
 </template>
