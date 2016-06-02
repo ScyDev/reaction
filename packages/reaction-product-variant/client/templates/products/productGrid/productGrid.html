@@ -4,7 +4,6 @@
   Use a specific helper instead of Template.subscriptionsReady 
   -->
   {{#if isProdsSubReady}}
-
       <div class="product-grid" data-event-category="grid" data-event-action="generic-click" data-event-label="product grid click">
         <ul class="product-grid-list list-unstyled" id="product-grid-list">
           {{#each products}}
@@ -31,9 +30,9 @@
   because otherwise there would be the expected spinnerBox AND the message that there's no product as long as it's loading
   (So just do nothing in this else-case)
   <div class="spinnerBox">
-      {{>spinner}}
-      <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
-    </div>
+    {{>spinner}}
+    <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
+  </div>
   -->
   {{/if}}
 </template>

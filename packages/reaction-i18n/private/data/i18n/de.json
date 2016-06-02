@@ -111,6 +111,7 @@
 				"shopSettings": "Shop Settings",
 				"dashboard": "Dashboard",
 				"print": "Print",
+				"appIsOffline": "Du bist zur Zeit offline",
 				"notFound": "This page was not found.",
 				"pageNotFound": "This page was not found.",
 				"notFoundTitle": "Oops!",

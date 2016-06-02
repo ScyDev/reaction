@@ -27,7 +27,6 @@ Template.accountProfile.onDestroyed(function() {
 Template.accountProfile.helpers( // for some strange reason our custom heleprs needs to be speficied on the template that we override. doesn't work with our new template name.
 {
       isProdsSubReady: function(){
-      ReactionCore.MeteorSubscriptions_ProductsForOrdersHistory = Meteor.subscribe("ProductsForOrdersHistory");
       if (ReactionCore.MeteorSubscriptions_ProductsForOrdersHistory.ready()){
         return true;
       }
