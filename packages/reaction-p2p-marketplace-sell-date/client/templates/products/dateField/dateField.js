@@ -77,6 +77,14 @@ var dtpTooltipsDe = {
 		nextCentury: 'Nächstes Jahrhundert'
 };
 
+function setLatestOrderMaxDate() {
+  // set maxDate on latestOrderDate Datetimepicker
+  let maxDate = moment($('.forSaleOnDate-edit-input').val(), "DD.MM.YYYY").startOf('day');
+  maxDate = moment(maxDate.format("DD.MM.YYYY")+" "+$(".pickupTimeFrom-edit-input").val(), "DD.MM.YYYY HH:mm");
+  maxDate = maxDate.subtract(1, "hour");
+  console.log("setting max Date: "+maxDate.toString());
+  $('.datetimepicker-latestOrderDate').data("DateTimePicker").maxDate(maxDate);
+}
 
 function initDatepickers() {
 
@@ -110,6 +118,8 @@ function initDatepickers() {
 		Alerts.removeSeen();
     $('.forSaleOnDate-edit-input').trigger("change");
 
+    setLatestOrderMaxDate();
+
     // automatically set latest order date to same day
     $('.latestOrderDate-dummy-input').val(moment(fixedDatetime).add(9.5, "hours").format("DD.MM.YYYY HH:mm"));
     $('.latestOrderDate-edit-input').val(moment(fixedDatetime).add(9.5, "hours").format("DD.MM.YYYY HH:mm"));
@@ -137,6 +147,7 @@ function initDatepickers() {
     tooltips: dtpTooltipsDe,
 		keepInvalid: true,
 		useCurrent: false,
+    //maxDate: moment($('.forSaleOnDate-edit-input')).add(9.5, "hours"),
 		defaultDate: dateTimePickerDefaultDate_latestOrderDate
   });
 
@@ -159,12 +170,15 @@ function initDatepickers() {
     $('.latestOrderDate-edit-input').trigger("change");
   });
 
+  setLatestOrderMaxDate();
 
 	const initTimePicker = (name) => {
 		const pickerChangeHandler = ( event, input ) => {
 			input.val(event.target.value);
 			Alerts.removeSeen();
 	    input.trigger("change");
+
+      setLatestOrderMaxDate();
 		}
 		const dummyInput = $( `.${name}-dummy-input` );
 		const realInput = $( `.${name}-edit-input` );
@@ -175,7 +189,7 @@ function initDatepickers() {
 		dummyInput.off("keyup");
 		dummyInput.on("keyup", event => pickerChangeHandler(event, realInput) );
 	}
-	
+
 	initTimePicker("pickupTimeFrom");
 	initTimePicker("pickupTimeTo");
 
