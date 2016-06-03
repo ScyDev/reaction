@@ -455,8 +455,8 @@
 					"searchBoxDatePlaceholder": "Tag auswählen...",
 					"searchBoxLocationLabel": "Wo möchtest Du essen",
 					"searchBoxMealTimeLabel": "Essenszeit",
-					"searchBoxLunch": "Mittagessen",
-					"searchBoxDinner": "Abendessen",
+					"searchBoxLunch": "Mittag",
+					"searchBoxDinner": "Abend",
 					"searchBoxLocationPlaceholder": "PLZ oder Ort...",
 					"noProductsFound": "Leider keine Mahlzeiten gefunden, probier es mit anderen Suchkriterien."
         }
