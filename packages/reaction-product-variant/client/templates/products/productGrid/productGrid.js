@@ -57,8 +57,16 @@ Template.productGrid.onCreated(function () {
     const mealTimeFilter = { mealTime: Session.get('productFilters/mealTime') }
 
     const queryParams = Object.assign({}, tags, ReactionRouter.current().queryParams, dateFilter, locationFilter, mealTimeFilter);
-    console.log( "queryParams:", queryParams );
+    console.log( "Grid queryParams:", queryParams );
     ReactionCore.MeteorSubscriptions_Products = Meteor.subscribe("Products", Session.get("productScrollLimit"), queryParams);
+    // const subscription = ReactionCore.MeteorSubscriptions_Products
+    // if (subscription.ready()) {
+    //   console.log("> Received.\n");
+    //   ReactionCore.Collections.Products.find({},{sort:{ latestOrderDate: 1 }}).fetch().map(p=>console.log(p. latestOrderDate, p.title));
+    // } else {
+    //   console.log("> Subscription is not ready yet. \n");
+    //   ReactionCore.Collections.Products.find({},{sort:{ latestOrderDate: 1 }}).fetch().map(p=>console.log(p. latestOrderDate, p.title));
+    // }
   });
 
   this.autorun(() => {
@@ -136,7 +144,7 @@ Template.productGrid.helpers({
         return a.position.position - b.position.position;
       }
 
-      let gridProducts = ReactionCore.Collections.Products.find({}).fetch();
+      let gridProducts = ReactionCore.Collections.Products.find({},{sort:{ latestOrderDate: 1 }}).fetch();
 
       for (let index in gridProducts) {
         if ({}.hasOwnProperty.call(gridProducts, index)) {

@@ -215,8 +215,8 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
       }
 
       // filter by meal time
-      if (productFilters.mealTime) {
-        const filterMealTime = productFilters.mealTime;
+      const filterMealTime = productFilters.mealTime;
+      if (filterMealTime && (!filterMealTime.showLunch || !filterMealTime.showDinner)) {
         ReactionCore.Log.info("filtering products by meal time: ", filterMealTime);
 
         _.extend(selector, {
@@ -347,6 +347,7 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
       }
     });*/
 
+    console.log( "Query:", selector, sort )
     return Products.find(selector, {
       sort: sort,
       limit: productScrollLimit

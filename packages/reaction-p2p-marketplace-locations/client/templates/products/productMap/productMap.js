@@ -146,7 +146,6 @@ Template.productMap.onCreated(function() {
     const mealTimeFilter = { mealTime: Session.get('productFilters/mealTime') }
 
     const queryParams = Object.assign({}, tags, ReactionRouter.current().queryParams, dateFilter, locationFilter, mealTimeFilter);
-    console.log( "queryParams:", queryParams );
     Meteor.subscribe("Products", Session.get("productScrollLimit"), queryParams);
   });
 
