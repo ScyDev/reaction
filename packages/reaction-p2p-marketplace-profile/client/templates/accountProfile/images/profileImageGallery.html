@@ -1,7 +1,7 @@
 <template name="profileImageGallery">
 <div id="galleryDropPane" class="galleryDropPane">
   <ul class="gallery">
-    {{#each media userId=userId }}
+    {{#each media }}
       {{> profileImageDetail}}
     {{else}}
      <li>

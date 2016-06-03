@@ -39,6 +39,10 @@ const filters = new SimpleSchema({
     type: String,
     optional: true
   },
+  "mealTime": {
+    type: Object,
+    optional: true
+  },
   "price": {
     type: Object,
     optional: true
@@ -72,8 +76,9 @@ const filters = new SimpleSchema({
  * @return {Object} return product cursor
  */
 Meteor.publish("Products", function (productScrollLimit = 24, productFilters, sort = {}) {
+  // console.log(productFilters)
   check(productScrollLimit, Number);
-  check(productFilters, Match.OneOf(undefined, filters, String));
+  check(productFilters, Match.OneOf(undefined, filters, String, Object));
 
   let shopAdmin;
   const shop = ReactionCore.getCurrentShop();
@@ -130,8 +135,10 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
       // filter by latest order date
       ReactionCore.Log.info("shopAdmin: ",shopAdmin);
       if (!shopAdmin) {
-        let currentDate = new Date(moment().utcOffset("+02:00").format('MM/DD/YYYY HH:mm')); // Date is necessary, moment won't work for query
-        let basicDate = new Date(moment().utcOffset("+02:00").format('MM/DD/YYYY'));
+        // let currentDate = new Date(moment().utcOffset("+02:00").format('MM/DD/YYYY HH:mm')); // Date is necessary, moment won't work for query
+        let currentDate = new Date(moment().format('MM/DD/YYYY HH:mm')); // Date is necessary, moment won't work for query
+        // let basicDate = new Date(moment().utcOffset("+02:00").format('MM/DD/YYYY'));
+        let basicDate = new Date(moment().format('MM/DD/YYYY'));
         ReactionCore.Log.info("filtering products by lastOrderDate: ",currentDate);
         ReactionCore.Log.info("and forSaleOnDate: ",basicDate);
 
@@ -203,6 +210,19 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
         _.extend(selector, {
           userId: {
             "$in": userIds,
+          }
+        });
+      }
+
+      // filter by meal time
+      const filterMealTime = productFilters.mealTime;
+      if (filterMealTime && (!filterMealTime.showLunch || !filterMealTime.showDinner)) {
+        ReactionCore.Log.info("filtering products by meal time: ", filterMealTime);
+
+        _.extend(selector, {
+          pickupTimeTo: {
+            "$gte": filterMealTime.showLunch ? "00:00" : "14:00",
+            "$lte": filterMealTime.showDinner ? "24:00" : "14:00"
           }
         });
       }
@@ -331,6 +351,8 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
     //Meteor._sleepForMs(2000);
     /* or call a function that doesn't exist, simulating never loading pub */
     //Meteor.asdflol(2000);
+
+    console.log( "Query:", selector, sort )
 
     return Products.find(selector, {
       sort: sort,

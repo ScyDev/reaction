@@ -54,9 +54,17 @@ Template.productGrid.onCreated(function () {
     if (locationFilter.location == null || locationFilter.location.trim() == "") {
       locationFilter = {};
     }
+    const mealTimeFilter = { mealTime: Session.get('productFilters/mealTime') }
 
-    const queryParams = Object.assign({}, tags, ReactionRouter.current().queryParams, dateFilter, locationFilter);
+    const queryParams = Object.assign({}, tags, ReactionRouter.current().queryParams, dateFilter, locationFilter, mealTimeFilter);
+    console.log( "Grid queryParams:", queryParams );
     ReactionCore.MeteorSubscriptions_Products = Meteor.subscribe("Products", Session.get("productScrollLimit"), queryParams);
+    // const subscription = ReactionCore.MeteorSubscriptions_Products
+    // if (subscription.ready()) {
+    //   console.log("> Received.\n");
+    // } else {
+    //   console.log("> Subscription is not ready yet. \n");
+    // }
   });
 
   this.autorun(() => {
@@ -142,7 +150,7 @@ Template.productGrid.helpers({
         return a.position.position - b.position.position;
       }
 
-      let gridProducts = ReactionCore.Collections.Products.find({}).fetch();
+      let gridProducts = ReactionCore.Collections.Products.find({},{sort:{ latestOrderDate: 1 }}).fetch();
 
       for (let index in gridProducts) {
         if ({}.hasOwnProperty.call(gridProducts, index)) {
