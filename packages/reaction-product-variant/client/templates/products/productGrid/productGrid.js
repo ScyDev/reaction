@@ -62,10 +62,8 @@ Template.productGrid.onCreated(function () {
     // const subscription = ReactionCore.MeteorSubscriptions_Products
     // if (subscription.ready()) {
     //   console.log("> Received.\n");
-    //   ReactionCore.Collections.Products.find({},{sort:{ latestOrderDate: 1 }}).fetch().map(p=>console.log(p. latestOrderDate, p.title));
     // } else {
     //   console.log("> Subscription is not ready yet. \n");
-    //   ReactionCore.Collections.Products.find({},{sort:{ latestOrderDate: 1 }}).fetch().map(p=>console.log(p. latestOrderDate, p.title));
     // }
   });
 

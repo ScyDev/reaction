@@ -2,7 +2,7 @@
  * productImageGallery helpers
  */
 
-let Media = ReactionCore.Collections.Media;
+const Media = ReactionCore.Collections.Media;
 
 /**
  * uploadHandler method
@@ -10,9 +10,9 @@ let Media = ReactionCore.Collections.Media;
 function uploadHandler(event) {
   let template = Template.instance();
 
-  if (template.data.profileViewUser._id == Meteor.userId()) {
+  const userId = Meteor.userId();
+  if (template.data.profileViewUser._id == userId) {
     let shopId = ReactionCore.getShopId();
-    let userId = Meteor.userId();
     let count = Media.find({
       "metadata.userId": userId
     }).count();
@@ -79,21 +79,16 @@ function updateImagePriorities() {
 
 
 Template.profileImageGallery.onCreated(function () {
-  let userId = this.data.userId; // something strange by the way we pass the userId from template
+  const userId = this.data.userId || Meteor.userId(); // something strange by the way we pass the userId from template
+  this.data.userId = userId;
+  console.log( "Template.profileImageGallery.onCreated |", this.data.userId)
 
   ReactionCore.Subscriptions.ProfileUser = ReactionSubscriptions.subscribe("ProfileUser", userId);
 
   this.autorun(() => {
-    let profileUser;
-    if (userId) {
-      if (ReactionCore.Subscriptions.ProfileUser.ready()) {
-        profileUser = Meteor.users.findOne({_id: userId});
-      }
-    }
-    else {
-      profileUser = Meteor.user();
-    }
-    console.log("Template.profileImageGallery.helpers.media() userId: ",userId," profileUser: %o", profileUser);
+    if (!ReactionCore.Subscriptions.ProfileUser.ready()) return;
+    const profileUser = Meteor.users.findOne({_id: userId});
+    console.log("Template.profileImageGallery.onCreated | userId:", userId, "profileUser:", profileUser);
     this.data.profileViewUser = profileUser;
   });
 });
@@ -103,11 +98,12 @@ Template.profileImageGallery.onCreated(function () {
  */
 
 Template.profileImageGallery.helpers({
-  media: function (userId) {
-    let mediaArray = [];
+  media: function () {
     let template = Template.instance();
+    const userId = template.data.userId;
+    let mediaArray = [];
     if (ReactionCore.Subscriptions.ProfileUser.ready()) {
-      if (template.data.profileViewUser.profile) {
+      if (template.data.profileViewUser._id) {
         mediaArray = Media.find({
           "metadata.userId": template.data.profileViewUser._id
         }, {
@@ -119,8 +115,9 @@ Template.profileImageGallery.helpers({
       return mediaArray;
     }
   },
-  profile: function (userId) {
+  profile: function () {
     let template = Template.instance();
+    const userId = template.data.userId;
     if (ReactionCore.Subscriptions.ProfileUser.ready()) {
       return template.data.profileViewUser.profile;
     }
