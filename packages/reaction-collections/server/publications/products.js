@@ -139,8 +139,8 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
         let currentDate = new Date(moment().format('MM/DD/YYYY HH:mm')); // Date is necessary, moment won't work for query
         // let basicDate = new Date(moment().utcOffset("+02:00").format('MM/DD/YYYY'));
         let basicDate = new Date(moment().format('MM/DD/YYYY'));
-        ReactionCore.Log.info("filtering products by lastOrderDate: ",currentDate);
-        ReactionCore.Log.info("and forSaleOnDate: ",basicDate);
+        ReactionCore.Log.info("default filtering products by lastOrderDate: ",currentDate);
+        ReactionCore.Log.info("default filtering and forSaleOnDate: ",basicDate);
 
         _.extend(selector, {
           latestOrderDate: {
@@ -154,19 +154,21 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
 
       // filter by sale date
       if (productFilters.forSaleOnDate) {
-        let filterDate = new Date(moment(productFilters.forSaleOnDate, "DD.MM.YYYY").format('MM/DD/YYYY'));
+        ReactionCore.Log.info("filtering by specific forSaleOnDate: ",productFilters.forSaleOnDate);
+
+        let filterDate = moment(productFilters.forSaleOnDate, "DD.MM.YYYY").format('MM/DD/YYYY');
 				if (filterDate.toString() == "Invalid Date") {
 					filterDate = null;
           ReactionCore.Log.info("invalid filter date: ",filterDate);
 				}
         else {
           let basicDate = moment(filterDate).format('YYYY-MM-DD');
-          ReactionCore.Log.info("filtering products by date: ",basicDate, " ",new Date(basicDate+"T00:00:00.000Z")," ",new Date(basicDate+"T23:59:59.000Z"));
+          ReactionCore.Log.info("filtering products by date: ",basicDate, " ",moment(basicDate).startOf("day").format()," ",moment(basicDate).endOf("day").format());
 
           _.extend(selector, {
             forSaleOnDate: {
-              "$gte": new Date(basicDate+"T00:00:00.000Z"),
-              "$lte": new Date(basicDate+"T23:59:59.000Z")
+              "$gte": new Date(moment(basicDate).startOf("day").format()),
+              "$lte": new Date(moment(basicDate).endOf("day").format())
             }
           });
         }
