@@ -50,7 +50,12 @@ function addMarker(map, userId) {
           });
           // console.log( "infoWindow:", contentString );
           const infoWindow = new google.maps.InfoWindow({ content: contentString });
-          marker.addListener( 'mouseover', () => { infoWindow.close(); infoWindow.open(map, marker) } );
+          let markerIsHovered = false;
+          marker.addListener( 'mouseover', () => {
+            markerIsHovered = true;
+            Meteor.setTimeout( () => { if( markerIsHovered ) infoWindow.open(map, marker) }, 1000 );
+          } );
+          marker.addListener( 'mouseout', () => markerIsHovered = false );
           map.instance.addListener( 'click', () => infoWindow.close() );
 
           markers[userId].marker = marker;
