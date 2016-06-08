@@ -127,6 +127,29 @@ Template.registerHelper("belongsToCurrentUser", function (productId) {
   return ((productBelongingToCurrUser != null) || ReactionCore.hasAdminAccess());
 });
 
+Template.registerHelper("displayProductDetail", function (productId) {
+  if (_.isArray(productId) === true) {
+    productId = productId[0];
+  }
+
+  let product = ReactionCore.Collections.Products.findOne({_id:productId})
+  const shopId = ReactionCore.getShopId();
+
+  console.log("displayProductDetail: ",productId,product);
+  if (product.userId == Meteor.userId()
+          || Roles.userIsInRole(Meteor.userId(), ["admin"], shopId)
+          || (product.isActive && product.isVisible)
+        ) {
+          console.log("yes, display product detail");
+          return true;
+        }
+        else {
+          console.log("don't display product detail");
+          return false;
+        }
+});
+
+
 Template.productDetail.onRendered(function(){
   let productId = ReactionRouter.current().params.handle;
 
