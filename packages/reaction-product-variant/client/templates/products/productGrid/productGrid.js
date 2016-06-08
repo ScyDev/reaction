@@ -89,59 +89,63 @@ Template.productGrid.helpers({
   loadMoreProducts: function () {
     return ReactionCore.Collections.Products.find().count() >= Session.get("productScrollLimit");
   },
-  products: function () {
-    if (ReactionCore.MeteorSubscriptions_Products.ready()) {
-      /*
-       * take natural sort, sorting by updatedAt
-       * then resort using positions.position for this tag
-       * retaining natural sort of untouched items
-       */
+  products: () => {
+    /* 
+      For some reason Tracker (Meteor 1.2.4) does not rerun helper when subscription is ready, 
+      when the complex filter is in the Products.find() 
+    */
+    // if (!ReactionCore.MeteorSubscriptions_Products.ready()) return;
 
-      // function to compare and sort position
-      function compare(a, b) {
-        if (a.position.position === b.position.position) {
-          let x = a.position.updatedAt;
-          let y = b.position.updatedAt;
+    /*
+    * take natural sort, sorting by updatedAt
+    * then resort using positions.position for this tag
+    * retaining natural sort of untouched items
+    */
 
-          if (x > y) {
-            return -1;
-          } else if (x < y) {
-            return 1;
-          }
+    // function to compare and sort position
+    function compare(a, b) {
+      if (a.position.position === b.position.position) {
+        let x = a.position.updatedAt;
+        let y = b.position.updatedAt;
 
-          return 0;
+        if (x > y) {
+          return -1;
+        } else if (x < y) {
+          return 1;
         }
-        return a.position.position - b.position.position;
+
+        return 0;
       }
-
-      const gridProducts = ReactionCore.Collections.Products.find(Session.get("productFilters"), {sort:{ latestOrderDate: 1 }}).fetch();
-
-      for (let index in gridProducts) {
-        if ({}.hasOwnProperty.call(gridProducts, index)) {
-          let gridProduct = gridProducts[index];
-          if (gridProduct.positions) {
-            let _results = [];
-            for (let position of gridProduct.positions) {
-              if (position.tag === ReactionCore.getCurrentTag()) {
-                _results.push(position);
-              }
-              gridProducts[index].position = _results[0];
-            }
-          }
-          if (!gridProduct.position) {
-            gridProducts[index].position = {
-              position: 0,
-              weight: 0,
-              pinned: false,
-              updatedAt: gridProduct.updatedAt
-            };
-          }
-        }
-      }
-
-      const products = gridProducts;//gridProducts.sort(compare);
-      Template.instance().products = products;
-      return products;
+      return a.position.position - b.position.position;
     }
+
+    const gridProducts = ReactionCore.Collections.Products.find(Session.get("productFilters"), { sort: { latestOrderDate: 1 }}).fetch();
+
+    for (let index in gridProducts) {
+      if ({}.hasOwnProperty.call(gridProducts, index)) {
+        let gridProduct = gridProducts[index];
+        if (gridProduct.positions) {
+          let _results = [];
+          for (let position of gridProduct.positions) {
+            if (position.tag === ReactionCore.getCurrentTag()) {
+              _results.push(position);
+            }
+            gridProducts[index].position = _results[0];
+          }
+        }
+        if (!gridProduct.position) {
+          gridProducts[index].position = {
+            position: 0,
+            weight: 0,
+            pinned: false,
+            updatedAt: gridProduct.updatedAt
+          };
+        }
+      }
+    }
+
+    const products = gridProducts;//gridProducts.sort(compare);
+    Template.instance().products = products;
+    return products;
   }
 });

@@ -246,7 +246,8 @@
         "addGroupTag": "Add Group Tag",
         "addSubTag": "Add Sub Tag",
         "removeTag": "Remove Tag",
-        "createTag": "Create Tag"
+        "createTag": "Create Tag",
+        "notag": "no tag"
       },
       "productDetailEdit": {
         "title": "Product title",
@@ -455,6 +456,7 @@
         },
         "search": {
           "searchBoxDateLabel": "Date",
+          "searchBoxSaleOnDateLabel": "For sale on date",
           "searchBoxDatePlaceholder": "Choose date...",
           "searchBoxLocationLabel": "Place",
           "searchBoxMealTimeLabel": "Meal Time",

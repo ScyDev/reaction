@@ -1,11 +1,17 @@
 /* watch for productFilters in Session and resubscribe */
 
 Meteor.startup( () => {
-  Session.setDefault( "productFilters", {} );
-  // Session.setDefault( "productFilters/tags", ReactionCore.Collections.Tags.find().fetch().map(tag =>  tag._id) );
-  Session.setDefault( "productFilters/tags", [] );
-  Session.setDefault( "productFilters/showAllMine", false );
+  Session.set( "productFilters", {} );
+  // Session.setDefault( "productFilters/tags", [] );
+  Session.set( "productFilters/showAllMine", false );
 	Session.setDefault( "productFilters/mealTime", { showLunch: true, showDinner: true } );
+	
+	Tracker.autorun(() => {
+	  if(!ReactionCore.Subscriptions.Tags.ready()) return;
+    const tags = ReactionCore.Collections.Tags.find().fetch().map(tag =>  tag._id);
+    tags.push( null );
+    Session.set( "productFilters/tags", tags );
+	})
 	
 	Tracker.autorun(() => {
 	  ReactionRouter.watchPathChange();
@@ -22,7 +28,7 @@ this.applyProductFilters = () => {
   const tag = Tags.findOne({ slug: slug }) || Tags.findOne(slug);
   
   let tagsFilter = tag ? { tags: [tag._id] } : ( showAllMine ? { tags: Session.get("productFilters/tags") } : {} );
-  if (tagsFilter.tags == null || tagsFilter.tags.length == 0) tagsFilter = {};
+  if ((tagsFilter.tags == null || tagsFilter.tags.length == 0) && !showAllMine) tagsFilter = {};
   
   let dateFilter = { forSaleOnDate: Session.get("productFilters/forSaleOnDate") };
   if (dateFilter.forSaleOnDate == null || dateFilter.forSaleOnDate.toString() == "Invalid Date") dateFilter = {};
