@@ -16,7 +16,7 @@ ReactionCore.MethodHooks.after("cart/submitPayment", function (options) {
 
     if (cart) {
       if (!cart.billing) {
-        ReactionCore.Log.info('ReactionCore.MethodHooks.after("cart/submitPayment") No billing address after payment!');
+        ReactionCore.Log.info('ReactionCore.MethodHooks.after("cart/submitPayment") No billing address after payment! Meteor.userId(): ',Meteor.userId(),' options: ',options);
       }
 
       if (cart.items && cart.billing && cart.billing[0].paymentMethod) {
@@ -26,7 +26,7 @@ ReactionCore.MethodHooks.after("cart/submitPayment", function (options) {
         result.orderId = orderId;
       } else {
         throw new Meteor.Error(
-          "An error occurred verifing payment method. Failed to save order."
+          "An error occurred verifing payment method. Failed to save order. Meteor.userId(): ",Meteor.userId()," options: ",options
         );
       }
     }
