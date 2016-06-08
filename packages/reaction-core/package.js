@@ -146,6 +146,7 @@ Package.onUse(function (api) {
   api.addFiles("client/helpers/apps.js", "client");
   api.addFiles("client/helpers/globals.js", "client");
   api.addFiles("client/helpers/permissions.js", "client");
+  api.addFiles("client/helpers/products.js", "client");
   api.addFiles("client/helpers/utilities.js", "client");
 
   api.addFiles("client/components/numericInput/numericInput.html", "client");

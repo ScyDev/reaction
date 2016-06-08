@@ -81,19 +81,22 @@ function getProductImage(productId) {
 function centerMapToMeaningfulPlace(map) {
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition( position => {
-      Session.set("geoPosition", {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      });
-      console.log("getCurrentPositionn: ", position);
-    } );
+    navigator.geolocation.getCurrentPosition( 
+      position => {
+        console.log("Current position: ", position);
+        Session.set("geoPosition", {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        });
+      }, 
+      e => console.log("Failed to get current position:", e.message) 
+    );
   }
 
   Tracker.autorun(() => {
-    console.log("centerMapToMeaningfulPlace() start");
+    console.log("Meaningful place changed.");
     let locationSearchResult = Session.get('productFilters/location');
-    let locationSearchUserInput = Session.get('productFilters/locationUserInput');
+    const locationSearchUserInput = Session.get('productFilters/locationUserInput');
     const geoPosition = Session.get('geoPosition');
 
     if( locationSearchUserInput != null && locationSearchResult != null && locationSearchResult != "" ) {
@@ -110,35 +113,14 @@ Template.productMap.onCreated(function() {
 
   Session.set("productGrid/selectedProducts", []);
   // Update product subscription
-  this.autorun(() => {
-    const slug = ReactionRouter.getParam("slug");
-    const { Tags } = ReactionCore.Collections;
-    const tag = Tags.findOne({ slug: slug }) || Tags.findOne(slug);
-    let tags = {}; // this could be shop default implementation needed
-    if (tag) {
-      tags = {tags: [tag._id]};
-    }
+  this.autorun(() => applyProductFilters());
 
-    let dateFilter = { forSaleOnDate: Session.get('productFilters/forSaleOnDate') }
-    if (dateFilter.forSaleOnDate == null || dateFilter.forSaleOnDate.toString() == "Invalid Date") {
-      dateFilter = {};
-    }
-    let locationFilter = { location: Session.get('productFilters/location') }
-    if (locationFilter.location == null || locationFilter.location.trim() == "") {
-      locationFilter = {};
-    }
-    const mealTimeFilter = { mealTime: Session.get('productFilters/mealTime') }
-
-    const queryParams = Object.assign({}, tags, ReactionRouter.current().queryParams, dateFilter, locationFilter, mealTimeFilter);
-    Meteor.subscribe("Products", Session.get("productScrollLimit"), queryParams);
-  });
-
-  this.autorun(() => {
-    const isActionViewOpen = ReactionCore.isActionViewOpen();
-    if (isActionViewOpen === false) {
-      Session.set("productGrid/selectedProducts", []);
-    }
-  });
+  // this.autorun(() => {
+  //   const isActionViewOpen = ReactionCore.isActionViewOpen();
+  //   if (isActionViewOpen === false) {
+  //     Session.set("productGrid/selectedProducts", []);
+  //   }
+  // });
 
 
   GoogleMaps.ready('map', function(map) {
@@ -156,17 +138,19 @@ Template.productMap.onCreated(function() {
       changed: (newDocument, oldDocument) =>
         markers[newDocument.userId].marker.setPosition({ latitude: newDocument.latitude, longitude: newDocument.longitude }),
       removed: function(oldDocument) {
-        let marker = markers[oldDocument.userId].marker;
-        if( !marker ) return;
-        marker.productsCount--;
+        const markerData = markers[oldDocument.userId];
+        if( !markerData ) return;
+        markerData.productsCount--;
         // Check if it is the last product for this seller
-        if( marker.productsCount < 1 ) {
-          // Remove the marker from the map
-          marker.setMap(null);
-          // Clear the event listener
-          google.maps.event.clearInstanceListeners(marker);
+        if( markerData.productsCount < 1 ) {
+          if( markerData.marker ) {
+            // Remove the marker from the map
+            markerData.marker.setMap(null);
+            // Clear the event listener
+            google.maps.event.clearInstanceListeners(markerData.marker);
+          }
           // Remove the reference to this marker instance
-          delete marker;
+          delete markers[oldDocument.userId];
           
           // centerMapToMeaningfulPlace(map);
         }

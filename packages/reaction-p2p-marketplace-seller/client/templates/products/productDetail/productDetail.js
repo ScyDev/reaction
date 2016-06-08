@@ -7,7 +7,6 @@ Template.productDetail.events({ // for some strange reason our custom event need
     let errorMsg = "";
     const self = this;
 
-    const productId = ReactionProduct.selectedProductId();
     const selectedProduct = ReactionProduct.selectedProduct();
 
     if (!self.title) {
@@ -49,10 +48,10 @@ Template.productDetail.events({ // for some strange reason our custom event need
           }
         });
       }
-      const pickupDate = moment( selectedProduct.forSaleOnDate )
-      const latestOrderDate = moment( selectedProduct.latestOrderDate )
+      const pickupDate = moment( selectedProduct.forSaleOnDate );
+      const latestOrderDate = moment( selectedProduct.latestOrderDate );
       
-      const lastestOrderDateTooLate = latestOrderDate.format( "YYYY-MM-DD" ) > pickupDate.format( "YYYY-MM-DD" )
+      const lastestOrderDateTooLate = latestOrderDate.format( "YYYY-MM-DD" ) > pickupDate.format( "YYYY-MM-DD" );
       delta = 1000;
       if( pickupDate.format( "YYYY-MM-DD" ) == latestOrderDate.format( "YYYY-MM-DD" ) ) {
         const fromHours = parseInt( selectedProduct.pickupTimeFrom.slice(0, 2) );

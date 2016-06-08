@@ -37,35 +37,7 @@ function loadMoreProducts() {
 Template.productGrid.onCreated(function () {
   Session.set("productGrid/selectedProducts", []);
   // Update product subscription
-  this.autorun(() => {
-    const slug = ReactionRouter.getParam("slug");
-    const { Tags } = ReactionCore.Collections;
-    const tag = Tags.findOne({ slug: slug }) || Tags.findOne(slug);
-    let tags = {}; // this could be shop default implementation needed
-    if (tag) {
-      tags = {tags: [tag._id]};
-    }
-
-    let dateFilter = { forSaleOnDate: Session.get('productFilters/forSaleOnDate') }
-    if (dateFilter.forSaleOnDate == null || dateFilter.forSaleOnDate.toString() == "Invalid Date") {
-      dateFilter = {};
-    }
-    let locationFilter = { location: Session.get('productFilters/location') }
-    if (locationFilter.location == null || locationFilter.location.trim() == "") {
-      locationFilter = {};
-    }
-    const mealTimeFilter = { mealTime: Session.get('productFilters/mealTime') }
-
-    const queryParams = Object.assign({}, tags, ReactionRouter.current().queryParams, dateFilter, locationFilter, mealTimeFilter);
-    console.log( "Grid queryParams:", queryParams );
-    ReactionCore.MeteorSubscriptions_Products = Meteor.subscribe("Products", Session.get("productScrollLimit"), queryParams);
-    // const subscription = ReactionCore.MeteorSubscriptions_Products
-    // if (subscription.ready()) {
-    //   console.log("> Received.\n");
-    // } else {
-    //   console.log("> Subscription is not ready yet. \n");
-    // }
-  });
+  this.autorun(() => applyProductFilters());
 
   this.autorun(() => {
     const isActionViewOpen = ReactionCore.isActionViewOpen();
@@ -142,7 +114,7 @@ Template.productGrid.helpers({
         return a.position.position - b.position.position;
       }
 
-      let gridProducts = ReactionCore.Collections.Products.find({},{sort:{ latestOrderDate: 1 }}).fetch();
+      const gridProducts = ReactionCore.Collections.Products.find(Session.get("productFilters"), {sort:{ latestOrderDate: 1 }}).fetch();
 
       for (let index in gridProducts) {
         if ({}.hasOwnProperty.call(gridProducts, index)) {
