@@ -111,6 +111,8 @@
         "shopSettings": "Shop Settings",
         "dashboard": "Dashboard",
         "print": "Print",
+        "offline": "No connection",
+				"appIsOffline": "No connection to server at this time, please try again in a bit.",
         "notFound": "This page was not found.",
         "pageNotFound": "This page was not found.",
         "notFoundTitle": "Oops!",
