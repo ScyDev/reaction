@@ -467,7 +467,10 @@
           "searchBoxLunch": "Lunch",
           "searchBoxDinner": "Dinner",
           "searchBoxLocationPlaceholder": "City name...",
-          "noProductsFound": "No products found"
+          "noProductsFound": "No products found",
+          "searchBoxSaleOnDateLabel": "For sale on date",
+          "searchBoxTitle": "Title",
+          "searchBoxTitlePlaceholder": "By title ..."
         }
       },
       "address": {

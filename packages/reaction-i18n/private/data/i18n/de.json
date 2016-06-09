@@ -463,7 +463,10 @@
 					"searchBoxLunch": "Mittag",
 					"searchBoxDinner": "Abend",
 					"searchBoxLocationPlaceholder": "PLZ oder Ort...",
-					"noProductsFound": "Leider keine Mahlzeiten gefunden, probier es mit anderen Suchkriterien."
+					"noProductsFound": "Leider keine Mahlzeiten gefunden, probier es mit anderen Suchkriterien.",
+					"searchBoxSaleOnDateLabel": "Zu verkaufen am",
+					"searchBoxTitle": "Titel",
+          "searchBoxTitlePlaceholder": "Titel suchen ..."
         }
 
 			},
