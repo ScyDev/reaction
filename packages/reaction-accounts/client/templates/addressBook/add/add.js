@@ -56,6 +56,14 @@ Template.addressBookAdd.events({
   // }
 });
 
+
+// this is only used because Template.instance() doesn't work in AutoForm.hooks() below
+var theAddressBookAddTemplate = null;
+Template.addressBookAdd.onCreated(function() {
+  var self = this;
+  theAddressBookAddTemplate = self;
+});
+
 /**
  * addressBookAddForm form handling
  * @description gets accountId and calls addressBookAdd method
@@ -76,6 +84,15 @@ AutoForm.hooks({
         if (result) {
           this.done();
           addressBook.trigger($.Event("showMainView"));
+
+          // make all steps available immediately
+          Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutAddressBook");
+          Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutAddressBook");
+          Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "coreCheckoutShipping");
+          Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "coreCheckoutShipping");
+          Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "coreCheckoutShipping");
+          Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutReview");
+          Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutReview");          
         }
       });
     }

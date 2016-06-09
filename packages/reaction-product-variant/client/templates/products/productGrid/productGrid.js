@@ -37,17 +37,7 @@ function loadMoreProducts() {
 Template.productGrid.onCreated(function () {
   Session.set("productGrid/selectedProducts", []);
   // Update product subscription
-  this.autorun(() => {
-    const slug = ReactionRouter.getParam("slug");
-    const { Tags } = ReactionCore.Collections;
-    const tag = Tags.findOne({ slug: slug }) || Tags.findOne(slug);
-    let tags = {}; // this could be shop default implementation needed
-    if (tag) {
-      tags = {tags: [tag._id]};
-    }
-    const queryParams = Object.assign({}, tags, ReactionRouter.current().queryParams);
-    Meteor.subscribe("Products", Session.get("productScrollLimit"), queryParams);
-  });
+  this.autorun(() => applyProductFilters());
 
   this.autorun(() => {
     const isActionViewOpen = ReactionCore.isActionViewOpen();
@@ -99,12 +89,26 @@ Template.productGrid.helpers({
   loadMoreProducts: function () {
     return ReactionCore.Collections.Products.find().count() >= Session.get("productScrollLimit");
   },
+  isProdsSubReady: function () {
+    if (ReactionCore.MeteorSubscriptions_Products.ready()) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
   products: function () {
+    /* 
+      For some reason Tracker (Meteor 1.2.4) does not rerun helper when subscription is ready, 
+      when the complex filter is in the Products.find() 
+    */
+    // if (!ReactionCore.MeteorSubscriptions_Products.ready()) return;
+
     /*
-     * take natural sort, sorting by updatedAt
-     * then resort using positions.position for this tag
-     * retaining natural sort of untouched items
-     */
+    * take natural sort, sorting by updatedAt
+    * then resort using positions.position for this tag
+    * retaining natural sort of untouched items
+    */
 
     // function to compare and sort position
     function compare(a, b) {
@@ -123,7 +127,7 @@ Template.productGrid.helpers({
       return a.position.position - b.position.position;
     }
 
-    let gridProducts = ReactionCore.Collections.Products.find({}).fetch();
+    const gridProducts = ReactionCore.Collections.Products.find(Session.get("productFilters"), { sort: { latestOrderDate: 1 }}).fetch();
 
     for (let index in gridProducts) {
       if ({}.hasOwnProperty.call(gridProducts, index)) {
@@ -148,7 +152,7 @@ Template.productGrid.helpers({
       }
     }
 
-    const products = gridProducts.sort(compare);
+    const products = gridProducts;//gridProducts.sort(compare);
     Template.instance().products = products;
     return products;
   }

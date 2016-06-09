@@ -294,6 +294,9 @@ Template.tagNav.events({
       const tags = instance.data.tags;
       const selectedTag = instance.state.get("selectedTag");
 
+      // click close button to make navabr left disappear
+      $('.rui.button.btn.btn-default.close-button').trigger('click');
+
       if (selectedTag && selectedTag._id === tagId) {
         return instance.state.set("selectedTag", null);
       }

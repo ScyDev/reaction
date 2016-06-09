@@ -1,0 +1,21 @@
+[submodule "packages/snaxter-template"]
+	path = packages/snaxter-template
+	url = https://github.com/ScyDev/snaxter-template
+[submodule "packages/meteor-collection2"]
+	path = packages/meteor-collection2
+	url = https://github.com/ScyDev/meteor-collection2
+[submodule "packages/meteor-collection2-core"]
+	path = packages/meteor-collection2-core
+	url = https://github.com/ScyDev/meteor-collection2-core
+[submodule "packages/reaction-braintree"]
+	path = packages/reaction-braintree
+	url = https://github.com/ScyDev/reaction-braintree
+[submodule "packages/reaction-search"]
+	path = packages/reaction-search
+	url = https://github.com/ScyDev/reaction-search
+[submodule "packages/reaction-email-templates-custom"]
+	path = packages/reaction-email-templates-custom
+	url = https://github.com/ScyDev/snaxter-email-templates.git
+[submodule "packages/meteor-bootstrap3-datetimepicker"]
+	path = packages/meteor-bootstrap3-datetimepicker
+	url = https://github.com/ScyDev/meteor-bootstrap3-datetimepicker

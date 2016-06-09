@@ -3,6 +3,7 @@
 
 Template.productDetail.onCreated(
   function() {
+    /*
     Meteor.setTimeout(function() { // what the?!? document doesn't seem to be ready immediately when this event is fired...
 
       if ($('#forSaleOnDate').length === 0) { // make sure its only injected once, not on every rendered event. should be obsolete with onCreated.
@@ -12,5 +13,6 @@ Template.productDetail.onCreated(
         console.log('injected date field');
       }
     }, 100);
+    */
   }
 );

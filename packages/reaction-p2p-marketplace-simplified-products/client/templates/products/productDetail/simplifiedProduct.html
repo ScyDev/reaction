@@ -1,0 +1,56 @@
+
+<template name="simplifiedProductCssInclude">
+    {{#if hasPermission "createProduct"}}
+      <style>
+        .add-to-cart-block {
+          display: none;
+        }
+      </style>
+    {{/if}}
+
+    {{#if belongsToCurrentUser _id }}
+      <!-- why doesn't this linked css get applied? -->
+      <style>
+
+        .variant-detail,
+        .variant-form-buttons,
+        .variant-options,
+        .vendor-edit-input,
+        .pageTitle-edit-input,
+        #price,
+        div.displayQuantity,
+        .variant-edit-form .form-group:nth-child(1), /* variant title */
+        .variant-edit-form .form-group:nth-child(2n+0), /* weight and msrp price */
+        .add-to-cart-block,
+        .marketplaceProfileWidget {
+          display: none;
+        }
+
+        .variant-edit-form {
+          display: block !important;
+        }
+
+      </style>
+    {{else}}
+      <!-- why doesn't this linked css get applied? -->
+      <style>
+
+        .product-detail-field.pageTitle,
+        .variant-list-item {
+          display: none;
+        }
+
+      </style>
+    {{/if}}
+
+    <style>
+
+    .options-add-to-cart h3,
+    h3[data-i18n="productDetail.details"],
+    .pdp-left-column ul.list-group.product-detail-edit {
+      display: none;
+    }
+
+    </style>
+
+</template>

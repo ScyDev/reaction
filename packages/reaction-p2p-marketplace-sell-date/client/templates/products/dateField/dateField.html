@@ -1,8 +1,75 @@
 <template name="productDetailDateField">
   {{#with product}}
-  <div class="row col-md-11">
-    <h2><span class="forSaleOnDate-text" data-i18n="productDetail.forSaleOnDate">For sale on date</span></h2>
-    <span id="forSaleOnDate" itemprop="forSaleOnDate">{{>fieldComponent field="forSaleOnDate" value=forSaleOnDate}}</span>
-  </div>
+    <div class="row col-md-11">
+      <h2><span class="forSaleOnDate-text" data-i18n="productDetail.forSaleOnDate">For sale on date</span></h2>
+      {{#if belongsToCurrentUser _id }}
+        <div class="input-group datetimepicker-forSaleOnDate">
+          <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+          <!-- just dummy field for calendar -->
+          <input class="forSaleOnDate-dummy-input form-control" type="text"/>
+        </div>
+
+        <!-- this is the real, invisible input field -->
+        <span id="forSaleOnDate" itemprop="forSaleOnDate" style="display:none;">
+          {{>fieldComponent field="forSaleOnDate" value=(prettifyDate forSaleOnDate) }}
+        </span>
+      {{else}}
+        <span id="forSaleOnDate" itemprop="forSaleOnDate">
+          {{>fieldComponent field="forSaleOnDate" value=(prettifyDate forSaleOnDate) }}
+        </span>
+      {{/if}}
+    </div>
+
+    <div class="row col-md-11">
+      <h2><span class="pickupTime-text" data-i18n="productDetail.pickupTime">Pickup time</span></h2>
+
+      <span class="pickupTime-label"><span data-i18n="productDetail.pickupTimeFrom">From</span>: </span><span id="pickupTimeFrom" itemprop="pickupTimeFrom">
+        {{#if belongsToCurrentUser _id }}
+          <!-- just dummy field for time -->
+          <input class="pickupTimeFrom-dummy-input form-control" type="text"/>
+          <!-- this is the real, invisible input field -->
+          <span id="pickupTimeFrom" itemprop="pickupTimeFrom" style="display:none;">
+            <!--{{>fieldComponent field="pickupTimeFrom" value=(prettifyTime pickupTimeFrom) }}-->
+            {{>fieldComponent field="pickupTimeFrom" value=pickupTimeFrom pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$" maxlength="5"}}
+          </span>
+        {{else}}
+          {{>fieldComponent field="pickupTimeFrom" value=pickupTimeFrom pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$" maxlength="5"}}
+        {{/if}}
+      </span>
+      <span class="pickupTime-label"><span data-i18n="productDetail.pickupTimeTo">To</span>: </span><span id="pickupTimeTo" itemprop="pickupTimeTo">
+        {{#if belongsToCurrentUser _id }}
+          <!-- just dummy field for time -->
+          <input class="pickupTimeTo-dummy-input form-control" type="text"/>
+          <!-- this is the real, invisible input field -->
+          <span id="pickupTimeTo" itemprop="pickupTimeTo" style="display:none;">
+            <!--{{>fieldComponent field="pickupTimeTo" value=(prettifyTime pickupTimeTo) }}-->
+            {{>fieldComponent field="pickupTimeTo" value=pickupTimeTo pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$" maxlength="5"}}
+          </span>
+        {{else}}
+          {{>fieldComponent field="pickupTimeTo" value=pickupTimeTo pattern="^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$" maxlength="5"}}
+        {{/if}}
+      </span>
+    </div>
+
+    <div class="row col-md-11">
+      <h2><span class="latestOrderDate-text" data-i18n="productDetail.latestOrderDate">Last order until</span></h2>
+        {{#if belongsToCurrentUser _id }}
+          <div class="input-group datetimepicker-latestOrderDate">
+            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+            <!-- just dummy field for calendar -->
+            <input class="latestOrderDate-dummy-input form-control" type="text"/>
+          </div>
+
+          <!-- this is the real, invisible input field -->
+          <span id="latestOrderDate" itemprop="latestOrderDate" style="display:none;">
+            {{>fieldComponent field="latestOrderDate" value=(prettifyDateTime latestOrderDate) }}
+          </span>
+        {{else}}
+          <span id="latestOrderDate" itemprop="latestOrderDate">
+            {{>fieldComponent field="latestOrderDate" value=(prettifyDateTime latestOrderDate) }}
+          </span>
+        {{/if}}
+    </div>
+
   {{/with}}
 </template>

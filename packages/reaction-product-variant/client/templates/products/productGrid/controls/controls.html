@@ -1,5 +1,5 @@
 <template name="gridControls">
-  {{#if hasPermission "createProduct"}}
+  {{#if hasAdminAccess}}
     <div class="product-grid-controls">
       <label class="like-button hidden" for="select-product-{{_id}}">
         <input type="checkbox" name="selectProduct" value="{{_id}}" id="select-product-{{_id}}" checked={{checked}}>

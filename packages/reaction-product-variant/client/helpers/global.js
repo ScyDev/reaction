@@ -103,24 +103,41 @@ ReactionProduct.maybeDeleteProduct = function (productOrArray) {
   let title;
   let confirmTitle;
   if (products.length === 1) {
-    title = products[0].title || "the product";
-    confirmTitle = "Delete this product?";
+    title = products[0].title || i18next.t("accountsUI.theProduct", 'the product');
+    confirmTitle = i18next.t("productDetail.deletedProductConfirm", "Delete this product?");
   } else {
     title = "the selected products";
-    confirmTitle = "Delete selected products?";
+    confirmTitle = i18next.t("productDetail.deletedProductsConfirm", "Delete the selected products?");
   }
 
-  if (confirm(confirmTitle)) {
-    Meteor.call("products/deleteProduct", productIds, function (error, result) {
-      if (error !== undefined || !result) {
-        Alerts.toast(`There was an error deleting ${title}`, "error", {
-          i18nKey: "productDetail.productDeleteError"
-        });
-        throw new Meteor.Error("Error deleting " + title, error);
-      } else {
-        ReactionRouter.go("/");
-        Alerts.toast(i18next.t("productDetail.deletedAlert") + " " + title, "info");
-      }
-    });
-  }
+  //Alerts.alert("Delete", confirmTitle, {type: "info"}, function(){alert("asdf");});
+
+  Alerts.alert({
+    title: i18next.t("productDetail.areYouSure", "Are you sure?"),
+    text: confirmTitle,
+    type: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#DD6B55",
+    confirmButtonText: i18next.t("productDetail.yes", "Yes"),
+    cancelButtonText: i18next.t("productDetail.no", "No"),
+    closeOnConfirm: true,
+    closeOnCancel: true
+  },
+  function(isConfirm){
+    if (isConfirm) {
+      //Alerts.alert("Deleted!", "Your imaginary file has been deleted.", "success");
+      Meteor.call("products/deleteProduct", productIds, function (error, result) {
+        if (error !== undefined || !result) {
+          Alerts.toast(i18next.t("productDetail.deletedProductFailed")+" "+title, "error", {
+            i18nKey: "productDetail.productDeleteError"
+          });
+          throw new Meteor.Error("Error deleting " + title, error);
+        } else {
+          ReactionRouter.go("/");
+          Alerts.toast(i18next.t("productDetail.deletedAlert") + " " + title, "info");
+        }
+      });
+    }
+  });
+
 };

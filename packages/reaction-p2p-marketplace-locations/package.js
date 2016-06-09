@@ -34,7 +34,11 @@ Package.onUse(function(api) {
   api.use('templating');
   api.use("less");
   api.use("reactioncommerce:core@0.10.0");
+  api.use("reactive-var");
 
+  api.use("scydev:reaction-p2p-marketplace");
+  api.use("reactioncommerce:reaction-product-variant");
+  
   api.use("dburles:google-maps");
 
   // common files
@@ -53,6 +57,8 @@ Package.onUse(function(api) {
                 'client/templates/products/productMap/productMapSingle.js',
                 'client/templates/products/locationField/locationField.html',
                 'client/templates/products/locationField/locationField.js',
+                'client/templates/products/locationFieldDisplay/locationFieldDisplay.html',
+                'client/templates/products/locationFieldDisplay/locationFieldDisplay.js',
                 'client/templates/products/productDetail/productDetail.js',
               ],
               'client');
@@ -61,6 +67,8 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/dashboard/locations.js", ["client"]);
 
   api.addFiles("client/templates/products/products.js", ["client"]);
+
+  api.addFiles("public/images/icon.png", ["client"], {isAsset: true});
 
   // server files
   api.addFiles("server/register.js", ["server"]);

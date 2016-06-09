@@ -9,7 +9,7 @@ window.LoginFormValidation.isSeller = function(isSeller) {
   // Invalid
   return {
     error: "INVALID_ISSELLER",
-    reason: i18n.t('accountsUI.error.invalidIsSeller')
+    reason: i18next.t('accountsUI.error.invalidIsSeller')
   };
 };
 
@@ -22,6 +22,6 @@ window.LoginFormValidation.name = function(name) {
   // Invalid
   return {
     "error": "INVALID_NAME",
-    "reason": i18n.t('accountsUI.error.usernameTooShort')
+    "reason": i18next.t('accountsUI.error.usernameTooShort')
   };
 };

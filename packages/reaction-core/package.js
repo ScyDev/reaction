@@ -50,7 +50,7 @@ Package.onUse(function (api) {
   api.use("underscorestring:underscore.string@3.2.2");
   api.use("reactioncommerce:reaction-logger@0.1.0");
   api.use("reactioncommerce:reaction-collections@2.0.1");
-  api.use("reactioncommerce:reaction-email-templates@0.1.0");
+  api.use("scydev:reaction-email-templates-custom@0.1.0");
   api.use("aldeed:template-extension@4.0.0", "client");
   api.use("aldeed:autoform@5.8.1");
   api.use("momentjs:moment@2.11.1");
@@ -69,7 +69,7 @@ Package.onUse(function (api) {
   api.imply("service-configuration");
   api.imply("reactioncommerce:reaction-logger");
   api.imply("reactioncommerce:reaction-collections");
-  api.imply("reactioncommerce:reaction-email-templates");
+  api.imply("scydev:reaction-email-templates-custom");
   api.imply("aldeed:autoform");
   api.imply("aldeed:template-extension");
   api.imply("mdg:validated-method");
@@ -146,6 +146,7 @@ Package.onUse(function (api) {
   api.addFiles("client/helpers/apps.js", "client");
   api.addFiles("client/helpers/globals.js", "client");
   api.addFiles("client/helpers/permissions.js", "client");
+  api.addFiles("client/helpers/products.js", "client");
   api.addFiles("client/helpers/utilities.js", "client");
 
   api.addFiles("client/components/numericInput/numericInput.html", "client");

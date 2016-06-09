@@ -41,7 +41,7 @@
 FROM debian:jessie
 MAINTAINER Aaron Judd <hello@reactioncommerce.com>
 
-ENV DEV_BUILD "true"
+ENV DEV_BUILD "false"
 
 ENV NODE_VERSION "0.10.41"
 
@@ -60,6 +60,15 @@ ENV ROOT_URL "http://localhost"
 ENV MONGO_URL "mongodb://127.0.0.1:27017/meteor"
 ENV PACKAGE_DIRS "packages"
 
+# setup server timezone
+# also set timezone to Europe/Zurich in Reaction backend. not sure if that had any effect.
+# probably not. but restarting Reaction after these commands in the shell DID have an effect!
+#
+RUN apt-get --assume-yes install --reinstall tzdata
+ENV TZ "Europe/Zurich"
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+RUN dpkg-reconfigure -f noninteractive tzdata
+
 # build script directories
 ENV APP_SOURCE_DIR "/var/src"
 ENV APP_BUNDLE_DIR "/var/www"
@@ -71,19 +80,30 @@ COPY docker/scripts $BUILD_SCRIPTS_DIR
 
 RUN chmod -R +x $BUILD_SCRIPTS_DIR
 
+RUN echo 'installing deps'
 RUN bash $BUILD_SCRIPTS_DIR/install-deps.sh
+RUN echo 'installing mongodb'
 RUN	bash $BUILD_SCRIPTS_DIR/install-mongodb.sh
+RUN echo 'installing node'
 RUN	bash $BUILD_SCRIPTS_DIR/install-node.sh
+RUN echo 'installing phantom'
 RUN	bash $BUILD_SCRIPTS_DIR/install-phantom.sh
-RUN	bash $BUILD_SCRIPTS_DIR/install-meteor.sh
 
 # copy the app to the container, build it, cleanup
 COPY . $APP_SOURCE_DIR
+
+RUN echo 'installing meteor'
+RUN	bash $BUILD_SCRIPTS_DIR/install-meteor.sh
+RUN echo 'installed meteor'
+
+RUN echo 'cloning packages and building meteor app'
 
 RUN cd $APP_SOURCE_DIR && \
 		bash $BUILD_SCRIPTS_DIR/clone-packages.sh && \
 		bash $BUILD_SCRIPTS_DIR/build-meteor.sh && \
 		bash $BUILD_SCRIPTS_DIR/post-build-cleanup.sh
+
+RUN echo 'done building'
 
 # switch to production meteor bundle
 WORKDIR $APP_BUNDLE_DIR/bundle

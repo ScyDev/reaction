@@ -1,0 +1,63 @@
+<template name="marketplaceUserDecision">
+
+  <div class="user-decision-page">
+
+    <div class="flex flex-column flex-align-center flex-2x container-lg">
+
+      <div class="flex-item">
+        <div class="panel panel-lg">
+
+          <div class="panel-heading  panel-title-center">
+            <h2><span data-i18n="accountsUI.userDecision">You decide!</span></h2>
+          </div>
+
+          <div class="panel-content">
+            <span data-i18n="accountsUI.userDecisionDesc">Decide if you want to sell or buy.</span>
+
+            <img class="decision-deco" src="/packages/scydev_reaction-p2p-marketplace-seller/public/images/decision_deco.jpg">
+          </div>
+
+        </div>
+      </div>
+
+      <div class="flex-item decision-block">
+
+        <div class="form-group form-group-isSeller">
+          <label for="isSeller-{{uniqueId}}" class="control-label" data-i18n="accountsUI.isSeller">Do you want to sell products?</label>
+          <input id="isSeller-{{uniqueId}}" class="form-control login-input-isSeller" type="checkbox" value="{{isSeller}}" checked="{{checked}}">
+        </div>
+
+        <div class="form-group form-group-isBuyer">
+          <label for="isBuyer-{{uniqueId}}" class="control-label" data-i18n="accountsUI.isBuyer">Do you want to buy products?</label>
+          <input id="isBuyer-{{uniqueId}}" class="form-control login-input-isBuyer" type="checkbox" value="{{isBuyer}}" checked="{{checked}}">
+        </div>
+
+      </div>
+
+      <div class="flex-item">
+
+        <div class="terms-alerts-container">
+          <span id="terms-alerts">{{> inlineAlerts placement="terms"}}</span>
+        </div>
+
+      </div>
+
+      <div class="flex-item terms-block" style="display: none;">
+
+        <div class="form-group form-group-acceptedTerms">
+          <a id="agb-link-seller" style="display: none;" href="http://www.snaxter.ch/agbS.html" target="_blank">{{ i18n 'accountsUI.readTerms' 'Read the terms and conditions' }}</a>
+          <a id="agb-link-buyer" style="display: none;" href="http://www.snaxter.ch/agbB.html" target="_blank">{{ i18n 'accountsUI.readTerms' 'Read the terms and conditions' }}</a>
+          <br/>
+          <br/>
+
+          <label for="acceptedTerms-{{uniqueId}}" class="control-label">{{ i18n 'accountsUI.acceptingTerms' 'I accept the terms and conditions' }}</label>
+          <input id="acceptedTerms-{{uniqueId}}" class="form-control login-input-acceptedTerms" type="checkbox" value="{{acceptedTerms}}" checked="{{checked}}">
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</template>

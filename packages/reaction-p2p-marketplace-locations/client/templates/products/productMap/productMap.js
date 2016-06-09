@@ -1,6 +1,8 @@
-/**
- * productMap helpers
- */
+
+Template.productMap.inheritsHelpersFrom(["productGrid"]);
+Template.productMap.inheritsEventsFrom(["productGrid"]);
+Template.productMap.inheritsHooksFrom(["productGrid"]);
+
 
 Template.productMap.onRendered(function() {
   GoogleMaps.load();
@@ -9,29 +11,6 @@ Template.productMap.onRendered(function() {
 let Media;
 Media = ReactionCore.Collections.Media;
 Template.productMap.helpers({
-  products: function () {
-    return ReactionProduct.getProductsByTag(this.tag);
-  },
-  media: function () {
-    let defaultImage;
-    let variants = [];
-    for (let variant of this.variants) {
-      if (!variant.parentId) {
-        variants.push(variant);
-      }
-    }
-    if (variants.length > 0) {
-      let variantId = variants[0]._id;
-      defaultImage = Media.findOne({
-        "metadata.variantId": variantId,
-        "metadata.priority": 0
-      });
-    }
-    if (defaultImage) {
-      return defaultImage;
-    }
-    return false;
-  },
   mapOptions: function() {
     if (GoogleMaps.loaded()) {
       return {
@@ -43,109 +22,134 @@ Template.productMap.helpers({
   }
 });
 
+var markers = {};
+
+function addMarker(map, userId) {
+  if( !map || !userId ) return;
+  console.log( "Adding marker for seller", userId )
+  Meteor.call("accounts/getUserAddress", userId, true, function(error, result) {
+    if (!error && result) {
+      const address = result.replace("undefined", "").replace("  ", " ");
+      console.log('address:', address);
+
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode( { address }, function(results, status) {
+       if(status == google.maps.GeocoderStatus.OK) {
+          console.log("resolved location: ", results[0].geometry.location);
+
+          const marker = new google.maps.Marker({
+             position: results[0].geometry.location,
+             map: map.instance,
+             animation: google.maps.Animation.DROP,
+             icon: "/packages/scydev_reaction-p2p-marketplace-locations/public/images/icon.png",
+          });
+          marker.productsCount = 1;
+
+          const contentString = Blaze.toHTMLWithData(Template.productMapDetails, {
+            products: ReactionCore.Collections.Products.find({ userId }, { sort: {latestOrderDate: 1} }).fetch()
+          });
+          // console.log( "infoWindow:", contentString );
+          const infoWindow = new google.maps.InfoWindow({ content: contentString });
+          let markerIsHovered = false;
+          marker.addListener( 'mouseover', () => {
+            markerIsHovered = true;
+            Meteor.setTimeout( () => { if( markerIsHovered ) infoWindow.open(map, marker) }, 1000 );
+          } );
+          marker.addListener( 'mouseout', () => markerIsHovered = false );
+          map.instance.addListener( 'click', () => infoWindow.close() );
+
+          markers[userId].marker = marker;
+       }
+      } );
+    }
+  });
+}
+
+function getProductImage(productId) {
+  const media = ReactionCore.Collections.Media.findOne({
+    "metadata.productId": productId,
+    "metadata.priority": 0,
+    "metadata.toGrid": 1
+  }, { sort: { uploadedAt: 1 } });
+
+  //console.log("media for product ",productId," ",media);
+  //console.log("thumbnail for product ",productId," ",media.getCopyInfo("thumbnail"));
+
+  return media;
+}
+
+function centerMapToMeaningfulPlace(map) {
+  // Try HTML5 geolocation.
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      position => {
+        console.log("Current position: ", position);
+        Session.set("geoPosition", {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        });
+      },
+      e => console.log("Failed to get current position:", e.message)
+    );
+  }
+
+  Tracker.autorun(() => {
+    console.log("Meaningful place changed.");
+    let locationSearchResult = Session.get('productFilters/location');
+    const locationSearchUserInput = Session.get('productFilters/locationUserInput');
+    const geoPosition = Session.get('geoPosition');
+
+    if( locationSearchUserInput != null && locationSearchResult != null && locationSearchResult != "" ) {
+      locationSearchResult = locationSearchResult.split("/");
+      console.log("Center map to location search result: ",locationSearchResult);
+      map.setCenter(new google.maps.LatLng(locationSearchResult[0], locationSearchResult[1]));
+    } else if( geoPosition )
+      map.setCenter(geoPosition);
+  });
+}
+
 Template.productMap.onCreated(function() {
-  // We can use the `ready` callback to interact with the map API once the map is ready.
+  // copied from productGrid
+
+  Session.set("productGrid/selectedProducts", []);
+  // Update product subscription
+  this.autorun(() => applyProductFilters());
+
   GoogleMaps.ready('map', function(map) {
-    // Add a marker to the map once it's ready
-    //var markerIcon = image = "http://gmaps-samples.googlecode.com/svn/trunk/markers/blue/blank.png";
-    /*
-    var marker = new google.maps.Marker({
-      position: map.options.center,
-      map: map.instance,
-      title: "Demo Marker: Wos zum essn'",
-      //icon: markerIcon
-    });*/
-
-    // tag is not available in onCreated event by this.tag, so we get it through mapOptions helper
-    products = ReactionProduct.getProductsByTag(map.options.reactionTag);
-    products.forEach(function(product){
-      // ### this block copied from singleMap. refactor!!! ###
-      let prodOwner = ReactionCore.Collections.Accounts.findOne({
-        userId: product.userId
-      });
-      //console.log('owner %o', prodOwner);
-
-      Meteor.call("accounts/getUserAddress", product.userId, function(error, result) {
-          let address = result;
-          console.log('address', address);
-
-          // TODO: resolve address of seller
-          //var address = 'Bahnhofstrasse, Zürich, Switzerland';
-          var geocoder = new google.maps.Geocoder();
-
-          geocoder.geocode(
-            {
-              'address': address
-            },
-            function(results, status) {
-               if(status == google.maps.GeocoderStatus.OK) {
-                  new google.maps.Marker({
-                     position: results[0].geometry.location,
-                     map: map.instance,
-                     title: product.title
-                  });
-                  console.log("resolved location: "+results[0].geometry.location);
-                  //map.instance.setCenter(results[0].geometry.location);
-               }
-            }
-          );
-
+    markers = [];
+    ReactionCore.Collections.Products.find().observe({
+      added: product => {
+        // Create a marker for this seller if it does not exist
+        if( markers[product.userId] ) markers[product.userId].productsCount++
+        else {
+          markers[product.userId] = { productsCount: 1 };
+          addMarker(map, product.userId);
         }
-      );
-      // ### /copy ###
-
-      /*
-      var marker = new google.maps.Marker({
-        position: new google.maps.LatLng(prodLocation.latitude, prodLocation.longitude),
-        map: map.instance,
-        title: prodLocation.title,
-        //icon: markerIcon
-      });
-      */
-    });
-
-    google.maps.event.addListener(map.instance, 'click', function(event) {
-      ReactionCore.Collections.MapMarkers.insert({ latitude: event.latLng.lat(), longitude: event.latLng.lng() });
-    });
-
-    var markers = {};
-
-    ReactionCore.Collections.MapMarkers.find().observe({
-      added: function(document) {
-        // Create a marker for this document
-        var marker = new google.maps.Marker({
-          draggable: true,
-          animation: google.maps.Animation.DROP,
-          position: new google.maps.LatLng(document.latitude, document.longitude),
-          map: map.instance,
-          // We store the document _id on the marker in order
-          // to update the document within the 'dragend' event below.
-          id: document._id
-        });
-
-        // This listener lets us drag markers on the map and update their corresponding document.
-        google.maps.event.addListener(marker, 'dragend', function(event) {
-          ReactionCore.Collections.MapMarkers.update(marker.id, { $set: { latitude: event.latLng.lat(), longitude: event.latLng.lng() }});
-        });
-
-        // Store this marker instance within the markers object.
-        markers[document._id] = marker;
+        // centerMapToMeaningfulPlace(map);
       },
-      changed: function(newDocument, oldDocument) {
-        markers[newDocument._id].setPosition({ latitude: newDocument.latitude, longitude: newDocument.longitude });
-      },
+      changed: (newDocument, oldDocument) =>
+        markers[newDocument.userId].marker.setPosition({ latitude: newDocument.latitude, longitude: newDocument.longitude }),
       removed: function(oldDocument) {
-        // Remove the marker from the map
-        markers[oldDocument._id].setMap(null);
+        const markerData = markers[oldDocument.userId];
+        if( !markerData ) return;
+        markerData.productsCount--;
+        // Check if it is the last product for this seller
+        if( markerData.productsCount < 1 ) {
+          if( markerData.marker ) {
+            // Remove the marker from the map
+            markerData.marker.setMap(null);
+            // Clear the event listener
+            google.maps.event.clearInstanceListeners(markerData.marker);
+          }
+          // Remove the reference to this marker instance
+          delete markers[oldDocument.userId];
 
-        // Clear the event listener
-        google.maps.event.clearInstanceListeners(
-          markers[oldDocument._id]);
-
-        // Remove the reference to this marker instance
-        delete markers[oldDocument._id];
+          // centerMapToMeaningfulPlace(map);
+        }
       }
     });
 
+    centerMapToMeaningfulPlace(map.instance);
   });
+
 });

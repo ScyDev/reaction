@@ -1,0 +1,22 @@
+<template name="newOpenCartDrawer">
+<div class="cart-drawer" id="cart-drawer">
+  <div id="cart-subtotal-checkout">
+    {{>cartSubTotals}}
+  </div>
+  <div class="cart-drawer-swiper-container">
+    <div class="cart-drawer-swiper-wrapper">
+      {{#each cartItems}}
+      <div class="cart-drawer-swiper-slide">
+        {{>cartDrawerItems}}
+      </div>
+      {{/each}}
+    </div>
+  </div>
+  <div class="cart-drawer-pagination"></div>
+  <div class="row">
+    <span class="btn btn-success btn-lg btn-block" id="btn-checkout" data-i18n="cartDrawer.checkout" data-event-category="cart" data-event-action="checkout-click" data-event-label="checkout button click" data-event-value="{{_id}}">
+    Checkout now
+    </span>
+  </div>
+</div>
+</template>

@@ -1,0 +1,20 @@
+{
+  "schemas": {
+    "products": {
+      "inventoryQuantity": {
+        "label": "Menge",
+        "placeholder": "Enter a title for your post"
+      },
+      "category": {
+        "label": "Category",
+        "placeholder": "Select a category",
+        "options": {
+          "announcements": "Announcements",
+          "packages": "Packages",
+          "ama": "AMA",
+          "news": "News"
+        }
+      }
+    }
+  }
+}

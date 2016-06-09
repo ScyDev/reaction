@@ -1,4 +1,7 @@
 
+@import "{reactioncommerce:reaction-ui}/client/styles/variables.less";
+@import "{reactioncommerce:reaction-ui}/client/styles/mixins.less";
+
 .product-map {
   //display: none; // makes map initialize empty :( // will be changed by view switcher
   width: 100%;
@@ -8,6 +11,12 @@
   width: 100%;
   height: 600px;
   padding: 0 20px;
+}
+
+@media screen and (max-width: @screen-xs) {
+  .product-map .map-container {
+    height: 350px;
+  }
 }
 
 .product-detail-map {

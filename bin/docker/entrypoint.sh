@@ -24,13 +24,14 @@ if [[ "${MONGO_URL}" == *"127.0.0.1"* ]]; then
 fi
 
 if [[ "${REACTION_ENVIRONMENT}" == "dev" ]]; then
+  echo "Running Reaction in DEV mode ..."
   # DEV
   # run reaction from source
   /var/www/src/reaction reset
   /var/www/src/reaction
 else
+  echo "Running Reaction in PROD mode ..."
   # PROD
   # Run meteor
   exec $NODE ./main.js
 fi
-

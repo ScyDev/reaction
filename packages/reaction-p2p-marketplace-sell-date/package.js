@@ -35,13 +35,17 @@ Package.onUse(function(api) {
   api.use("reactioncommerce:core@0.10.0");
 
   api.use("aldeed:template-extension");
-  api.use("rajit:bootstrap3-datepicker");
-
-
+  api.use("tsega:bootstrap3-datetimepicker");
+  
+  // moment-package for translated and formatted date
+  api.use('rzymek:moment');
+  api.use('rzymek:moment-locale-de');
+  
   api.addFiles([
                 'reaction-p2p-marketplace-sell-date.js',
                 'client/templates/products/dateField/dateField.html',
                 'client/templates/products/dateField/dateField.js',
+                'client/templates/products/dateField/dateField.less',
                 'client/templates/products/productDetail/productDetailWithDate.js',
               ],
               'client'

@@ -31,6 +31,21 @@ Template.coreCheckoutShipping.onCreated(function () {
   this.autorun(() => {
     this.subscribe("Shipping");
   });
+
+  /*
+  const instance = Template.instance();
+  if (instance.subscriptionsReady()) {
+    let freeShipping = ReactionCore.Collections.Shipping.findOne({
+      "methods.enabled": true,
+      "methods.name": "Free"
+    });
+    console.log("found free shipping: ",freeShipping);
+
+    if (getShipmentMethod() != freeShipping) {
+      let cart = ReactionCore.Collections.Cart.findOne();
+      Meteor.call("cart/setShipmentMethod", cart._id, freeShipping);
+    }
+  }*/
 });
 
 Template.coreCheckoutShipping.helpers({
@@ -76,6 +91,7 @@ Template.coreCheckoutShipping.events({
     let cart = ReactionCore.Collections.Cart.findOne();
 
     try {
+      console.log("click event selecting shipping: ",self.method);
       Meteor.call("cart/setShipmentMethod", cart._id, self.method);
     } catch (error) {
       throw new Meteor.Error(error,

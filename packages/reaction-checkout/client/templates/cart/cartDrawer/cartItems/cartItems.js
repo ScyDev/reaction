@@ -3,20 +3,31 @@
  *
  */
 Template.cartDrawerItems.onRendered(function () {
+  return;
+  
   return $(function () {
-    return $(".cart-drawer-swiper-container").swiper({
-      direction: "horizontal",
-      setWrapperSize: true,
+      var cartSwiper = $(".cart-drawer-swiper-container").swiper({
+      autoplayStopOnLast : true,
+      autoplay: 2000,
+      mode: "horizontal",
       loop: false,
+      setWrapperSize: true,
       grabCursor: true,
-      slidesPerView: "auto",
+      slidesPerView: 4,
       wrapperClass: "cart-drawer-swiper-wrapper",
       slideClass: "cart-drawer-swiper-slide",
       slideActiveClass: "cart-drawer-swiper-slide-active",
       pagination: ".cart-drawer-pagination",
-      paginationClickable: true
+      paginationClickable: true,
+      watchSlidesVisibility: true
     });
+    console.log("cartSwiper: ", cartSwiper);
+    cartSwiper.startAutoplay();
+  //  cartSwiper.onAutoplayStart: function(){
+    //  console.log("Startet");
+    //};
   });
+  return true;
 });
 
 /**

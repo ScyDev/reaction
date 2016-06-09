@@ -22,7 +22,7 @@ Template.products.events({
 
     if ($('.product-map').length === 0) { // make sure its only injected once, not on every rendered event
         // inject template here
-        Blaze.renderWithData(Template.productMap, this.data, $("#main")[0])
+        Blaze.renderWithData(Template.productMap, this.data, $(".container-main")[0])
         console.log('injected map');
     }
     return $(".product-map").show();

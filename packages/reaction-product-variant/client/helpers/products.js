@@ -184,7 +184,7 @@ ReactionProduct.maybeDeleteProduct = maybeDeleteProduct = (product) => {
 
   if (_.isArray(product)) {
     if (product.length === 1) {
-      title = product[0].title || "the product";
+      title = product[0].title || i18next.t("accountsUI.theProduct", 'the product');
       productIds = [product[0]._id];
     } else {
       title = "the selected products";
@@ -195,7 +195,7 @@ ReactionProduct.maybeDeleteProduct = maybeDeleteProduct = (product) => {
       });
     }
   } else {
-    title = product.title || "the product";
+    title = product.title || i18next.t("accountsUI.theProduct", 'the product');
     productIds = [product._id];
   }
 

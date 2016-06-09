@@ -1,0 +1,53 @@
+<template name="loginFormSignInViewMarketplace">
+
+  <div class="loginForm-title">
+    <h2 data-i18n="accountsUI.signIn">Sign In</h2>
+  </div>
+
+  <div class="btn btn-default btn-block">
+    <a href class="" data-i18n="accountsUI.isSeller" data-event-action="signUp">I want to sell prducts</a>
+  </div>
+
+  <hr/>
+
+  {{#if hasPasswordService}}
+    <form class="login-form" novalidate>
+
+      {{> loginFormMessages messages=messages}}
+
+      <div class="form-group form-group-email {{hasError messages.errors.email}}">
+        <label for="email-{{uniqueId}}" class="control-label" data-i18n="accountsUI.emailAddress">Email</label>
+        <input id="email-{{uniqueId}}" class="form-control login-input-email" type="email" tabindex="1" value="{{credentials.email}}">
+
+        {{#if hasError messages.errors.email}}
+          <span class="help-block">
+            {{messages.errors.email}}
+          </span>
+        {{/if}}
+      </div>
+
+      <div class="form-group {{hasError messages.errors.password }}">
+        <label for="password-{{uniqueId}}" class="control-label" data-i18n="accountsUI.password">Password</label>
+        <input id="password-{{uniqueId}}" class="form-control login-input-password" type="password" tabindex="2" value="{{credentials.password}}">
+
+        {{#if hasError messages.errors.password}}
+          <span class="help-block">
+            {{messages.errors.password}}
+          </span>
+        {{/if}}
+      </div>
+
+      <div class="form-group">
+        <button class="btn btn-primary btn-block" type="submit" data-i18n="accountsUI.signIn" tabindex="3" data-event-action="submitSignInForm">Sign In</button>
+      </div>
+
+      <div class="form-group flex flex-justify-spaceBetween">
+        <a data-i18n="accountsUI.forgotPassword" href tabindex="4" data-event-action="forgotPassword">Reset Password</a>
+        <a data-i18n="accountsUI.signUp" href tabindex="5" data-event-action="signUp">Register</a>
+      </div>
+
+    </form>
+
+  {{/if}}
+
+</template>

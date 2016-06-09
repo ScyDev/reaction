@@ -1,49 +1,20 @@
 <template name="dashboardProductsList">
-
-      <div cla_ss="flex-item">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Products</h3>
-          </div>
-
-          <div class="panel-content">
-            <div class="backend-product-list">
-              <table class="table table-hover">
-                <tbody>
-                  {{#each products}}
-                  <tr class="product-list-item">
-                    <td>
-                      <a href="{{pathFor 'product' handle=handle}}" data-event-category="grid" data-event-action="product-click" data-event-label="Grid product click" data-event-value="{{_id}}">
-                      {{#with media}}
-                        <img src="{{url}}" class="product-grid-item-images img-responsive">
-                      {{else}}
-                        <img src= "/resources/placeholder.gif" class="product-grid-item-images img-responsive">
-                      {{/with}}
-                      </a>
-                    </td>
-                    <td>
-                      <div><h3>{{title}}</h3></div>
-                      <div>{{{description}}}</div>
-                    </td>
-                    <td>
-                      <div><h3>{{formatPrice variants.[0].price}}</h3></div>
-                      {{#if cart.showItemLowInventoryWarning variants.[0]}}
-                      <div class="badge badge-low-inv-warning">{{variants.[0].inventoryQuantity}} Left!</div>
-                      {{/if}}
-                    </td>
-                  </tr>
-                  {{else}}
-                    <div class="alert alert-info">
-                      <span data-i18n="profile.products.noProductsFound">No products found.</span>
-                    </div>
-                  {{/each}}
-                </tbody>
-              </table>
-            </div>
-
-          </div>
+  {{#if isProdsSubReady}}
+    <div cla_ss="flex-item">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title" data-i18n="admin.dashboard.sellerProductsLabel">Products</h3>
         </div>
+        <div class="">
+          <a href="#" class="btn btn-default btn-block btn-product-management btn-add-product">{{i18n 'admin.shortcut.addProductLabel' 'Add product'}}</a>
+        </div>
+        {{> productsMarketplace}}
       </div>
-
-
+    </div>
+  {{else}}
+    <div class="spinnerBox">
+      {{>spinner}}
+      <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
+    </div>
+  {{/if}}
 </template>

@@ -1,0 +1,34 @@
+<template name="ordersListItemsMarketplace">
+{{#each items}}
+  <div class="order-items">
+      <div class="order-item">
+        <div class="order-item-media">
+          {{#with media}}
+            <img src="{{url store='thumbnail'}}">
+          {{else}}
+            <img src= "/resources/placeholder.gif">
+          {{/with}}
+        </div>
+
+      <div class="order-item-details">
+
+        <div class="order-detail-title">
+          <b>{{variants.title}}</b><br />
+          {{> itemSeller sellerId}}<br />
+          <span data-i18n="productDetail.forSaleOnDate">For sale on date</span> {{sellingDate}}
+          <span data-i18n="productDetail.pickupTime">Pickup time</span> {{pickupTimeFrom}} - {{pickupTimeTo}}
+        </div>
+
+        <div class="order-detail-quantity">
+        </div>
+
+        <span class="order-detail-price">
+          <span class="badge badge-info">{{quantity}}</span>
+          -
+          <span>{{formatPrice variants.price}}</span>
+        </span>
+      </div>
+    </div>
+  </div>
+{{/each}}
+</template>

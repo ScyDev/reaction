@@ -16,13 +16,15 @@ ecmascript              # Enable ECMAScript2015+ syntax in app code
 audit-argument-checks   # ensure meteor method argument validation
 
 # Performance & Debugging Tools
-#meteorhacks:fast-render                   # improve initial page loads
+meteorhacks:fast-render                   # improve initial page loads
 #meteortoys:allthings                      # developer tools
 #meteortoys:notifications                  # logging notification
 #meteorhacks:kadira                        # performance monitoring
 #meteorhacks:kadira-profiler               # cpu profiling
 #spiderable                                # adds phantomjs, use ongoworks:spiderable with Docker
 #meteorhacks:sikka                         # additional ddp, login security
+
+#meteorhacks:cluster # oh my, this seems to break when creating more than 2 containers on same GKE node
 
 # Meteor Auth Packages
 
@@ -48,7 +50,7 @@ reactioncommerce:reaction-dashboard
 reactioncommerce:reaction-orders
 reactioncommerce:reaction-analytics-libs
 reactioncommerce:reaction-analytics
-reactioncommerce:reaction-inventory
+#reactioncommerce:reaction-inventory # disabling because it published 10k inventory items to all sellers, cause it thinks they are admins...
 reactioncommerce:reaction-shipping
 reactioncommerce:reaction-social
 reactioncommerce:reaction-checkout
@@ -65,7 +67,6 @@ reactioncommerce:reaction-braintree
 
 # Reaction Commerce Data
 
-reactioncommerce:reaction-sample-data   # default Reaction data
 
 # Themes
 reactioncommerce:default-theme          # default Reaction theme
@@ -78,12 +79,20 @@ cosmos:browserify@0.9.2
 dburles:google-maps
 
 
-scydev:reaction-p2p-marketplace
 
 
-scydev:reaction-p2p-marketplace-locations
-reaction-search
-scydev:reaction-p2p-marketplace-sell-date
 reactioncommerce:reaction-paymentmethod
+aldeed:collection2@2.9.1
+aldeed:collection2-core@1.1.1
+scydev:reaction-p2p-marketplace-locations
 scydev:reaction-p2p-marketplace-ratings
+scydev:reaction-p2p-marketplace
+scydev:reaction-p2p-marketplace-simplified-products
+scydev:reaction-p2p-marketplace-sell-date
+scydev:reaction-sample-data-custom
+ramusus:reaction-filtration
+scydev:reaction-p2p-marketplace-profile
 scydev:reaction-p2p-marketplace-seller
+scydev:snaxter-template
+meteorhacks:kadira
+255kb:meteor-status

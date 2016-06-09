@@ -56,14 +56,12 @@ Template.productMapSingle.onCreated(function() {
     });
     //console.log('owner %o', prodOwner);
 
-    Meteor.call("accounts/getUserAddress", product.userId, function(error, result) {
+    Meteor.call("accounts/getUserAddress", product.userId, true, function(error, result) {
+      if(!error && result) {
         let address = result;
         console.log('address', address);
 
-        // TODO: resolve address of seller
-        //var address = 'Bahnhofstrasse, Zürich, Switzerland';
         var geocoder = new google.maps.Geocoder();
-
         geocoder.geocode(
           {
             'address': address
@@ -73,13 +71,31 @@ Template.productMapSingle.onCreated(function() {
                 new google.maps.Marker({
                    position: results[0].geometry.location,
                    map: map.instance,
-                   title: "This product"
+                   title: product.title,
+                   animation: google.maps.Animation.DROP,
                 });
-                console.log("resolved location: "+results[0].geometry.location);
-                map.instance.setCenter(results[0].geometry.location);
-             }
-          }
-        );
+                let location = results[0].geometry.location;
+                console.log("resolved location: "+location.lat()+"/"+location.lng());
+                map.instance.setCenter(location);
+
+                if (product.userId == Meteor.userId()) {
+                  Meteor.users.update(
+                    {
+                      _id: Meteor.userId() // from client, updates always need to reference _id
+                    },
+                    {
+                      $set: {
+                        "profile.latitude": location.lat(),
+                        "profile.longitude": location.lng()
+                      }
+                    }
+                  );
+
+                  console.log("updated profile lat/long");
+                }
+              }
+          });
+        }
 
       }
     );

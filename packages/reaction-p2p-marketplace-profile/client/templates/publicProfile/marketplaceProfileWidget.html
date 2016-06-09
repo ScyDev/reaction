@@ -1,0 +1,15 @@
+<template name="marketplaceProfileWidget">
+  {{#with getProfileAccount data.userId}}
+    <div class="marketplaceProfileWidget">
+
+      <a class="link-to-profile" href="{{ pathFor 'marketplaceProfile' userId=profileAccount.userId }}">
+        <div class="profile-image">
+          {{!--> avatar user=currentUser class="circular-icon" size="large" shape="circle"--}}
+          <img class="circular-icon" src="{{getGravatar profileAccount 40}}" style="width: 40px; border-radius: 50%;" />
+          <span class="profile-image-display-name">{{displayName (getProfileUser profileAccount.userId) }}</span>
+        </div>
+      </a>
+
+    </div>
+  {{/with}}
+</template>

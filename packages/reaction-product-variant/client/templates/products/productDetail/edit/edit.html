@@ -5,7 +5,7 @@
 </p>
 {{else}}
 <div class="product-detail-edit {{field}}-edit">
-  <input type="text" value="{{value}}" class="{{field}}-edit-input" placeholder="{{i18nPlaceholder}}"/>
+  <input type="{{getType(type)}}" pattern="{{pattern}}" value="{{value}}" class="form-control {{field}}-edit-input" placeholder="{{i18nPlaceholder}}" maxlength="{{maxlength}}">
 </div>
 {{/if}}
 <span class="product-detail-message" id="{{field}}-message"></span>

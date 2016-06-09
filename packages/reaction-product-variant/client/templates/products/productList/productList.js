@@ -6,21 +6,26 @@ let Media;
 Media = ReactionCore.Collections.Media;
 Template.productList.helpers({
   products: function () {
-    return ReactionProducts.getProductsByTag(this.tag);
+    return ReactionProduct.getProductsByTag(this.tag);
+  },
+  isProdsSubReady: function () {
+    if (ReactionCore.MeteorSubscriptions_Products.ready()) {
+      return true;
+    }
+    else {
+      return false;
+    }
   },
   media: function () {
-    let defaultImage;
-    const variants = getTopVariants();
-    if (variants.length > 0) {
-      let variantId = variants[0]._id;
-      defaultImage = Media.findOne({
-        "metadata.variantId": variantId,
-        "metadata.priority": 0
-      });
-    }
-    if (defaultImage) {
-      return defaultImage;
-    }
-    return false;
-  }
+    const media = ReactionCore.Collections.Media.findOne({
+      "metadata.productId": this._id,
+      //"metadata.priority": 0, // this will fail to find an image if none has prio 0, use sort instead
+      "metadata.toGrid": 1
+    }, { sort: { "metadata.priority": 1, uploadedAt: 1 } });
+
+    return media instanceof FS.File ? media : false;
+  },
+  displayPrice: function () {
+    return this._id && this.price && this.price.range;
+  },
 });

@@ -83,7 +83,7 @@ function getSellerOrders(filter) {
 
 function getFiltersWithCounts() {
   return sellerOrderFilters.map((filter) => {
-    filter.label = i18n.t(`order.filter.${filter.name}`, {defaultValue: filter.label});
+    filter.label = i18next.t(`order.filter.${filter.name}`, {defaultValue: filter.label});
     filter.count = ReactionCore.Collections.Orders.find(SellerOrderHelper.makeQuery(filter.name)).count();
 
     if (ReactionRouter.getQueryParam("filter")) {
@@ -109,12 +109,26 @@ Template.sellerOrders.onCreated(() => {
  * orders helpers
  */
 Template.sellerOrders.helpers({
+
   sellerOrders() {
     ReactionCore.Subscriptions.SellerOrders = ReactionSubscriptions.subscribe("SellerOrders");
     if (ReactionCore.Subscriptions.SellerOrders.ready()) {
       const template = Template.instance();
       const queryParams = ReactionRouter.getQueryParam("filter");
-      template.orders = getSellerOrders(queryParams);
+      template.orders = getSellerOrders(queryParams).fetch();
+
+      console.log("Template.sellerOrders.helpers.sellerOrders() orders: ",template.orders);
+      for (let order of template.orders) {
+        for (let item of order.items) {
+          if (item.sellerId != Meteor.userId())
+          {
+            console.log("ignoring item: ",item);
+            let itemIndex = order.items.indexOf(item);
+            order.items.splice(itemIndex, 1);
+          }
+        }
+      }
+
       return template.orders;
     }
   },
@@ -132,6 +146,15 @@ Template.sellerOrders.helpers({
       return "panel-info";
     }
     return "panel-default";
+  },
+  isProdsSubReady: function () {
+    ReactionCore.Subscriptions.SellerOrders = ReactionSubscriptions.subscribe("SellerOrders");
+    if (ReactionCore.Subscriptions.SellerOrders.ready()) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
 });
 

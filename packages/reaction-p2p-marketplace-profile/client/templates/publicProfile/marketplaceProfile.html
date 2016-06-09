@@ -1,0 +1,40 @@
+<template name="marketplaceProfile">
+
+  <div class="profile-page">
+
+  {{#with getProfileAccount data.userId}}
+    <div class="flex flex-column flex-align-center flex-2x container-lg">
+
+      <div class="flex-item">
+        <div class="panel panel-lg">
+
+          <div class="panel-heading  panel-title-center">
+
+              <div class="profile-image">
+                {{!--> avatar user=currentUser class="circular-icon" size="large" shape="circle"--}}
+<!--                <img class="circular-icon" src="{{getGravatar profileAccount 80}}" style="width: 80px;border-radius: 50%;" />
+-->
+                <span class="profile-image-display-name">{{displayName (getProfileUser profileAccount.userId) }}</span>
+              </div>
+
+          </div>
+          {{#with getProfileUser profileAccount.userId}}
+            <div class="panel-content">
+              {{> profileImageGallery userId=_id }}
+            </div>
+            <div class="panel-content">
+              {{> productDetailMarketplaceRating}}
+            </div>
+            <div class="panel-content">
+              {{profile.description}}
+            </div>
+          {{/with}}
+        </div>
+      </div>
+
+    </div>
+  {{/with}}
+
+  </div>
+
+</template>

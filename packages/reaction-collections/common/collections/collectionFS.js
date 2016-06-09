@@ -11,8 +11,24 @@ FS.HTTP.setHeadersForGet([
  * See: https://github.com/CollectionFS/Meteor-CollectionFS
  * chunkSize: 1024*1024*2; <- CFS default // 256k is default GridFS chunk size, but performs terribly
  */
+let maxUploadKb = 1048576; //bytes
 
 ReactionCore.Collections.Media = new FS.Collection("Media", {
+  filter: {
+        maxSize: maxUploadKb, //bytes  0.5MB = 524288 bytes
+        /*allow: {
+            contentTypes: ['image/*'], // regex wildcard
+            extensions: ['']
+        },*//*
+        deny: {
+            contentTypes: [''],
+            extensions: ['']
+        },*/
+        onInvalid: function(message) {
+            // do stuff if error
+            throw new Meteor.Error(403, "imageTooBig", {maxKb: (maxUploadKb/1024)});
+        }
+    },
   stores: [
     new FS.Store.GridFS("image", {
       chunkSize: 1 * 1024 * 1024
@@ -20,7 +36,7 @@ ReactionCore.Collections.Media = new FS.Collection("Media", {
       chunkSize: 1 * 1024 * 1024,
       transformWrite: function (fileObj, readStream, writeStream) {
         if (gm.isAvailable) {
-          gm(readStream, fileObj.name).resize("1000", "1000").stream()
+          gm(readStream, fileObj.name).autoOrient().resize("1000", "1000").stream()
             .pipe(writeStream);
         } else {
           readStream.pipe(writeStream);
@@ -30,7 +46,7 @@ ReactionCore.Collections.Media = new FS.Collection("Media", {
       chunkSize: 1 * 1024 * 1024,
       transformWrite: function (fileObj, readStream, writeStream) {
         if (gm.isAvailable) {
-          gm(readStream, fileObj.name).resize("600", "600").stream().pipe(
+          gm(readStream, fileObj.name).autoOrient().resize("600", "600").stream().pipe(
             writeStream);
         } else {
           readStream.pipe(writeStream);
@@ -40,7 +56,7 @@ ReactionCore.Collections.Media = new FS.Collection("Media", {
       chunkSize: 1 * 1024 * 1024,
       transformWrite: function (fileObj, readStream, writeStream) {
         if (gm.isAvailable) {
-          gm(readStream).resize("235", "235" + "^").gravity("Center")
+          gm(readStream).autoOrient().resize("235", "235" + "^").gravity("Center")
             .extent("235", "235").stream("PNG").pipe(writeStream);
         } else {
           readStream.pipe(writeStream);
@@ -50,7 +66,7 @@ ReactionCore.Collections.Media = new FS.Collection("Media", {
       chunkSize: 1 * 1024 * 1024,
       transformWrite: function (fileObj, readStream, writeStream) {
         if (gm.isAvailable) {
-          gm(readStream).resize("100", "100" + "^").gravity("Center")
+          gm(readStream).autoOrient().resize("100", "100" + "^").gravity("Center")
             .extent("100", "100").stream("PNG").pipe(writeStream);
         } else {
           readStream.pipe(writeStream);

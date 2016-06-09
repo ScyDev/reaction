@@ -79,7 +79,7 @@
           "version": "1.0.3"
         },
         "moment": {
-          "version": "2.11.2"
+          "version": "2.12.0"
         }
       }
     },
@@ -115,7 +115,7 @@
                   "version": "1.0.3",
                   "dependencies": {
                     "readable-stream": {
-                      "version": "2.0.5",
+                      "version": "2.0.6",
                       "dependencies": {
                         "core-util-is": {
                           "version": "1.0.2"
@@ -124,7 +124,7 @@
                           "version": "2.0.1"
                         },
                         "isarray": {
-                          "version": "0.0.1"
+                          "version": "1.0.0"
                         },
                         "process-nextick-args": {
                           "version": "1.0.6"
@@ -174,7 +174,7 @@
                   "version": "0.4.2"
                 },
                 "tough-cookie": {
-                  "version": "2.2.1"
+                  "version": "2.2.2"
                 },
                 "http-signature": {
                   "version": "1.1.1",
@@ -273,7 +273,7 @@
                       "version": "1.1.1",
                       "dependencies": {
                         "ansi-styles": {
-                          "version": "2.2.0",
+                          "version": "2.2.1",
                           "dependencies": {
                             "color-convert": {
                               "version": "1.0.0"

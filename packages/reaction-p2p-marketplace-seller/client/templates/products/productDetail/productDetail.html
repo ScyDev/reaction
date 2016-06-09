@@ -1,38 +1,77 @@
 <template name="productDetailMarketplace">
+  {{#if Template.subscriptionsReady}}
+  <div class="product-page">
   {{#with product}}
-  <div class="container-main">
-    <div class="container-fluid pdp-container">
-      {{!-- Product Visibility Admin Block --}}
-      {{#if hasPermission "createProduct"}}
+
+  {{>simplifiedProductCssInclude}}
+
+
+{{#if belongsToCurrentUser _id }}
+
+  <div cla_ss="flex-item">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"> {{i18n 'productDetail.productManagement' 'Edit product'}}</h3>
+      </div>
+    </div>
+  </div>
+    {{#if isVisible}}
+      {{#if isActive}}
         <div class="row">
-          <span data-i18n="productDetail.productManagement">Product management:</span>
-          {{#if isVisible}}
-            {{#if hasAdminAccess}}
-              <a href="#" class="toggle-product-isVisible-link" data-i18n="productDetail.makeInvisible">Make invisible</a> |
-            {{/if}}
-          {{/if}}
-          {{#if isActive}}
-            <a href="#" class="toggle-product-isActive-link" data-i18n="productDetail.makeInactive">Deactivate</a> |
-          {{/if}}
-          {{#unless isActive}}
-            <a href="#" class="toggle-product-isActive-link" data-i18n="productDetail.makeActive">Activate</a> |
-          {{/unless}}
-          <a href="#" class="delete-product-link" data-i18n="app.delete">Delete</a>
+          <div class="success alert-success">
+            <span> {{i18n 'productDetail.isVisible' 'This product is visible to customers.'}}</span>
+          </div>
         </div>
-        {{#unless isVisible}}
+      {{else}}
         <div class="row">
           <div class="alert alert-warning">
-            <span data-i18n="productDetail.isNotVisible">This product is not visible to customers.</span>
-            {{#if hasAdminAccess}}
-              <a href="#" class="toggle-product-isVisible-link" data-i18n="productDetail.makeItVisible">You can make it visible</a>
-              <span data-i18n="productDetail.whenYouAreDone">when you're done editing.</span>
-            {{/if}}
+            <span> {{i18n 'productDetail.isNotVisible' 'This product is not visible to customers.'}}</span>
           </div>
-          <span id="product-management-alerts">{{> inlineAlerts placement="productManagement"}}</span>
         </div>
-        {{/unless}}
       {{/if}}
-      {{!-- END Product Visibility Admin Block --}}
+    {{/if}}
+    {{#unless isVisible}}
+      {{#if isActive}}
+        <div class="row">
+          <div class="info alert-info">
+            <span> {{i18n 'productDetail.isActive' 'This product is under review. It will be visible soon.'}}</span>
+          </div>
+        </div>
+      {{else}}
+        <div class="row">
+          <div class="alert alert-warning">
+            <span> {{i18n 'productDetail.isNotVisible' 'This product is not visible to customers.'}}</span>
+              <span> {{i18n 'productDetail.whenYouAreDone' 'Admin can set it visible when you are done editing.'}}</span>
+          </div>
+        </div>
+      {{/if}}
+    {{/unless}}
+
+    {{#if soldOne}}
+      <div class="row">
+        <div class="alert alert-warning">
+          <span> {{i18n 'productDetail.cantChangeOrderedProduct' "Can't change a product that has already been ordered."}}</span>
+        </div>
+      </div>
+    {{/if}}
+
+    <span id="product-management-alerts">{{> inlineAlerts placement="productManagement"}}</span>
+
+  {{else}}
+  <div cla_ss="flex-item">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"> {{i18n 'productDetail.productDetail' 'Product detail'}}</h3>
+      </div>
+    </div>
+  </div>
+{{/if}}
+
+{{#if displayProductDetail _id }}
+
+  <div class="container-main">
+    <div class="container-fluid pdp-container">
+
        <!-- Product Detail Page -->
       <div class="row" itemscope itemtype="http://schema.org/Product">
         <!-- Titles -->
@@ -49,10 +88,20 @@
           <!-- BEGIN Left Side -->
           <div class="col-sm-5 pdp-left-column">
             {{> productImageGallery}}
+
+            <div class="displayQuantity">
+              <span id="quantity" itemprop="quantity">{{ copiedInventoryQuantity }} {{ i18n 'accountsUI.inventoryUnit' 'pieces' }}</span>
+            </div>
+
+            {{> marketplaceProfileWidget data=product }}
+
             <!-- Product Tags -->
             {{>tagsComponent tags=tags}}
-            <h3 data-i18n="productDetail.details">Details</h3>
-            {{> metaComponent }}
+
+            <!--
+            {{> productDetailMarketplaceRating}}
+            -->
+
           </div>
           <!-- END Left Side -->
           <!-- BEGIN Right Side -->
@@ -60,13 +109,15 @@
             <div class="row social-pricing">
               <div class="col-xs-8">
                 {{!-- Price Fixation --}}
-                <span class="price">
+                <div class="price">
                   <span id="price" itemprop="price">{{formatPrice actualPrice}}</span>
-                </span>
+                </div>
+
                 {{>fieldComponent field="vendor" value=vendor}}
               </div>
               <div class="col-xs-3 col-xs-offset-1">
-                {{!-- Social Commentary --}}
+                <!--
+                {{!- - Social Commentary - -}}
                 {{#if hasPermission "createProduct"}}
                 <div class="social-media">
                   <a href="#"><i class="fa fa-facebook fa-lg"></i></a>
@@ -83,6 +134,7 @@
                 {{else}}
                   {{> productSocial }}
                 {{/if}}
+              -->
               </div>
             </div>
             <!-- main product information -->
@@ -110,11 +162,77 @@
               </div>
 
             </div>
+
+            {{> productDetailDateField}}
+
             <!-- END Right Side -->
           </div>
+
+          <div class="double-column">
+
+            <div class="product-container-management">
+            {{!-- Product Visibility Admin Block --}}
+            {{#if hasAdminAccess}}
+              <div class="row">
+              {{#if isVisible}}
+                <div class="">
+                  <a href="#" class="toggle-product-isVisible-link btn btn-default btn-block btn-product-management">{{i18n 'productDetail.makeInvisible' 'Make invisible'}}</a>
+                </div>
+              {{/if}}
+              {{#unless isVisible}}
+                <div class="">
+                  <a href="#" class="toggle-product-isVisible-link btn btn-default btn-block btn-product-management">{{i18n 'productDetail.makeItVisible' 'You can make it visible'}}</a>
+                </div>
+              {{/unless}}
+              </div>
+            {{/if}}
+
+            {{#if belongsToCurrentUser _id }}
+
+              <div class="row">
+                <!-- has no function yet, template is in autosave mode, but to avoid user confusion, a placebo save button is shown-->
+                <div class="">
+                  <a href="#" class="save-product-link btn btn-default btn-block btn-product-management">{{i18n 'app.saveAndContinue' 'Save and continue'}}</a>
+                </div>
+
+                <!-- for style reasons,  <div><span data-i18n="productDetail.productManagement">Product management</span>:</div> -->
+                {{#if isActive}}
+                  <div class="">
+                    <a href="#" class="toggle-product-isActive-link btn btn-default btn-block btn-product-management">{{i18n 'productDetail.makeInactive' 'Deactivate'}}</a>
+                  </div>
+                {{/if}}
+                {{#unless isActive}}
+                  <div class="">
+                    <a href="#" class="toggle-product-isActive-link btn btn-default btn-block btn-product-management">{{i18n 'productDetail.makeActive' 'Activate'}}</a>
+                  </div>
+                {{/unless}}
+                <div class="">
+                  <a href="#" class="delete-product-link btn btn-default btn-block btn-product-management">{{i18n 'app.delete' 'Delete'}}</a>
+                </div>
+              </div>
+
+            {{/if}}
+            {{!-- END Product Visibility Admin Block --}}
+
+          </div>
+
+
+            {{> productDetailLocationField}}
+          </div>
+
         </div>
       </div>
     </div>
   </div>
+
+  {{/if}}
+
   {{/with}}
+  </div>
+  {{else}}
+    <div class="spinnerBox">
+      {{>spinner}}
+      <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
+    </div>
+  {{/if}}
 </template>

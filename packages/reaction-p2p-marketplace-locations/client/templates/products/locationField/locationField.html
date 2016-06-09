@@ -3,7 +3,7 @@
   <div class="row col-md-11">
 
     <div class="product-detail-map">
-      <h2><span class="forSaleOnDate-text" data-i18n="productDetail.location">Location</span>:</h2>
+      <h2><span class="forSaleOnDate-text" data-i18n="productDetail.location">Location</span></h2>
 
       <!--
       {{#if hasPermission "createProduct"}}
@@ -14,7 +14,11 @@
       {{/if}}
       -->
 
-      {{>productMapSingle}}
+      <div class="address-text">
+        {{> locationFieldDisplay }}
+      </div>
+
+      {{> productMapSingle }}
     </div>
   </div>
   {{/with}}

@@ -33,15 +33,39 @@ Package.onUse(function(api) {
   api.use('templating');
   api.use("less");
   api.use("reactioncommerce:core@0.10.0");
+  api.use("reactive-var");
 
-  api.use("reaction-search");
+  api.use("sacha:spin");
+  api.use("scydev:reaction-search@0.0.2");
 
   api.addFiles('reaction-p2p-marketplace.js');
+
+  api.addFiles("server/methods/accounts.js", "server");
+
+  api.addFiles("client/templates/style.less", ["client"]);
 
   api.addFiles("client/templates/products/productsViewSwitcher.html", ["client"]);
   api.addFiles("client/templates/products/productsMarketplace.html", ["client"]);
   api.addFiles("client/templates/products/productsMarketplace.js", ["client"]);
   api.addFiles("client/templates/products/products.less", ["client"]);
+  api.addFiles("client/templates/products/productList/productList.less", ["client"]);
+  api.addFiles("client/templates/cart/checkout/header/header.html", ["client"]);
+  api.addFiles("client/templates/cart/checkout/header/header.js", ["client"]);
+
+  api.addFiles("server/methods/cart.js", ["server"]);
+  api.addFiles("server/methods/checkout.js", ["server"]);
+
+  api.addFiles("client/templates/cart/checkout/checkout.html", "client");
+  api.addFiles("client/templates/cart/checkout/checkout.js", "client");
+  api.addFiles("client/templates/cart/checkout/completed/completed.html", "client");
+  api.addFiles("client/templates/cart/checkout/completed/completed.js", "client");
+  api.addFiles("client/templates/dashboard/orders/list/ordersList.html", "client");
+  api.addFiles("client/templates/dashboard/orders/list/ordersList.js", "client");
+  api.addFiles("client/templates/dashboard/orders/list/items/items.html", "client");
+  api.addFiles("client/templates/dashboard/orders/list/items/items.js", "client");
+  api.addFiles("client/templates/dashboard/orders/list/itemSeller/itemSeller.html", "client");
+  api.addFiles("client/templates/dashboard/orders/list/itemSeller/itemSeller.js", "client");
+
 
 });
 

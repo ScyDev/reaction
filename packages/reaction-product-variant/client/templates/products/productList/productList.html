@@ -1,31 +1,60 @@
 <template name="productList">
   <div class="product-list">
-    <table class="table table-hover">
-      <tbody>
-        {{#each products}}
-        <tr class="product-list-item">
-          <td>
-            <a href="{{pathFor 'product' handle=handle}}" data-event-category="grid" data-event-action="product-click" data-event-label="Grid product click" data-event-value="{{_id}}">
-            {{#with media}}
-              <img src="{{url}}" class="product-grid-item-images img-responsive">
+    {{#if isProdsSubReady}}
+      <table class="table table-hover">
+        <tbody>
+          {{#each products}}
+            <tr cla__ss="product-list-item">
+              <td>
+                <div><h3>{{title}}</h3></div>
+              </td>
+            </tr>
+            <tr class="product-list-item">
+              <td class="no-border">
+                <div class="product-info-block">
+                  <a href="{{pathFor 'product' handle=handle}}" data-event-category="grid" data-event-action="product-click" data-event-label="Grid product click" data-event-value="{{_id}}">
+                    {{#with media}}
+                      <img src="{{url}}" class="product-grid-item-images img-responsive">
+                    {{else}}
+                      <img src= "/resources/placeholder.gif" class="product-grid-item-images img-responsive">
+                    {{/with}}
+                  </a>
+
+
+                  <!-- price from list. not working? -->
+                  <div><h3>{{formatPrice variants.[0].price}}</h3></div>
+                  <!-- using price from grid. -->
+                  <div class="currency-symbol"><h3>{{formatPrice displayPrice}}</h3></div>
+
+                    {{#if cart.showItemLowInventoryWarning variants.[0]}}
+                      <div class="badge badge-low-inv-warning">{{variants.[0].inventoryQuantity}} Left!</div>
+                    {{/if}}
+
+                    <div class="for-sale-on-date">{{ prettifyDate forSaleOnDate }}</div>
+                    <div class="location-text">{{> locationFieldDisplay }}</div>
+                    <div class="location-text">{{ copiedInventoryQuantity }} {{ i18n 'accountsUI.inventoryUnit' 'pieces' }}</div>
+                </div>
+                  <div class="product-desc">
+                    {{{description}}}
+                  </div>
+              </td>
+            </tr>
             {{else}}
-              <img src= "/resources/placeholder.gif" class="product-grid-item-images img-responsive">
-            {{/with}}
-            </a>
-          </td>
-          <td>
-            <div><h3>{{title}}</h3></div>
-            <div>{{{description}}}</div>
-          </td>
-          <td>
-            <div><h3>{{formatPrice variants.[0].price}}</h3></div>
-            {{#if cart.showItemLowInventoryWarning variants.[0]}}
-            <div class="badge badge-low-inv-warning">{{variants.[0].inventoryQuantity}} Left!</div>
-            {{/if}}
-          </td>
-        </tr>
-        {{/each}}
-      </tbody>
-    </table>
+              <tr>
+                <div class="no-products-found">
+                  <h3>
+                    <i class="fa fa-cutlery"></i> <span>{{i18n 'shop.search.noProductsFound' 'No products found'}}</span>
+                  </h3>
+                </div>
+              </tr>
+            {{/each}}
+        </tbody>
+      </table>
+    {{else}}
+      <div class="spinnerBox">
+        {{>spinner}}
+        <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
+      </div>
+    {{/if}}
   </div>
 </template>

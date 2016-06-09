@@ -41,7 +41,8 @@ Meteor.publish("ShopMembers", function () {
         "services.weibo.picture": 1,
         "services.github.name": 1,
         "services.github.email": 1,
-        "services.github.username": 1
+        "services.github.username": 1,
+        "profile.name": 1
       }
     };
 

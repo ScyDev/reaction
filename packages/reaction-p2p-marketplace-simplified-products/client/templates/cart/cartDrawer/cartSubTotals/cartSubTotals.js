@@ -1,0 +1,1 @@
+Template.newCartSubTotals.replaces('cartSubTotals');

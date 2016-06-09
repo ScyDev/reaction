@@ -1,12 +1,27 @@
 <template name="productGrid">
-  <div class="container-main">
-    <div class="product-grid" data-event-category="grid" data-event-action="generic-click" data-event-label="product grid click">
+  <div class="product-grid" data-event-category="grid" data-event-action="generic-click" data-event-label="product grid click">
+    <!--
+    https://forums.meteor.com/t/if-template-subscriptionsready-is-firing-too-soon/8752/10
+    Use a specific helper instead of Template.subscriptionsReady
+    -->
+    {{#if isProdsSubReady}}
       <ul class="product-grid-list list-unstyled" id="product-grid-list">
-      {{#each products}}
-        {{> productGridItems}}
-      {{/each}}
+        {{#each products}}
+          {{> productGridItems}}
+        {{else}}
+          <div class="no-products-found">
+            <h3>
+              <i class="fa fa-cutlery"></i> <span>{{i18n 'shop.search.noProductsFound' 'No products found'}}</span>
+            </h3>
+          </div>
+        {{/each}}
       </ul>
-    </div>
+    {{else}}
+      <div class="spinnerBox">
+          {{>spinner}}
+          <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
+      </div>
+    {{/if}}
   </div>
 
   {{#if loadMoreProducts}}
