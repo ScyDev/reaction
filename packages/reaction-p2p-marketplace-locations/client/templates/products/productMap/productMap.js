@@ -81,15 +81,15 @@ function getProductImage(productId) {
 function centerMapToMeaningfulPlace(map) {
   // Try HTML5 geolocation.
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition( 
+    navigator.geolocation.getCurrentPosition(
       position => {
         console.log("Current position: ", position);
         Session.set("geoPosition", {
           lat: position.coords.latitude,
           lng: position.coords.longitude
         });
-      }, 
-      e => console.log("Failed to get current position:", e.message) 
+      },
+      e => console.log("Failed to get current position:", e.message)
     );
   }
 
@@ -114,14 +114,6 @@ Template.productMap.onCreated(function() {
   Session.set("productGrid/selectedProducts", []);
   // Update product subscription
   this.autorun(() => applyProductFilters());
-
-  // this.autorun(() => {
-  //   const isActionViewOpen = ReactionCore.isActionViewOpen();
-  //   if (isActionViewOpen === false) {
-  //     Session.set("productGrid/selectedProducts", []);
-  //   }
-  // });
-
 
   GoogleMaps.ready('map', function(map) {
     markers = [];
@@ -151,7 +143,7 @@ Template.productMap.onCreated(function() {
           }
           // Remove the reference to this marker instance
           delete markers[oldDocument.userId];
-          
+
           // centerMapToMeaningfulPlace(map);
         }
       }
