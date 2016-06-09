@@ -8,56 +8,57 @@
           <div class="">
             <a href="#" class="btn btn-default btn-block btn-product-management btn-add-product">{{i18n 'admin.shortcut.addProductLabel' 'Add product'}}</a>
           </div>
-          <div class="panel-content">
-            <div class="backend-product-list">
-              <table class="table table-hover">
-                <tbody>
-                  {{#each products}}
-                    <tr cla__ss="product-list-item">
-                                <td>
-                        <div><h3>{{title}}</h3></div>
-                      </td>
-                    </tr>
-                    <tr class="product-list-item">
-                      <td class="no-border">
-                        <div class="product-info-block">
-                                  <a href="{{pathFor 'product' handle=handle}}" data-event-category="grid" data-event-action="product-click" data-event-label="Grid product click" data-event-value="{{_id}}">
-                                  {{#with media}}
-                                    <img src="{{url}}" class="product-grid-item-images img-responsive">
-                                  {{else}}
-                                    <img src= "/resources/placeholder.gif" class="product-grid-item-images img-responsive">
-                                  {{/with}}
-                                  </a>
+          {{> productsMarketplace}}
+          <!--<div class="panel-content">-->
+            <!--<div class="backend-product-list">-->
+            <!--  <table class="table table-hover">-->
+            <!--    <tbody>-->
+            <!--      {{#each products}}-->
+            <!--        <tr cla__ss="product-list-item">-->
+            <!--                    <td>-->
+            <!--            <div><h3>{{title}}</h3></div>-->
+            <!--          </td>-->
+            <!--        </tr>-->
+            <!--        <tr class="product-list-item">-->
+            <!--          <td class="no-border">-->
+            <!--            <div class="product-info-block">-->
+            <!--                      <a href="{{pathFor 'product' handle=handle}}" data-event-category="grid" data-event-action="product-click" data-event-label="Grid product click" data-event-value="{{_id}}">-->
+            <!--                      {{#with media}}-->
+            <!--                        <img src="{{url}}" class="product-grid-item-images img-responsive">-->
+            <!--                      {{else}}-->
+            <!--                        <img src= "/resources/placeholder.gif" class="product-grid-item-images img-responsive">-->
+            <!--                      {{/with}}-->
+            <!--                      </a>-->
 
 
                                   <!-- price from list. not working? -->
-                                  <div><h3>{{formatPrice variants.[0].price}}</h3></div>
+            <!--                      <div><h3>{{formatPrice variants.[0].price}}</h3></div>-->
                                   <!-- using price from grid. -->
-                                  <div class="currency-symbol"><h3>{{formatPrice displayPrice}}</h3></div>
+            <!--                      <div class="currency-symbol"><h3>{{formatPrice displayPrice}}</h3></div>-->
 
-                                  {{#if cart.showItemLowInventoryWarning variants.[0]}}
-                                  <div class="badge badge-low-inv-warning">{{variants.[0].inventoryQuantity}} Left!</div>
-                                  {{/if}}
+            <!--                      {{#if cart.showItemLowInventoryWarning variants.[0]}}-->
+            <!--                      <div class="badge badge-low-inv-warning">{{variants.[0].inventoryQuantity}} Left!</div>-->
+            <!--                      {{/if}}-->
 
-                                  <div class="for-sale-on-date">{{ prettifyDate forSaleOnDate }}</div>
-                          <div class="location-text">{{> locationFieldDisplay }}</div>
-                        </div>
-                        <div class="product-desc">
-                          {{{description}}}
-                        </div>
-                    </td>
-                  </tr>
-                  {{else}}
-                    <div class="empty-view-message">
-                        <i class="fa fa-cutlery"></i>
-                        <p>{{i18n 'accountsUI.error.noProductsFound' 'No products found'}}</p>
-                    </div>
-                  {{/each}}
-                </tbody>
-              </table>
-            </div>
+            <!--                      <div class="for-sale-on-date">{{ prettifyDate forSaleOnDate }}</div>-->
+            <!--              <div class="location-text">{{> locationFieldDisplay }}</div>-->
+            <!--            </div>-->
+            <!--            <div class="product-desc">-->
+            <!--              {{{description}}}-->
+            <!--            </div>-->
+            <!--        </td>-->
+            <!--      </tr>-->
+            <!--      {{else}}-->
+            <!--        <div class="empty-view-message">-->
+            <!--            <i class="fa fa-cutlery"></i>-->
+            <!--            <p>{{i18n 'accountsUI.error.noProductsFound' 'No products found'}}</p>-->
+            <!--        </div>-->
+            <!--      {{/each}}-->
+            <!--    </tbody>-->
+            <!--  </table>-->
+            <!--</div>-->
 
-          </div>
+          <!--</div>-->
         </div>
       </div>
       {{else}}

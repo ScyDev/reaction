@@ -7,8 +7,7 @@ Template.productDetail.events({ // for some strange reason our custom event need
     let errorMsg = "";
     const self = this;
 
-    const productId = ReactionProduct.selectedProductId();
-    const productBelongingToCurrUser = ReactionCore.Collections.Products.findOne({_id:productId, userId:Meteor.userId()})
+    const selectedProduct = ReactionProduct.selectedProduct();
 
     if (!self.title) {
       errorMsg += `${i18next.t("error.isRequired", { field: i18next.t("productDetailEdit.title") })}\n`;
@@ -24,10 +23,10 @@ Template.productDetail.events({ // for some strange reason our custom event need
         errorMsg += `${i18next.t("error.variantFieldIsRequired", { field: i18next.t("productVariant.price"), number: index + 1 })}\n`;
       }
     }
-    if( ! /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(productBelongingToCurrUser.pickupTimeFrom) ) {
+    if( ! /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(selectedProduct.pickupTimeFrom) ) {
       errorMsg += `${i18next.t("productDetail.pickupTimeFromIsRequired", { field: i18next.t("productDetail.pickupTimeFrom") })}\n`;
     }
-    if( ! /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(productBelongingToCurrUser.pickupTimeTo) ) {
+    if( ! /^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/.test(selectedProduct.pickupTimeTo) ) {
       errorMsg += `${i18next.t("productDetail.pickupTimeToIsRequired", { field: i18next.t("productDetail.pickupTimeTo") })}\n`;
     }
     if (errorMsg.length > 0) {
@@ -49,23 +48,23 @@ Template.productDetail.events({ // for some strange reason our custom event need
           }
         });
       }
-      const pickupDate = moment( productBelongingToCurrUser.forSaleOnDate )
-      const latestOrderDate = moment( productBelongingToCurrUser.latestOrderDate )
-
-      const lastestOrderDateTooLate = latestOrderDate.format( "YYYY-MM-DD" ) > pickupDate.format( "YYYY-MM-DD" )
+      const pickupDate = moment( selectedProduct.forSaleOnDate );
+      const latestOrderDate = moment( selectedProduct.latestOrderDate );
+      
+      const lastestOrderDateTooLate = latestOrderDate.format( "YYYY-MM-DD" ) > pickupDate.format( "YYYY-MM-DD" );
       delta = 1000;
       if( pickupDate.format( "YYYY-MM-DD" ) == latestOrderDate.format( "YYYY-MM-DD" ) ) {
-        const fromHours = parseInt( productBelongingToCurrUser.pickupTimeFrom.slice(0, 2) );
-        const fromMinutes = parseInt( productBelongingToCurrUser.pickupTimeFrom.slice(3) );
+        const fromHours = parseInt( selectedProduct.pickupTimeFrom.slice(0, 2) );
+        const fromMinutes = parseInt( selectedProduct.pickupTimeFrom.slice(3) );
         delta = ( fromHours * 60 + fromMinutes ) - ( latestOrderDate.hours() * 60 + latestOrderDate.minutes() );
         console.log( "Time difference:", delta, "minutes" );
       }
 
-      if (productBelongingToCurrUser.isActive) {
+      if (selectedProduct.isActive) {
         execMeteorCallActivateProduct();
       }
-      else if (!moment(productBelongingToCurrUser.forSaleOnDate).isSame(moment(productBelongingToCurrUser.latestOrderDate), "day")) {
-        //console.log(moment(productBelongingToCurrUser.forSaleOnDate).toString()+" vs. "+moment(productBelongingToCurrUser.latestOrderDate).toString());
+      else if (!moment(selectedProduct.forSaleOnDate).isSame(moment(selectedProduct.latestOrderDate), "day")) {
+        //console.log(moment(selectedProduct.forSaleOnDate).toString()+" vs. "+moment(selectedProduct.latestOrderDate).toString());
 
         Alerts.alert({
           title: i18next.t("productDetail.areYouSure", "Are you sure?"),

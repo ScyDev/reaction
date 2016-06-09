@@ -24,43 +24,43 @@ Template.productMap.helpers({
 
 var markers = {};
 
-function addMarker(map, product) {
-  Meteor.call("accounts/getUserAddress", product.userId, true, function(error, result) {
+function addMarker(map, userId) {
+  if( !map || !userId ) return;
+  console.log( "Adding marker for seller", userId )
+  Meteor.call("accounts/getUserAddress", userId, true, function(error, result) {
     if (!error && result) {
-      let address = result.replace("undefined", "").replace("  ", " ");
-      console.log('address', address);
+      const address = result.replace("undefined", "").replace("  ", " ");
+      console.log('address:', address);
 
       var geocoder = new google.maps.Geocoder();
-      geocoder.geocode(
-        {
-          'address': address
-        },
-        function(results, status) {
-           if(status == google.maps.GeocoderStatus.OK) {
-              console.log("resolved location: "+results[0].geometry.location);
+      geocoder.geocode( { address }, function(results, status) {
+       if(status == google.maps.GeocoderStatus.OK) {
+          console.log("resolved location: ", results[0].geometry.location);
 
-              var marker = new google.maps.Marker({
-                 position: results[0].geometry.location,
-                 map: map.instance,
-                 title: product.title+"\n"+address+"\n"+product.copiedInventoryQuantity+" "+i18next.t('accountsUI.inventoryUnit', {defaultValue: 'pieces'}),
-                 animation: google.maps.Animation.DROP,
-                 icon: "/packages/scydev_reaction-p2p-marketplace-locations/public/images/icon.png",
-                 //icon: getProductImage(product._id).url({store: "thumbnail"})
-              });
+          const marker = new google.maps.Marker({
+             position: results[0].geometry.location,
+             map: map.instance,
+             animation: google.maps.Animation.DROP,
+             icon: "/packages/scydev_reaction-p2p-marketplace-locations/public/images/icon.png",
+          });
+          marker.productsCount = 1;
 
-              var infowindow = new google.maps.InfoWindow({
-                content: "Test Info Win" //contentString
-              });
-              marker.addListener('click', function() {
-                console.log("clicked marker: ",map," ",marker);
-                //infowindow.open(map, marker);
-                ReactionRouter.go("product", {handle: product.handle});
-              });
+          const contentString = Blaze.toHTMLWithData(Template.productMapDetails, {
+            products: ReactionCore.Collections.Products.find({ userId }, { sort: {latestOrderDate: 1} }).fetch()
+          });
+          // console.log( "infoWindow:", contentString );
+          const infoWindow = new google.maps.InfoWindow({ content: contentString });
+          let markerIsHovered = false;
+          marker.addListener( 'mouseover', () => {
+            markerIsHovered = true;
+            Meteor.setTimeout( () => { if( markerIsHovered ) infoWindow.open(map, marker) }, 1000 );
+          } );
+          marker.addListener( 'mouseout', () => markerIsHovered = false );
+          map.instance.addListener( 'click', () => infoWindow.close() );
 
-              markers[product._id] = marker;
-           }
-        }
-      );
+          markers[userId].marker = marker;
+       }
+      } );
     }
   });
 }
@@ -79,46 +79,33 @@ function getProductImage(productId) {
 }
 
 function centerMapToMeaningfulPlace(map) {
-  Tracker.autorun(() => {
-    console.log("centerMapToMeaningfulPlace() start");
-    let locationSearchResult = Session.get('productFilters/location');
-    let locationSearchUserInput = Session.get('productFilters/locationUserInput');
-
-    if (locationSearchUserInput != null && locationSearchResult != null && locationSearchResult != "") {
-      locationSearchResult = locationSearchResult.split("/");
-      console.log("center map to location search result: ",locationSearchResult);
-      map.instance.setCenter(new google.maps.LatLng(locationSearchResult[0], locationSearchResult[1]));
-    }
-    else {
-      console.log("HTML5 geolocation: ",navigator.geolocation);
-      // Try HTML5 geolocation.
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-          var pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
-          console.log("getCurrentPositionn: ",position);
-
-          //infoWindow.setPosition(pos);
-          //infoWindow.setContent('Location found.');
-          map.setCenter(pos);
-        }, function() {
-          handleLocationError(true, infoWindow, map.getCenter());
+  // Try HTML5 geolocation.
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition( 
+      position => {
+        console.log("Current position: ", position);
+        Session.set("geoPosition", {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
         });
-      } else {
-        // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
-      }
-    }
-  });
-}
+      }, 
+      e => console.log("Failed to get current position:", e.message) 
+    );
+  }
 
-function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-  infoWindow.setPosition(pos);
-  infoWindow.setContent(browserHasGeolocation ?
-                        'Error: The Geolocation service failed.' :
-                        'Error: Your browser doesn\'t support geolocation.');
+  Tracker.autorun(() => {
+    console.log("Meaningful place changed.");
+    let locationSearchResult = Session.get('productFilters/location');
+    const locationSearchUserInput = Session.get('productFilters/locationUserInput');
+    const geoPosition = Session.get('geoPosition');
+
+    if( locationSearchUserInput != null && locationSearchResult != null && locationSearchResult != "" ) {
+      locationSearchResult = locationSearchResult.split("/");
+      console.log("Center map to location search result: ",locationSearchResult);
+      map.setCenter(new google.maps.LatLng(locationSearchResult[0], locationSearchResult[1]));
+    } else if( geoPosition )
+      map.setCenter(geoPosition);
+  });
 }
 
 Template.productMap.onCreated(function() {
@@ -126,61 +113,47 @@ Template.productMap.onCreated(function() {
 
   Session.set("productGrid/selectedProducts", []);
   // Update product subscription
-  this.autorun(() => {
-    const slug = ReactionRouter.getParam("slug");
-    const { Tags } = ReactionCore.Collections;
-    const tag = Tags.findOne({ slug: slug }) || Tags.findOne(slug);
-    let tags = {}; // this could be shop default implementation needed
-    if (tag) {
-      tags = {tags: [tag._id]};
-    }
+  this.autorun(() => applyProductFilters());
 
-    let dateFilter = { forSaleOnDate: Session.get('productFilters/forSaleOnDate') }
-    if (dateFilter.forSaleOnDate == null || dateFilter.forSaleOnDate.toString() == "Invalid Date") {
-      dateFilter = {};
-    }
-    let locationFilter = { location: Session.get('productFilters/location') }
-    if (locationFilter.location == null || locationFilter.location.trim() == "") {
-      locationFilter = {};
-    }
-    const mealTimeFilter = { mealTime: Session.get('productFilters/mealTime') }
-
-    const queryParams = Object.assign({}, tags, ReactionRouter.current().queryParams, dateFilter, locationFilter, mealTimeFilter);
-    Meteor.subscribe("Products", Session.get("productScrollLimit"), queryParams);
-  });
-
-  this.autorun(() => {
-    const isActionViewOpen = ReactionCore.isActionViewOpen();
-    if (isActionViewOpen === false) {
-      Session.set("productGrid/selectedProducts", []);
-    }
-  });
+  // this.autorun(() => {
+  //   const isActionViewOpen = ReactionCore.isActionViewOpen();
+  //   if (isActionViewOpen === false) {
+  //     Session.set("productGrid/selectedProducts", []);
+  //   }
+  // });
 
 
   GoogleMaps.ready('map', function(map) {
-    //var infoWindow = new google.maps.InfoWindow({map: map});
-
+    markers = [];
     ReactionCore.Collections.Products.find().observe({
-      added: function(product) {
-        // Create a marker for this document
-        addMarker(map, product);
-
-        centerMapToMeaningfulPlace(map);
+      added: product => {
+        // Create a marker for this seller if it does not exist
+        if( markers[product.userId] ) markers[product.userId].productsCount++
+        else {
+          markers[product.userId] = { productsCount: 1 };
+          addMarker(map, product.userId);
+        }
+        // centerMapToMeaningfulPlace(map);
       },
-      changed: function(newDocument, oldDocument) {
-        markers[newDocument._id].setPosition({ latitude: newDocument.latitude, longitude: newDocument.longitude });
-      },
+      changed: (newDocument, oldDocument) =>
+        markers[newDocument.userId].marker.setPosition({ latitude: newDocument.latitude, longitude: newDocument.longitude }),
       removed: function(oldDocument) {
-        // Remove the marker from the map
-        markers[oldDocument._id].setMap(null);
-
-        // Clear the event listener
-        google.maps.event.clearInstanceListeners(markers[oldDocument._id]);
-
-        // Remove the reference to this marker instance
-        delete markers[oldDocument._id];
-
-        centerMapToMeaningfulPlace(map);
+        const markerData = markers[oldDocument.userId];
+        if( !markerData ) return;
+        markerData.productsCount--;
+        // Check if it is the last product for this seller
+        if( markerData.productsCount < 1 ) {
+          if( markerData.marker ) {
+            // Remove the marker from the map
+            markerData.marker.setMap(null);
+            // Clear the event listener
+            google.maps.event.clearInstanceListeners(markerData.marker);
+          }
+          // Remove the reference to this marker instance
+          delete markers[oldDocument.userId];
+          
+          // centerMapToMeaningfulPlace(map);
+        }
       }
     });
 
