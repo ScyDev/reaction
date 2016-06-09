@@ -1,5 +1,4 @@
 <template name="sellerOrders">
-  {{#if isProdsSubReady}}
     {{#if hasPermission 'account/seller/sellerorders'}}
       <div class="seller-orders container-fluid-sm">
         <div class="panel-heading">
@@ -16,13 +15,13 @@
           </div>
         {{/each}}
       </div>
+    {{#unless isProdsSubReady}}
+      <div class="spinnerBox">
+          {{>spinner}}
+          <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
+      </div>
+    {{/unless}}
     {{/if}}
-  {{else}}
-    <div class="spinnerBox">
-      {{>spinner}}
-      <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
-    </div>
-  {{/if}}
 </template>
 
 <template name="sellerOrderListFilters">

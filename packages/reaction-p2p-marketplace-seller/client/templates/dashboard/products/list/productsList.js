@@ -3,28 +3,14 @@ Template.dashboardProductsList.inheritsHelpersFrom("productList"); // for media
 Template.dashboardProductsList.inheritsHooksFrom("productList"); // needed to make products show up
 Template.dashboardProductsList.inheritsHelpersFrom("gridContent"); // for price
 
-Template.dashboardProductsList.onCreated(function() {
-  // Update product subscription
-  this.autorun(() => applyProductFilters());
-});
-
-Template.dashboardProductsList.helpers({
-  products: function (data) { // override to show only this users products
-    //let SellerProducts = Meteor.subscribe("SellerProducts");
-    if (ReactionCore.MeteorSubscriptions_Products.ready()) {
-      //console.log("helper Template.dashboardProductsList.helpers using publication SellerProducts.");
-      return ReactionCore.Collections.Products.find({userId: Meteor.userId()});
-    }
-  },
-  isProdsSubReady: function () {
-    if (ReactionCore.MeteorSubscriptions_Products.ready()) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-});
+// Template.dashboardProductsList.helpers({
+//   products: function (data) { // override to show only this users products
+//     if (ReactionCore.Subscriptions.Products.ready()) {
+//       //console.log("helper Template.dashboardProductsList.helpers using publication SellerProducts.");
+//       return ReactionCore.Collections.Products.find({userId: Meteor.userId()});
+//     }
+//   }
+// });
 
 Template.dashboardProductsList.events({
   "click .btn-add-product": function (event, template) {

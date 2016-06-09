@@ -79,7 +79,9 @@ var dtpTooltipsDe = {
 
 function setLatestOrderMaxDate() {
   // set maxDate on latestOrderDate Datetimepicker
-  let maxDate = moment($('.forSaleOnDate-edit-input').val(), "DD.MM.YYYY").startOf('day');
+  const value = $('.forSaleOnDate-edit-input').val();
+  if( !value ) return;
+  let maxDate = moment(value, "DD.MM.YYYY").startOf('day');
   maxDate = moment(maxDate.format("DD.MM.YYYY")+" "+$(".pickupTimeFrom-edit-input").val(), "DD.MM.YYYY HH:mm");
   maxDate = maxDate.subtract(1, "hour");
   console.log("setting max Date: "+maxDate.toString());

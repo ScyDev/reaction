@@ -1,5 +1,4 @@
 <template name="dashboardProductsList">
-  {{#if isProdsSubReady}}
     <div cla_ss="flex-item">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -11,10 +10,4 @@
         {{> productsMarketplace}}
       </div>
     </div>
-  {{else}}
-    <div class="spinnerBox">
-      {{>spinner}}
-      <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
-    </div>
-  {{/if}}
 </template>

@@ -113,7 +113,7 @@ Template.productMap.onCreated(function() {
 
   Session.set("productGrid/selectedProducts", []);
   // Update product subscription
-  this.autorun(() => applyProductFilters());
+  // this.autorun(() => applyProductFilters());
 
   GoogleMaps.ready('map', function(map) {
     markers = [];

@@ -76,7 +76,8 @@ const filters = new SimpleSchema({
  * @return {Object} return product cursor
  */
 Meteor.publish("Products", function (productScrollLimit = 24, productFilters, sort = {}) {
-  // console.log(productFilters)
+  console.log("Products publication call!");
+  
   check(productScrollLimit, Number);
   check(productFilters, Match.OneOf(undefined, filters, String, Object));
 

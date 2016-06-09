@@ -1,33 +1,32 @@
 Template.productDetail.onCreated(function () {
+  console.log("Template.productDetail.onCreated()");
   this.productId = () => ReactionRouter.getParam("handle");
   this.variantId = () => ReactionRouter.getParam("variantId");
-  this.autorun(() => {
+  // this.autorun(() => {
     this.subscribe("Product", this.productId());
     this.subscribe("Tags");
-  });
+  // });
 });
-
+Template.productDetail.onRendered(function () {
+  console.log("Template.productDetail.onRendered()");
+});
 /**
  * productDetail helpers
  * see helper/product.js for
  * product data source
  */
 Template.productDetail.helpers({
-  product: function () {
-    const instance = Template.instance();
-    if (instance.subscriptionsReady()) {
-      return ReactionProduct.setProduct(instance.productId(),
-        instance.variantId());
-    }
-  },
+  product: () => ReactionProduct.setProduct(Template.instance().productId(), Template.instance().variantId()),
+  // product: function () {
+  //   const instance = Template.instance();
+  //   if (instance.subscriptionsReady()) {
+  //     return ReactionProduct.setProduct(instance.productId(), instance.variantId());
+  //   }
+  // },
   tags: function () {
     let product = ReactionProduct.selectedProduct();
     if (product) {
-      if (product.hashtags) {
-        return _.map(product.hashtags, function (id) {
-          return ReactionCore.Collections.Tags.findOne(id);
-        });
-      }
+      return _.map(product.hashtags, id => ReactionCore.Collections.Tags.findOne(id));
     }
   },
   tagsComponent: function () {
