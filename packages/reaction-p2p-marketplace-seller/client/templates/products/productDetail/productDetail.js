@@ -154,7 +154,7 @@ Template.productDetail.helpers({
 Template.productDetail.onRendered(function(){
   const productId = ReactionProduct.selectedProductId();
   console.log( "Calling 'products/checkIfExpired' method with productId", productId)
-  Meteor.call("products/checkIfExpired", productId);
+  if( productId ) Meteor.call("products/checkIfExpired", productId);
 });
 
 Template.productDetail.onDestroyed(function(){

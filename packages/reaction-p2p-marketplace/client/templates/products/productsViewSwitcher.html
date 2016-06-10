@@ -14,15 +14,14 @@
           <span>{{i18n 'products.listView' 'List'}}</span>
           </span>
         </div>
-        {{#if Session "productFilters/showAllMine"}}
-        {{else}}
+        {{#unless Session "productFilters/showAllMine"}}
         <div class="viewSwitchItem">
           <span id="productMapView">
           <i id="icon-map" class="view-switcher-icon fa fa-map"></i>
           <span>{{i18n 'products.mapView' 'Map'}}</span>
           </span>
         </div>
-        {{/if}}
+        {{/unless}}
       </div>
     </h2>
   </div>

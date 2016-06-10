@@ -8,8 +8,7 @@ Template.productMap.onRendered(function() {
   GoogleMaps.load();
 });
 
-let Media;
-Media = ReactionCore.Collections.Media;
+let Media = ReactionCore.Collections.Media;
 Template.productMap.helpers({
   mapOptions: function() {
     if (GoogleMaps.loaded()) {
@@ -25,8 +24,8 @@ Template.productMap.helpers({
 var markers = {};
 
 function addMarker(map, userId) {
-  if( !map || !userId ) return;
-  console.log( "Adding marker for seller", userId )
+  if (!map || !userId) return;
+  console.log("Adding marker for seller", userId);
   Meteor.call("accounts/getUserAddress", userId, true, function(error, result) {
     if (!error && result) {
       const address = result.replace("undefined", "").replace("  ", " ");
@@ -43,7 +42,7 @@ function addMarker(map, userId) {
              animation: google.maps.Animation.DROP,
              icon: "/packages/scydev_reaction-p2p-marketplace-locations/public/images/icon.png",
           });
-          marker.productsCount = 1;
+          markers[userId].marker = marker;
 
           const contentString = Blaze.toHTMLWithData(Template.productMapDetails, {
             products: ReactionCore.Collections.Products.find({ userId }, { sort: {latestOrderDate: 1} }).fetch()
@@ -58,7 +57,6 @@ function addMarker(map, userId) {
           marker.addListener( 'mouseout', () => markerIsHovered = false );
           map.instance.addListener( 'click', () => infoWindow.close() );
 
-          markers[userId].marker = marker;
        }
       } );
     }
@@ -117,7 +115,7 @@ Template.productMap.onCreated(function() {
 
   GoogleMaps.ready('map', function(map) {
     markers = [];
-    ReactionCore.Collections.Products.find().observe({
+    ReactionCore.Collections.Products.find(Session.get("productFilters")).observe({
       added: product => {
         // Create a marker for this seller if it does not exist
         if( markers[product.userId] ) markers[product.userId].productsCount++

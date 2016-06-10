@@ -96,8 +96,10 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
   //Meteor.asdflol(2000);
 
   ReactionCore.Log.info( "Query:", selector, sort )
-  return ReactionCore.Collections.Products.find(selector, {
+  const products = ReactionCore.Collections.Products.find(selector, {
     sort: sort,
     limit: productScrollLimit
   });
+  ReactionCore.Log.info("Products publication:", products.count(), "items returned.");
+  return products;
 });

@@ -1,11 +1,13 @@
 /* watch for productFilters in Session and resubscribe */
 
-let savedQueryParams;
+let savedProductFilters;
 let savedProductScrollLimit;
 
 this.applyProductFilters = () => {
   const route = ReactionRouter._current.path;
 
+  /* Collect the filters from Session into the 'queryParams' */
+  
   const showAllMine = /\/account\/seller\/products/.test(route);
   const showAllMineFilter = showAllMine ? { showAllMine: true } : {};
   
@@ -23,56 +25,74 @@ this.applyProductFilters = () => {
   if (locationFilter.location == null || locationFilter.location.trim() == "") locationFilter = {};
   
   const mealTimeFilter = { mealTime: Session.get("productFilters/mealTime") };
-  
+
   let queryFilter = { query: Session.get("productFilters/query") };
-  if (queryFilter.query == null || queryFilter.query == "") queryFilter = {};
-  
+  if (queryFilter.query == null || queryFilter.query === "") queryFilter = {};
+
   const queryParams = Object.assign({}, tagsFilter, ReactionRouter.current().queryParams, dateFilter, locationFilter, mealTimeFilter, showAllMineFilter, queryFilter);
-  
+
   const productScrollLimit = Session.get("productScrollLimit");
-  
+
   /* We do not check route earlier as the Tracker ignores reactive vars after the "return" statement */
-  if( typeof route === "undefined" ) {
+  if (typeof route === "undefined") {
     console.log("Route is not defined yet...");
     return;
   }
 
-  // console.log("route:", route, "queryParams differs:", !_.isEqual(queryParams, savedQueryParams), ", productScrollLimit:", productScrollLimit, savedProductScrollLimit, "showAllMine:", showAllMine, "queryParams: ", queryParams);
-  
-  if( !_.isEqual(queryParams, savedQueryParams) || productScrollLimit != savedProductScrollLimit ) Tracker.nonreactive( () => {
-    savedQueryParams = queryParams;
-    savedProductScrollLimit = productScrollLimit;
-    console.info( "applyProductFilters | queryParams:", queryParams );
-    Session.set("productFilters", buildProductSelector(queryParams, Meteor.userId()));
-    Session.set("subscriptions/products/ready", false);
-    ReactionCore.Subscriptions.Products = Meteor.subscribe("Products", productScrollLimit, queryParams, () => {
-      console.log("ReactionCore.Subscriptions.Products is ready.");
-      // Session.set("subscriptions/products/ready", true);
-    });
-  }); else {
-    console.info("Tracker pushed with the same environment state, ignoring...");
-  }
+  /* We need to build the Products fetch selector to compare it with the previous one,
+     however we can do it on server only as the location filter is Users collection dependant
+  */
+  Meteor.call("buildProductSelector", queryParams, Meteor.userId(), (error, productFilters) => {
+    if (error) {
+      console.log(`Can't build the selector: ${error.message}`);
+      return;
+    }
+
+    /* Here we wrap the code into Tracker.nonreactive not to allow Tracker to stop the sub automatically,
+       because it is doing that even when the condition is not fulfilled and the nex resubscription is not called.
+       In the result we had not ready subscriptions in some cases.
+    */
+    if (!_.isEqual(productFilters, savedProductFilters) || 
+        productScrollLimit != savedProductScrollLimit) Tracker.nonreactive(() => {
+      savedProductFilters = productFilters;
+      savedProductScrollLimit = productScrollLimit;
+      console.info("applyProductFilters | queryParams:", queryParams, ", productFilters:", productFilters);
+      Session.set("productFilters", productFilters);
+      // Session.set("subscriptions/products/ready", false);
+
+      /* As the subscription is not stopped automatically, we should stop it manually,
+         but only after the next subscription is ready
+      */
+      const oldSub = ReactionCore.Subscriptions.Products;
+      ReactionCore.Subscriptions.Products = Meteor.subscribe("Products", productScrollLimit, queryParams, () => {
+        if (oldSub) oldSub.stop();
+        console.log("ReactionCore.Subscriptions.Products is ready.");
+        // Session.set("subscriptions/products/ready", true);
+      });
+    }); else {
+      console.info("Tracker pushed with the same environment state, ignoring...");
+    }
+  });
 }
 
 
-Meteor.startup( () => {
-  Session.set( "productFilters", {} );
-  // Session.setDefault( "productFilters/tags", [] );
-  Session.set( "productFilters/showAllMine", false );
-	Session.setDefault( "productFilters/mealTime", { showLunch: true, showDinner: true } );
+Meteor.startup(() => {
+  Session.set("productFilters", {});
+  Session.set("productFilters/showAllMine", false);
+  Session.setDefault("productFilters/mealTime", { showLunch: true, showDinner: true });
   Session.set("productScrollLimit", 24);
 
-	Tracker.autorun(() => {
-	  if(!ReactionCore.Subscriptions.Tags.ready()) return;
+  Tracker.autorun(() => {
+    if (!ReactionCore.Subscriptions.Tags.ready()) return;
     const tags = ReactionCore.Collections.Tags.find().fetch().map(tag =>  tag._id);
-    tags.push( null );
-    Session.set( "productFilters/tags", tags );
-	})
-	
-	Tracker.autorun(() => {
-	  ReactionRouter.watchPathChange();
-	  Session.set("productFilters/showAllMine", /\/account\/seller\/products/.test(ReactionRouter._current.path) );
-	});
+    tags.push(null);
+    Session.set("productFilters/tags", tags);
+  })
+
+  Tracker.autorun(() => {
+    ReactionRouter.watchPathChange();
+    Session.set("productFilters/showAllMine", /\/account\/seller\/products/.test(ReactionRouter._current.path));
+  });
 
   // Update product subscription
   Tracker.autorun(() => applyProductFilters());
@@ -81,4 +101,6 @@ Meteor.startup( () => {
 
 Template.registerHelper("Session", name => Session.get(name));
 // Template.registerHelper("isProdsSubReady", () => Session.get("subscriptions/products/ready"));
-Template.registerHelper("isProdsSubReady", () => ReactionCore.Subscriptions.Products.ready());
+Template.registerHelper("isProdsSubReady", () => {
+  return ReactionCore.Subscriptions.Products ? ReactionCore.Subscriptions.Products.ready() : false;
+});

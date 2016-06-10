@@ -5,7 +5,7 @@
 let Media;
 Media = ReactionCore.Collections.Media;
 Template.productList.helpers({
-  // products: () => ReactionCore.Collections.Products.find(Session.get("productFilters"), { sort: { latestOrderDate: 1 }}).fetch(),
+  products: () => ReactionCore.Collections.Products.find(Session.get("productFilters"), { sort: { latestOrderDate: 1 }}).fetch(),
   // products: function () {
   //   return ReactionProduct.getProductsByTag(this.tag);
   // },

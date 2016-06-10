@@ -57,11 +57,11 @@ Meteor.methods({
 
     if (!ReactionCore.hasAdminAccess()) {
       let account =  ReactionCore.Collections.Accounts.findOne({userId: Meteor.userId()});
-      if (account.profile.addressBook.length <= 0) {
+      if (!account.profile.addressBook || account.profile.addressBook.length === 0) {
         ReactionCore.Log.info("No address. throw error!");
         throw new Meteor.Error(403, "error.noProfileAddress");
-        //errorMsg += "Profile address required.";
-        //template.$(".title-edit-input").focus();
+        // errorMsg += "Profile address required.";
+        // template.$(".title-edit-input").focus();
       }
     }
 
