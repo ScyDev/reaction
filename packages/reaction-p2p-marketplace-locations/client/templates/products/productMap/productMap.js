@@ -46,16 +46,23 @@ function addMarker(map, userId) {
           marker.productsCount = 1;
 
           const contentString = Blaze.toHTMLWithData(Template.productMapDetails, {
-            products: ReactionCore.Collections.Products.find({ userId }, { sort: {latestOrderDate: 1} }).fetch()
+            products: ReactionCore.Collections.Products.find({ userId }, { sort: {latestOrderDate: 1} }).fetch(),
+            address: address
           });
           // console.log( "infoWindow:", contentString );
           const infoWindow = new google.maps.InfoWindow({ content: contentString });
           let markerIsHovered = false;
+
           marker.addListener( 'mouseover', () => {
             markerIsHovered = true;
             Meteor.setTimeout( () => { if( markerIsHovered ) infoWindow.open(map, marker) }, 1000 );
           } );
+          marker.addListener( 'click', () => {
+            markerIsHovered = true;
+            infoWindow.open(map, marker);
+          } );
           marker.addListener( 'mouseout', () => markerIsHovered = false );
+          
           map.instance.addListener( 'click', () => infoWindow.close() );
 
           markers[userId].marker = marker;
