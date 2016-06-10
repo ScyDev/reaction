@@ -38,7 +38,7 @@ Package.onUse(function(api) {
 
   api.use("scydev:reaction-p2p-marketplace");
   api.use("reactioncommerce:reaction-product-variant");
-  
+
   api.use("dburles:google-maps");
 
   // common files
@@ -62,6 +62,9 @@ Package.onUse(function(api) {
                 'client/templates/products/productDetail/productDetail.js',
               ],
               'client');
+
+  api.addFiles("client/templates/products/productMapDetails/productMapDetails.html", "client");
+  api.addFiles("client/templates/products/productMapDetails/productMapDetails.js", "client");
 
   api.addFiles("client/templates/dashboard/locations.html", ["client"]);
   api.addFiles("client/templates/dashboard/locations.js", ["client"]);

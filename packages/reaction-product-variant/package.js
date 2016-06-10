@@ -47,9 +47,6 @@ Package.onUse(function (api) {
   api.addFiles("client/templates/products/productList/productList.html", "client");
   api.addFiles("client/templates/products/productList/productList.js", "client");
 
-  api.addFiles("client/templates/products/productMapDetails/productMapDetails.html", "client");
-  api.addFiles("client/templates/products/productMapDetails/productMapDetails.js", "client");
-
   api.addFiles("client/templates/products/productGrid/content/content.html", "client");
   api.addFiles("client/templates/products/productGrid/content/content.js", "client");
 
