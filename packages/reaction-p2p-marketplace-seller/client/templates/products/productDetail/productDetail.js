@@ -126,7 +126,8 @@ Template.registerHelper("belongsToCurrentUser", function (productId) {
   return ((productBelongingToCurrUser != null) || ReactionCore.hasAdminAccess());
 });
 
-Template.registerHelper("displayProductDetail", function (productId) {
+Template.productDetail.helpers({
+  "displayProductDetail": (productId) => {
   if (_.isArray(productId) === true) {
     productId = productId[0];
   }
@@ -134,7 +135,7 @@ Template.registerHelper("displayProductDetail", function (productId) {
   let product = ReactionCore.Collections.Products.findOne({_id:productId})
   const shopId = ReactionCore.getShopId();
 
-  console.log("displayProductDetail: ",productId,product);
+  console.log("displayProductDetail: ", productId, product);
   if (product.userId == Meteor.userId()
           || Roles.userIsInRole(Meteor.userId(), ["admin"], shopId)
           || (product.isActive && product.isVisible)
@@ -146,25 +147,26 @@ Template.registerHelper("displayProductDetail", function (productId) {
           console.log("don't display product detail");
           return false;
         }
+  }
 });
 
 
 Template.productDetail.onRendered(function(){
-  let productId = ReactionRouter.current().params.handle;
-
-  Meteor.call("products/checkIfExpired", productId);
+  const productId = ReactionProduct.selectedProductId();
+  console.log( "Calling 'products/checkIfExpired' method with productId", productId)
+  if( productId ) Meteor.call("products/checkIfExpired", productId);
 });
 
 Template.productDetail.onDestroyed(function(){
   console.log("Template productDetail destroyed! showing ReactionProduct: ",ReactionProduct);
 
-  let productId = ReactionProduct.selectedProductId();
-  let media = ReactionCore.Collections.Media.findOne({
+  const productId = ReactionProduct.selectedProductId();
+  const media = ReactionCore.Collections.Media.findOne({
     "metadata.productId": productId,
     "metadata.priority": 0,
     "metadata.toGrid": 1
   }, { sort: { uploadedAt: 1 } });
-  console.log("product media: ",media);
+  console.log("product media:", media);
 
   if ($('.product-detail-edit .title-edit-input').val() == ""
       && $('.product-detail-edit.description-edit .description-edit-input').val() == ""

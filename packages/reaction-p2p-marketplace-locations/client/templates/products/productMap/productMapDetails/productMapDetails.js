@@ -2,10 +2,6 @@
  * productMapDetails helpers
  */
 
-Template.productMapDetails.onRendered( function() {
-  console.log("data", this.data);
-})
-
 Template.productMapDetails.helpers({
   // products: () => ReactionProduct.getProductsByTag(this.tag),
   mediaUrl: function () {
