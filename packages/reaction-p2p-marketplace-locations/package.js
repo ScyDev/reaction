@@ -55,8 +55,6 @@ Package.onUse(function (api) {
     "client/templates/products/productMap/productMap.js",
     "client/templates/products/productMap/productMapSingle.html",
     "client/templates/products/productMap/productMapSingle.js",
-    "client/templates/products/productMap/productMapDetails/productMapDetails.html",
-    "client/templates/products/productMap/productMapDetails/productMapDetails.js",
     "client/templates/products/locationField/locationField.html",
     "client/templates/products/locationField/locationField.js",
     "client/templates/products/locationFieldDisplay/locationFieldDisplay.html",
