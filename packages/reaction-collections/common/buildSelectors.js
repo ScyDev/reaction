@@ -1,25 +1,25 @@
 if (Meteor.isServer) {
-  /* Cannot be provided as the isomorphic function as it uses search throught Users collection, 
+  /* Cannot be provided as the isomorphic function as it uses search throught Users collection,
      which is not fully accessible from the client
   */
   this.buildProductSelector = (productFilters, userId) => {
     const shopId = ReactionCore.getShopId();
     ReactionCore.Log.info( "Shop:", shopId);
-    
+
     let shopAdmin = false;
-  
+
     const selector = {
       // Using '$not: {$ne' instead of '$eq'
       // The issue is solved in Meteor 1.3.3: https://github.com/meteor/meteor/issues/4142
       ancestors: { $exists: true, $not: {$ne: [] } },
       shopId
     };
-  
+
     if (productFilters) {
       if (Roles.userIsInRole(userId, ["admin"])) {
         shopAdmin = true;
       }
-  
+
       // handle multiple shops
       if (productFilters.shops) {
         _.extend(selector, {
@@ -27,7 +27,7 @@ if (Meteor.isServer) {
             $in: productFilters.shops
           }
         });
-      
+
         // check if this user is a shopAdmin
         for (let thisShopId of productFilters.shops) {
           if (Roles.userIsInRole(userId, ["admin", "createProduct"], thisShopId)) {
@@ -35,7 +35,7 @@ if (Meteor.isServer) {
           }
         }
       }
-      
+
       // filter by tags
       if (productFilters.tags) {
         _.extend(selector, {
@@ -44,7 +44,7 @@ if (Meteor.isServer) {
           }
         });
       }
-  
+
       // filter by details
       if (productFilters.details) {
         _.extend(selector, {
@@ -62,11 +62,11 @@ if (Meteor.isServer) {
           }
         });
       }
-  
+
       // show all seller's products
       if( productFilters.showAllMine && userId) {
         _.extend(selector, { userId });
-        
+
         // filter by query (applicapble only to seller's products list)
         if (productFilters.query) {
           let cond = {
@@ -89,10 +89,10 @@ if (Meteor.isServer) {
         if (!shopAdmin) {
           const currentDate = new Date(moment().format("MM/DD/YYYY HH:mm")); // Date is necessary, moment won't work for query
           const basicDate = new Date(moment().format("MM/DD/YYYY"));
-  
-          ReactionCore.Log.info("filtering products by lastOrderDate:", currentDate);
-          ReactionCore.Log.info("and forSaleOnDate:", basicDate);
-  
+
+          ReactionCore.Log.info("default filtering products by lastOrderDate:", currentDate);
+          ReactionCore.Log.info("default filtering and forSaleOnDate:", basicDate);
+
           _.extend(selector, {
             latestOrderDate: {
               "$gte": currentDate
@@ -102,19 +102,19 @@ if (Meteor.isServer) {
             }
           });
         }
-  
+
         // filter by location
         if (productFilters.location) {
           ReactionCore.Log.info("filtering products by location:", productFilters.location);
           let filterLocation = productFilters.location.split("/");
           let filterLat = parseFloat(filterLocation[0]);
           let filterLong = parseFloat(filterLocation[1])
-    
+
           // http://gis.stackexchange.com/questions/2951/algorithm-for-offsetting-a-latitude-longitude-by-some-amount-of-meters
           let oneKilometerLat = 1.0/111.111;
           let oneKilometerLong = 1.0/(111.111 * Math.cos(filterLat));
           let searchDistanceMultiplier = 10;
-    
+
           let usersSelector = {
             "profile.latitude": {
               "$gte": filterLat - (oneKilometerLat * searchDistanceMultiplier),
@@ -127,22 +127,22 @@ if (Meteor.isServer) {
           };
           ReactionCore.Log.info("with selector:", usersSelector);
           const usersForLocation = Meteor.users.find( usersSelector );
-    
+
           const userIds = usersForLocation.map( p => p._id )
           ReactionCore.Log.info("found users for lat/long:", userIds);
-    
+
           _.extend(selector, {
             userId: {
               "$in": userIds,
             }
           });
         }
-    
+
         // filter by meal time
         const filterMealTime = productFilters.mealTime;
         if (filterMealTime && (!filterMealTime.showLunch || !filterMealTime.showDinner)) {
           ReactionCore.Log.info("filtering products by meal time: ", filterMealTime);
-    
+
           _.extend(selector, {
             pickupTimeTo: {
               "$gte": filterMealTime.showLunch ? "00:00" : "14:00",
@@ -150,14 +150,14 @@ if (Meteor.isServer) {
             }
           });
         }
-    
+
         // filter by visibility
         if (productFilters.visibility !== undefined) {
           _.extend(selector, {
             isVisible: productFilters.visibility
           });
         }
-    
+
         // filter by gte minimum price
         if (productFilters["price.min"] && !productFilters["price.max"]) {
           _.extend(selector, {
@@ -166,7 +166,7 @@ if (Meteor.isServer) {
             }
           });
         }
-    
+
         // filter by lte maximum price
         if (productFilters["price.max"] && !productFilters["price.min"]) {
           _.extend(selector, {
@@ -175,7 +175,7 @@ if (Meteor.isServer) {
             }
           });
         }
-    
+
         // filter with a price range
         if (productFilters["price.min"] && productFilters["price.max"]) {
           _.extend(selector, {
@@ -186,7 +186,7 @@ if (Meteor.isServer) {
             }]
           });
         }
-    
+
         // filter by gte minimum weight
         if (productFilters["weight.min"] && !productFilters["weight.max"]) {
           _.extend(selector, {
@@ -195,7 +195,7 @@ if (Meteor.isServer) {
             }
           });
         }
-    
+
         // filter by lte maximum weight
         if (productFilters["weight.max"] && !productFilters["weight.min"]) {
           _.extend(selector, {
@@ -204,7 +204,7 @@ if (Meteor.isServer) {
             }
           });
         }
-    
+
         // filter with a weight range
         if (productFilters["weight.min"] && productFilters["weight.max"]) {
           _.extend(selector, {
@@ -215,14 +215,14 @@ if (Meteor.isServer) {
             }]
           });
         }
-  
+
         // products are always visible to owners and admins
         if (!(Roles.userIsInRole(userId, ["owner"], shopId) || shopAdmin)) {
           selector.isVisible = true;
           // only products enabled by their owner
           selector.isActive = true;
         }
-  
+
         // check quantity
         _.extend(selector, {
           isSoldOut: false
@@ -234,7 +234,7 @@ if (Meteor.isServer) {
           }
         });*/
       }
-  
+
       // Filter by sale date if it is explicitly defined in the filterset
       if (productFilters.forSaleOnDate) {
         const filterDate = new Date(moment(productFilters.forSaleOnDate, "DD.MM.YYYY").format("MM/DD/YYYY"));
@@ -243,17 +243,17 @@ if (Meteor.isServer) {
   			}
         else {
           const basicDateYMD = moment(filterDate).format("YYYY-MM-DD");
-          ReactionCore.Log.info("filtering products by date:", basicDateYMD, new Date(basicDateYMD+"T00:00:00.000Z"), new Date(basicDateYMD+"T23:59:59.000Z"));
-  
+          ReactionCore.Log.info("filtering products by date: ",basicDateYMD, " ",moment(basicDateYMD).startOf("day").format()," ",moment(basicDateYMD).endOf("day").format());
+
           _.extend(selector, {
             forSaleOnDate: {
-              "$gte": new Date(basicDateYMD + "T00:00:00.000Z"),
-              "$lte": new Date(basicDateYMD + "T23:59:59.000Z")
+              "$gte": new Date(moment(basicDateYMD).startOf("day").format()),
+              "$lte": new Date(moment(basicDateYMD).endOf("day").format())
             }
           });
         }
       }
-  
+
     }
 
     return selector;
