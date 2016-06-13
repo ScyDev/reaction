@@ -1,4 +1,5 @@
 <template name="productDetailMarketplace">
+  {{#if Template.subscriptionsReady}}
   <div class="product-page">
   {{#with product}}
 
@@ -225,5 +226,10 @@
   </div>
   {{/with}}
   </div>
-
+  {{else}}
+    <div class="spinnerBox">
+      {{>spinner}}
+      <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
+    </div>
+  {{/if}}
 </template>
