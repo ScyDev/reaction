@@ -51,7 +51,10 @@ function addMarker(map, userId) {
 
             /* If products count is zero, delete the marker, otherwise update infoWindow content */
             if (products.count() > 0) {
-              infoWindow.setContent(Blaze.toHTMLWithData(Template.productMapDetails, { products: products.fetch() }));
+              infoWindow.setContent(Blaze.toHTMLWithData(Template.productMapDetails, {
+                products: products.fetch(),
+                address: address
+              }));
             } else {
               // Remove the marker from the map
               marker.setMap(null);
@@ -69,6 +72,10 @@ function addMarker(map, userId) {
             markerIsHovered = true;
             Meteor.setTimeout(() => { if (markerIsHovered) infoWindow.open(map, marker) }, 1000);
           });
+          marker.addListener( 'click', () => {
+            markerIsHovered = true;
+            infoWindow.open(map, marker);
+          } );          
           marker.addListener("mouseout", () => markerIsHovered = false);
           map.instance.addListener("click", () => infoWindow.close());
         }
