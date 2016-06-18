@@ -19,7 +19,7 @@ Meteor.publish("Accounts", function (userId) {
   const usersSelector = `{"roles.${shopId}": {"$nin": ["anonymous"]}}`;
   let nonAnonUsers = Meteor.users.find(EJSON.parse(usersSelector), {fields: {_id: 1}}).fetch();
   nonAnonUsers = _.pluck(nonAnonUsers, '_id');
-  ReactionCore.Log.info("publish(Accounts): ",nonAnonUsers);
+  //ReactionCore.Log.info("publish(Accounts): ",nonAnonUsers);
 
   // global admin can get all accounts
   if (Roles.userIsInRole(this.userId, ["owner"], Roles.GLOBAL_GROUP)) {
