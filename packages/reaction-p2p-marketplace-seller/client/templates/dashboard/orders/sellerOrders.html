@@ -5,22 +5,25 @@
           <h3 class="panel-title" data-i18n="admin.dashboard.sellerOrdersLabel">Orders</h3>
         </div>
 
-        {{#each order in sellerOrders}}
-          {{> sellerOrdersListItem order}}
-        {{else}}
+        {{#if isOrdersSubReady}}
 
-          <div class="empty-view-message">
-              <i class="fa fa-shopping-bag"></i>
-              <p>{{i18n 'order.ordersNotFound' 'No orders found'}}</p>
+          {{#each order in sellerOrders}}
+            {{> sellerOrdersListItem order}}
+          {{else}}
+
+            <div class="empty-view-message">
+                <i class="fa fa-shopping-bag"></i>
+                <p>{{i18n 'order.ordersNotFound' 'No orders found'}}</p>
+            </div>
+          {{/each}}
+        {{else}}
+          <div class="spinnerBox">
+              {{>spinner}}
+              <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
           </div>
-        {{/each}}
+        {{/if}}
+
       </div>
-    {{#unless isProdsSubReady}}
-      <div class="spinnerBox">
-          {{>spinner}}
-          <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
-      </div>
-    {{/unless}}
     {{/if}}
 </template>
 
