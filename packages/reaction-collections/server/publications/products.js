@@ -77,7 +77,7 @@ const filters = new SimpleSchema({
  */
 Meteor.publish("Products", function (productScrollLimit = 24, productFilters, sort = {}) {
   console.log("Products publication call!");
-  
+
   check(productScrollLimit, Number);
   check(productFilters, Match.OneOf(undefined, filters, String, Object));
 
@@ -86,7 +86,7 @@ Meteor.publish("Products", function (productScrollLimit = 24, productFilters, so
   if (typeof shop !== "object") return this.ready();
 
   const selector = buildProductSelector(productFilters, this.userId);
-  
+
   // default sort
   if (_.isEmpty(sort)) sort = { latestOrderDate: 1 }
 
