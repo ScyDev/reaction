@@ -17,6 +17,23 @@ function belongsToCurrentUser(productId) {
   return ((productBelongingToCurrUser != null) || ReactionCore.hasAdminAccess());
 }
 
+function isLatestOrderDateAfterPickupTime(product) {
+  // check if latestOrderDate is after pickupTime
+  let latestOrderDateValue = moment(product.latestOrderDate);
+  let pickupDateTime = moment(
+                        moment(product.forSaleOnDate).format("DD.MM.YYYY")+" "+product.pickupTimeFrom,
+                        "DD.MM.YYYY HH:mm"
+                      );
+
+  ReactionCore.Log.info("'products/activateProduct' latestOrderDateValue ",latestOrderDateValue.toString()," pickupTime ",pickupDateTime.toString());
+
+  if (latestOrderDateValue.isAfter(pickupDateTime)) {
+    ReactionCore.Log.info("'products/activateProduct' latestOrderDateValue ",latestOrderDateValue.toString()," can't be after pickupDateTime ",pickupDateTime.toString());
+    throw new Meteor.Error(403, "productDetail.latestOrderDateValueAfterPickupDateTime");
+  }
+
+}
+
 /**
  * @function setProductInvisibleAndInactive
  * @description set the product insvisible and inactive
@@ -71,16 +88,7 @@ Meteor.methods({
     }).fetch();
     let variantValidator = true;
 
-    // check if latestOrderDate is after pickupTime
-    let latestOrderDateValue = moment(product.latestOrderDate);
-    let pickupDateTime = moment(
-                          moment(product.forSaleOnDate).format("DD.MM.YYYY")+" "+product.pickupTimeFrom,
-                          "DD.MM.YYYY HH:mm"
-                        );
-    if (latestOrderDateValue.isAfter(pickupDateTime)) {
-      ReactionCore.Log.info("'products/activateProduct' latestOrderDateValue ",latestOrderDateValue.toString()," can't be after pickupDateTime ",pickupDateTime.toString());
-      throw new Meteor.Error(403, "productDetail.latestOrderDateValueAfterPickupDateTime");
-    }
+    isLatestOrderDateAfterPickupTime(product);
 
     if (typeof product === "object" && product.title.length > 1) {
       if (variants.length > 0) {
