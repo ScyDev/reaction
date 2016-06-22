@@ -129,7 +129,18 @@ Template.registerHelper("belongsToCurrentUser", function (productId) {
 
 Template.productDetail.onRendered(function(){
   let productId = ReactionRouter.current().params.handle;
-
+/*
+  $("html, body").animate({ scrollTop: 0 }, "fast");
+  Meteor.setTimeout(function(){
+    $("html, body").animate({ scrollTop: 0 }, "fast");
+  }, 10);
+  Meteor.setTimeout(function(){
+    $("html, body").animate({ scrollTop: 0 }, "fast");
+  }, 500);
+  Meteor.setTimeout(function(){
+    $("html, body").animate({ scrollTop: 0 }, "fast");
+  }, 1500);
+*/
   Meteor.call("products/checkIfExpired", productId);
 });
 
