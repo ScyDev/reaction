@@ -4,6 +4,7 @@
     https://forums.meteor.com/t/if-template-subscriptionsready-is-firing-too-soon/8752/10
     Use a specific helper instead of Template.subscriptionsReady
     -->
+    {{#if isProdsSubReady}}
       <ul class="product-grid-list list-unstyled" id="product-grid-list">
         {{#each products}}
           {{> productGridItems}}
@@ -15,12 +16,13 @@
           </div>
         {{/each}}
       </ul>
-    {{#unless isProdsSubReady}}
+      {{#if loadingMoreProducts}}{{>spinner}}{{/if}}
+    {{else}}
       <div class="spinnerBox">
           {{>spinner}}
           <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
       </div>
-    {{/unless}}
+    {{/if}}
   </div>
 
   {{#if loadMoreProducts}}
