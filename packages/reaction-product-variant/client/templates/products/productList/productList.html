@@ -50,11 +50,12 @@
             {{/each}}
         </tbody>
       </table>
-    {{else}}
+      {{#if loadingMoreProducts}}{{>spinner}}{{/if}}
+  {{else}}
       <div class="spinnerBox">
           {{>spinner}}
           <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
       </div>
-    {{/if}}
+  {{/if}}
   </div>
 </template>

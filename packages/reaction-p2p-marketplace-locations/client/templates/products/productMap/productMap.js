@@ -75,7 +75,7 @@ function addMarker(map, userId) {
           marker.addListener( 'click', () => {
             markerIsHovered = true;
             infoWindow.open(map, marker);
-          } );          
+          } );
           marker.addListener("mouseout", () => markerIsHovered = false);
           map.instance.addListener("click", () => infoWindow.close());
         }

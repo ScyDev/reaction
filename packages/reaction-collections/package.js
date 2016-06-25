@@ -33,7 +33,7 @@ Package.onUse(function (api) {
 
   // ReactionCore declaration
   api.addFiles("common/globals.js");
-  api.addFiles("common/buildSelectors.js");
+  api.addFiles("server/buildSelectors.js");
 
   // collections
   api.addFiles("common/collections/collections.js");
