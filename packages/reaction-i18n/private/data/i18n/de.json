@@ -336,7 +336,9 @@
 					"refunded": "Refunded"
 				},
 				"outOfStock": "Nicht mehr verfügbar",
-				"productInventoryHasChanged": "Sorry. Jemand hat dieses Produkt gekauft während Du am shoppen warst. Passe Deinen Warenkorb an."
+				"productInventoryHasChanged": "Sorry. Jemand hat dieses Produkt gekauft während Du am shoppen warst. Passe Deinen Warenkorb an.",
+				"cartMissingAddress": "Warenkorb hat keine Adresse",
+				"cartMissingAddressText": "Da ist bei uns etwas schief gelaufen. Wir werden das untersuchen. Bitte probiers nochmals."
 			},
 			"orderShipping": {
 				"shipTo": "Ship To",
