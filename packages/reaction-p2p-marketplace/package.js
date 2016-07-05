@@ -35,7 +35,7 @@ Package.onUse(function(api) {
   api.use("reactioncommerce:core@0.10.0");
   api.use("reactive-var");
 
-  api.use("sacha:spin");
+  api.use("utilities:spin");
   api.use("scydev:reaction-search@0.0.2");
 
   api.use("aldeed:template-extension");

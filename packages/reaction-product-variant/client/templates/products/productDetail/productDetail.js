@@ -180,9 +180,10 @@ Template.productDetail.events({
         ReactionProduct.setCurrentVariant(null);
         qtyField.val(1);
         // scroll to top on cart add
-        $("html,body").animate({
-          scrollTop: 0
-        }, 0);
+        $('html, body').animate({
+            scrollTop: $("#products-anchor").offset().top
+        }, "fast");
+
         // slide out label
         let addToCartText = i18next.t("productDetail.addedToCart");
         let addToCartTitle = currentVariant.title || "";
