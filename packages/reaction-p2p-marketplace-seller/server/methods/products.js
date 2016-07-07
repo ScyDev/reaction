@@ -150,7 +150,7 @@ Meteor.methods({
     const shop = ReactionCore.Collections.Shops.findOne(shopId);
     //const product = ReactionCore.Collections.Products.findOne(productId);
     let adminEmail = process.env.REACTION_EMAIL;
-    ReactionCore.Log.info(`Wanna send product review mail to: `,adminEmail);
+    ReactionCore.Log.info(`Wanna send product review mail for product `,productId,` from user `,userId,` to: `,adminEmail);
 
     if (!adminEmail || !adminEmail.length > 0) {
       return true;
