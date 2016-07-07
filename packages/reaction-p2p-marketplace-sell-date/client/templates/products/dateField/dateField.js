@@ -79,9 +79,11 @@ var dtpTooltipsDe = {
 
 function setLatestOrderMaxDate() {
   // set maxDate on latestOrderDate Datetimepicker
-  let maxDate = moment($('.forSaleOnDate-edit-input').val(), "DD.MM.YYYY").startOf('day');
+  const value = $('.forSaleOnDate-edit-input').val();
+  if( !value ) return;
+  let maxDate = moment(value, "DD.MM.YYYY").startOf('day');
   maxDate = moment(maxDate.format("DD.MM.YYYY")+" "+$(".pickupTimeFrom-edit-input").val(), "DD.MM.YYYY HH:mm");
-  maxDate = maxDate.subtract(1, "hour");
+  //maxDate = maxDate.subtract(1, "hour");
   console.log("setting max Date: "+maxDate.toString());
   $('.datetimepicker-latestOrderDate').data("DateTimePicker").maxDate(maxDate);
 }
@@ -111,7 +113,7 @@ function initDatepickers() {
 
   $('.datetimepicker-forSaleOnDate').off();
   $('.datetimepicker-forSaleOnDate').on("dp.change", function(event) {
-    console.log("datetimepicker-forSaleOnDate changed: ",event.date);
+    console.log("datetimepicker-forSaleOnDate changed: ",event.date.toString());
 
     const fixedDatetime = event.date;
     $('.forSaleOnDate-edit-input').val(fixedDatetime.format("DD.MM.YYYY"));
@@ -121,9 +123,13 @@ function initDatepickers() {
     setLatestOrderMaxDate();
 
     // automatically set latest order date to same day
-    $('.latestOrderDate-dummy-input').val(moment(fixedDatetime).add(9.5, "hours").format("DD.MM.YYYY HH:mm"));
-    $('.latestOrderDate-edit-input').val(moment(fixedDatetime).add(9.5, "hours").format("DD.MM.YYYY HH:mm"));
+    let newLatestOrderDate = moment(fixedDatetime).add(9.5, "hours");
+    let newLatestOrderDateFormatted = newLatestOrderDate.format("DD.MM.YYYY HH:mm");
+    console.log("datetimepicker-forSaleOnDate changed newLatestOrderDate: ",newLatestOrderDate.toString());
+    $('.latestOrderDate-dummy-input').val(newLatestOrderDateFormatted);
+    $('.latestOrderDate-edit-input').val(newLatestOrderDateFormatted);
     $('.latestOrderDate-edit-input').trigger("change");
+    $('.datetimepicker-latestOrderDate').data("DateTimePicker").date(newLatestOrderDate);
   });
 
 	// ######################################################################

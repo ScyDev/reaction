@@ -5,17 +5,7 @@
 let Media;
 Media = ReactionCore.Collections.Media;
 Template.productList.helpers({
-  products: function () {
-    return ReactionProduct.getProductsByTag(this.tag);
-  },
-  isProdsSubReady: function () {
-    if (ReactionCore.MeteorSubscriptions_Products.ready()) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  },
+  products: () => ReactionCore.Collections.Products.find(Session.get("productFilters"), { sort: { latestOrderDate: 1 }}).fetch(),
   media: function () {
     const media = ReactionCore.Collections.Media.findOne({
       "metadata.productId": this._id,

@@ -5,18 +5,23 @@ Template.locationFieldDisplay.onCreated(function() {
 });
 
 Template.registerHelper("locationForProduct", function (product) {
-  //console.log("locationForProduct() product: ",product);
+  console.log("locationForProduct() product: ",product);
   let templateInstance = Template.instance();
 
-  //console.log("product.userId:",product.userId);
+  if (templateInstance.locationForProduct == null) {
+    templateInstance.locationForProduct = new ReactiveVar("");
+  }
+
+  console.log("product.userId:",product.userId);
   if (product.userId != null) {
     Meteor.call("accounts/getUserAddress", product.userId, false, function(error, result) {
-      //console.log("accounts/getUserAddress() result: ",result," error: ",error);
+      console.log("accounts/getUserAddress() result: ",result," error: ",error);
       if (!error && result) {
         templateInstance.locationForProduct.set(result.replace("undefined", "").replace("  ", " "));
       }
     });
   }
 
-  return Template.instance().locationForProduct.get();
+  return templateInstance.locationForProduct.get();
+  
 });

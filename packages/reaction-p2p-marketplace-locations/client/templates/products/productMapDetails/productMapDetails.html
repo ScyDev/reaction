@@ -1,0 +1,21 @@
+<template name="productMapDetails">
+  <div class="info-window-content">
+    {{#each products}}
+    <a href="{{pathFor 'product' handle=handle}}" data-event-category="grid" data-event-action="product-click" data-event-label="Grid product click" data-event-value="{{_id}}" style="display: block;">
+      <div class="product-list-item product-image">
+        <div><h3>{{title}}</h3></div>
+        <img src="{{mediaUrl}}" class="product-grid-item-images img-responsive">
+        <div class="product-info">
+          <div class="currency-symbol"><h4>{{formatPrice displayPrice}}</h4></div>
+          <div class="for-sale-on-date">{{ prettifyDate forSaleOnDate }}</div>
+          <div class="pickup-time">{{ pickupTimeFrom }} - {{ pickupTimeTo }}</div>
+          <div class="location-text">{{../address}}</div>
+        </div>
+      </div>
+      <div class="product-list-item product-desc">
+        <div>{{{description}}}</div>
+      </div>
+    </a>
+    {{/each}}
+  </div>
+</template>

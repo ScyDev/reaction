@@ -36,8 +36,9 @@ function loadMoreProducts() {
 
 Template.productGrid.onCreated(function () {
   Session.set("productGrid/selectedProducts", []);
+  Session.set("productScrollLimit", 24);
   // Update product subscription
-  this.autorun(() => applyProductFilters());
+  // this.autorun(() => applyProductFilters());
 
   this.autorun(() => {
     const isActionViewOpen = ReactionCore.isActionViewOpen();
@@ -88,14 +89,6 @@ Template.productGrid.events({
 Template.productGrid.helpers({
   loadMoreProducts: function () {
     return ReactionCore.Collections.Products.find().count() >= Session.get("productScrollLimit");
-  },
-  isProdsSubReady: function () {
-    if (ReactionCore.MeteorSubscriptions_Products.ready()) {
-      return true;
-    }
-    else {
-      return false;
-    }
   },
   products: function () {
     /* 

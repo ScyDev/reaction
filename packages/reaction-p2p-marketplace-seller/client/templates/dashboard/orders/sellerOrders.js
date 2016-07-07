@@ -147,7 +147,7 @@ Template.sellerOrders.helpers({
     }
     return "panel-default";
   },
-  isProdsSubReady: function () {
+  isOrdersSubReady: function () {
     ReactionCore.Subscriptions.SellerOrders = ReactionSubscriptions.subscribe("SellerOrders");
     if (ReactionCore.Subscriptions.SellerOrders.ready()) {
       return true;

@@ -16,6 +16,7 @@
           </div>
         {{/each}}
       </ul>
+      {{#if loadingMoreProducts}}{{>spinner}}{{/if}}
     {{else}}
       <div class="spinnerBox">
           {{>spinner}}

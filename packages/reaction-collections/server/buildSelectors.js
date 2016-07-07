@@ -1,8 +1,10 @@
-
+/* Cannot be provided as the isomorphic function as it uses search through the Users collection,
+   which is not fully accessible from the client
+*/
 this.buildProductSelector = (productFilters, userId) => {
   const shopId = ReactionCore.getShopId();
   ReactionCore.Log.info( "Shop:", shopId);
-  
+
   let shopAdmin = false;
 
   const selector = {
@@ -24,7 +26,7 @@ this.buildProductSelector = (productFilters, userId) => {
           $in: productFilters.shops
         }
       });
-    
+
       // check if this user is a shopAdmin
       for (let thisShopId of productFilters.shops) {
         if (Roles.userIsInRole(userId, ["admin", "createProduct"], thisShopId)) {
@@ -32,50 +34,13 @@ this.buildProductSelector = (productFilters, userId) => {
         }
       }
     }
-    
+
     // filter by tags
     if (productFilters.tags) {
       _.extend(selector, {
         hashtags: {
           $in: productFilters.tags
         }
-      });
-    }
-
-    // filter by sale date
-    if (productFilters.forSaleOnDate) {
-      let filterDate = new Date(moment(productFilters.forSaleOnDate, "DD.MM.YYYY").format('MM/DD/YYYY'));
-			if (filterDate.toString() == "Invalid Date") {
-				filterDate = null;
-        ReactionCore.Log.info("invalid filter date: ",filterDate);
-			}
-      else {
-        let basicDate = moment(filterDate).format('YYYY-MM-DD');
-        ReactionCore.Log.info("filtering products by date: ",basicDate, " ",new Date(basicDate+"T00:00:00.000Z")," ",new Date(basicDate+"T23:59:59.000Z"));
-
-        _.extend(selector, {
-          forSaleOnDate: {
-            "$gte": new Date(basicDate+"T00:00:00.000Z"),
-            "$lte": new Date(basicDate+"T23:59:59.000Z")
-          }
-        });
-      }
-    }
-
-    // filter by query
-    if (productFilters.query) {
-      let cond = {
-        $regex: productFilters.query,
-        $options: "i"
-      };
-      _.extend(selector, {
-        $or: [{
-          title: cond
-        }, {
-          pageTitle: cond
-        }, {
-          description: cond
-        }]
       });
     }
 
@@ -100,18 +65,33 @@ this.buildProductSelector = (productFilters, userId) => {
     // show all seller's products
     if( productFilters.showAllMine && userId) {
       _.extend(selector, { userId });
+
+      // filter by query (applicapble only to seller's products list)
+      if (productFilters.query) {
+        let cond = {
+          $regex: productFilters.query,
+          $options: "i"
+        };
+        _.extend(selector, {
+          $or: [{
+            title: cond
+          }, {
+            pageTitle: cond
+          }, {
+            description: cond
+          }]
+        });
+      }
     } else {
-    
-      // filter by latest order date
-      ReactionCore.Log.info("shopAdmin: ",shopAdmin);
+      // Filter by latest order date AND sale date - both should be not less than today
+      ReactionCore.Log.info("shopAdmin:", shopAdmin);
       if (!shopAdmin) {
-        // let currentDate = new Date(moment().utcOffset("+02:00").format('MM/DD/YYYY HH:mm')); // Date is necessary, moment won't work for query
-        let currentDate = new Date(moment().format('MM/DD/YYYY HH:mm')); // Date is necessary, moment won't work for query
-        // let basicDate = new Date(moment().utcOffset("+02:00").format('MM/DD/YYYY'));
-        let basicDate = new Date(moment().format('MM/DD/YYYY'));
-        ReactionCore.Log.info("filtering products by lastOrderDate:", currentDate);
-        ReactionCore.Log.info("and forSaleOnDate:", basicDate);
-  
+        const currentDate = new Date(moment().format("MM/DD/YYYY HH:mm")); // Date is necessary, moment won't work for query
+        const basicDate = new Date(moment().format("MM/DD/YYYY"));
+
+        ReactionCore.Log.info("default filtering products by lastOrderDate:", currentDate);
+        ReactionCore.Log.info("default filtering and forSaleOnDate:", basicDate);
+
         _.extend(selector, {
           latestOrderDate: {
             "$gte": currentDate
@@ -124,16 +104,16 @@ this.buildProductSelector = (productFilters, userId) => {
 
       // filter by location
       if (productFilters.location) {
-        ReactionCore.Log.info("filtering products by location: ",productFilters.location);
+        ReactionCore.Log.info("filtering products by location:", productFilters.location);
         let filterLocation = productFilters.location.split("/");
         let filterLat = parseFloat(filterLocation[0]);
         let filterLong = parseFloat(filterLocation[1])
-  
+
         // http://gis.stackexchange.com/questions/2951/algorithm-for-offsetting-a-latitude-longitude-by-some-amount-of-meters
         let oneKilometerLat = 1.0/111.111;
         let oneKilometerLong = 1.0/(111.111 * Math.cos(filterLat));
         let searchDistanceMultiplier = 10;
-  
+
         let usersSelector = {
           "profile.latitude": {
             "$gte": filterLat - (oneKilometerLat * searchDistanceMultiplier),
@@ -144,24 +124,24 @@ this.buildProductSelector = (productFilters, userId) => {
             "$lte": filterLong - (oneKilometerLong * searchDistanceMultiplier),
           },
         };
-        ReactionCore.Log.info("with selector: ",usersSelector);
+        ReactionCore.Log.info("with selector:", usersSelector);
         const usersForLocation = Meteor.users.find( usersSelector );
-  
+
         const userIds = usersForLocation.map( p => p._id )
-        ReactionCore.Log.info("found users for lat/long: ", userIds);
-  
+        ReactionCore.Log.info("found users for lat/long:", userIds);
+
         _.extend(selector, {
           userId: {
             "$in": userIds,
           }
         });
       }
-  
+
       // filter by meal time
       const filterMealTime = productFilters.mealTime;
       if (filterMealTime && (!filterMealTime.showLunch || !filterMealTime.showDinner)) {
         ReactionCore.Log.info("filtering products by meal time: ", filterMealTime);
-  
+
         _.extend(selector, {
           pickupTimeTo: {
             "$gte": filterMealTime.showLunch ? "00:00" : "14:00",
@@ -169,14 +149,14 @@ this.buildProductSelector = (productFilters, userId) => {
           }
         });
       }
-  
+
       // filter by visibility
       if (productFilters.visibility !== undefined) {
         _.extend(selector, {
           isVisible: productFilters.visibility
         });
       }
-  
+
       // filter by gte minimum price
       if (productFilters["price.min"] && !productFilters["price.max"]) {
         _.extend(selector, {
@@ -185,7 +165,7 @@ this.buildProductSelector = (productFilters, userId) => {
           }
         });
       }
-  
+
       // filter by lte maximum price
       if (productFilters["price.max"] && !productFilters["price.min"]) {
         _.extend(selector, {
@@ -194,7 +174,7 @@ this.buildProductSelector = (productFilters, userId) => {
           }
         });
       }
-  
+
       // filter with a price range
       if (productFilters["price.min"] && productFilters["price.max"]) {
         _.extend(selector, {
@@ -205,7 +185,7 @@ this.buildProductSelector = (productFilters, userId) => {
           }]
         });
       }
-  
+
       // filter by gte minimum weight
       if (productFilters["weight.min"] && !productFilters["weight.max"]) {
         _.extend(selector, {
@@ -214,7 +194,7 @@ this.buildProductSelector = (productFilters, userId) => {
           }
         });
       }
-  
+
       // filter by lte maximum weight
       if (productFilters["weight.max"] && !productFilters["weight.min"]) {
         _.extend(selector, {
@@ -223,7 +203,7 @@ this.buildProductSelector = (productFilters, userId) => {
           }
         });
       }
-  
+
       // filter with a weight range
       if (productFilters["weight.min"] && productFilters["weight.max"]) {
         _.extend(selector, {
@@ -253,7 +233,38 @@ this.buildProductSelector = (productFilters, userId) => {
         }
       });*/
     }
+
+    // Filter by sale date if it is explicitly defined in the filterset
+    if (productFilters.forSaleOnDate) {
+      const filterDate = new Date(moment(productFilters.forSaleOnDate, "DD.MM.YYYY").format("MM/DD/YYYY"));
+      if (filterDate.toString() == "Invalid Date") {
+        ReactionCore.Log.info("invalid filter date.");
+      }
+      else {
+        const basicDateYMD = moment(filterDate).format("YYYY-MM-DD");
+        ReactionCore.Log.info("filtering products by date: ",basicDateYMD, " ",moment(basicDateYMD).startOf("day").format()," ",moment(basicDateYMD).endOf("day").format());
+
+        _.extend(selector, {
+          forSaleOnDate: {
+            "$gte": new Date(moment(basicDateYMD).startOf("day").format()),
+            "$lte": new Date(moment(basicDateYMD).endOf("day").format())
+          }
+        });
+      }
+    }
+
   }
 
   return selector;
 }
+
+Meteor.methods({
+  buildProductSelector: (productFilters, userId) => {
+    check(productFilters, Object);
+    check(userId, String);
+    ReactionCore.Log.info("'methods.buildProductSelector' call:", productFilters, userId)
+    const result = buildProductSelector(productFilters, userId);
+    ReactionCore.Log.info("'methods.buildProductSelector' result:", result);
+    return result;
+  }
+});
