@@ -167,6 +167,12 @@ Meteor.methods({
     ReactionCore.i18nextInitForServer(i18next);
     ReactionCore.Log.info("sendProductReviewEmail: i18n server test:", i18next.t('accountsUI.mails.productReview.subject'));
 
+    let userEmail = "";
+    if (Meteor.user().emails && Meteor.user().emails.length > 0) {
+      userEmail = Meteor.user().emails[0].address
+    }
+    ReactionCore.Log.info("sendProductReviewEmail: userEmail ",userEmail);
+
     // fetch and send templates
     SSR.compileTemplate("products/reviewProduct", ReactionEmailTemplate("products/reviewProduct"));
     try {
@@ -179,7 +185,7 @@ Meteor.methods({
           shop: shop,
           user: Meteor.user(),
           productId: productId,
-          userEmail: Meteor.user().emails[0].address
+          userEmail: userEmail
         })
       });
     } catch (e) {
