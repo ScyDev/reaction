@@ -2,20 +2,40 @@
 // Reaction i18n Translations, RTL and Currency Exchange Support
 //
 
+function camelize(str) {
+  return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
+    if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
+    return index == 0 ? match.toLowerCase() : match.toUpperCase();
+  });
+}
+
+/**
+  To translate messages from packages that do not send i18n keys
+*/
+ReactionCore.toI18nKey = function(text) {
+  return camelize(text.replace(/[0-9]/g,'').replace(/\./g,'').replace(",", "").replace("'", "").replace("\"", "").replace("!", "").replace("?", "").replace("(", "").replace(")", ""));
+}
+
 /**
  * getLang
  * @summary detects device default language
  * @return {String} language code
  */
 const getLang = () => {
+  return "de";
+
   if (typeof navigator.languages !== "undefined") {
     if (~navigator.languages[0].indexOf("-")) {
+      console.log("getLang() ",navigator.languages[0].split("-")[0]);
       return navigator.languages[0].split("-")[0];
     } else if (~navigator.languages[0].indexOf("_")) {
+      console.log("getLang() ",navigator.languages[0].split("_")[0]);
       return navigator.languages[0].split("_")[0];
     }
+    console.log("getLang() ",navigator.languages[0]);
     return navigator.languages[0];
   }
+  console.log("getLang() ",navigator.language," || ",navigator.browserLanguage);
   return navigator.language || navigator.browserLanguage;
 };
 

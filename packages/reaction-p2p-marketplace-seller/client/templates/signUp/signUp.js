@@ -84,6 +84,9 @@ Template.loginFormSignUpView.events({ // for some strange reason our custom even
     Accounts.createUser(newUserData, function (error) {
       if (error) {
         // Show some error message
+        //console.log("register fail: ",error);
+        error.reason = i18next.t("accountsUI.error."+error.reason.replace(".", ""));
+        console.log("register fail: ",error);
         templateInstance.formMessages.set({
           alerts: [error]
         });

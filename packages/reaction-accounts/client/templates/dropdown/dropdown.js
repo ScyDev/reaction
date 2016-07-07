@@ -59,6 +59,7 @@ Template.loginDropdown.events({
           });
         }
       });
+      template.$(".dropdown-toggle").dropdown("toggle");
     } else if (this.route || this.name) {
       event.preventDefault();
       template.$(".dropdown-toggle").dropdown("toggle");

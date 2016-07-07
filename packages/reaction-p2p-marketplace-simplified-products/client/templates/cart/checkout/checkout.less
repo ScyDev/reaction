@@ -1,0 +1,21 @@
+
+.checkout-progress,
+.checkout-steps-main .checkout-step:nth-child(1), // welcome message & login/register
+//.checkout-steps-main .checkout-step:nth-child(2),  address
+.checkout-steps-main .checkout-step:nth-child(3), // shipping
+.checkout-steps-side .checkout-step:nth-child(1), // order summary
+.checkout-steps-main .checkout-step-completed:nth-child(1), // welcome message & login/register
+//.checkout-steps-main .checkout-step-completed:nth-child(2),  address
+.checkout-steps-main .checkout-step-completed:nth-child(3), // shipping
+.checkout-steps-main .checkout-step-completed:nth-child(4), // summary, if all steps are in main
+.checkout-steps-side .checkout-step-completed:nth-child(1), // order summary
+.checkout-step-badge,
+//.checkout-steps-main
+{
+  display: none;
+}
+
+//#payment-methods-accordian .panel:first-child,
+#payment-methods-accordian a[aria-controls="genericPaymentForm"] {
+  display: none;
+}

@@ -70,7 +70,8 @@ Template.registerHelper("cart", function () {
  */
 
 Template.registerHelper("cartPayerName", function () {
-  let cart = ReactionCore.Collections.Cart.findOne();
+  // Is not ideal if customer name contains umlaut öäü, then the braintree form does produce an error, thus the customer should always type in the name as it is on the credit card
+  /*let cart = ReactionCore.Collections.Cart.findOne();
   if (cart) {
     if (cart.billing) {
       if (cart.billing[0].address) {
@@ -79,5 +80,5 @@ Template.registerHelper("cartPayerName", function () {
         }
       }
     }
-  }
+  }*/
 });

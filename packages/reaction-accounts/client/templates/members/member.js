@@ -23,6 +23,12 @@ Template.member.events({
   }
 });
 
+Template.member.helpers({
+  getUserAccount: function(userId) {
+    ReactionCore.Collections.Accounts.findOne({_id: userId});
+  }
+});
+
 Template.memberSettings.helpers({
   isOwnerDisabled: function () {
     if (Meteor.userId() === this.userId) {

@@ -4,8 +4,25 @@
         <img class="circular-icon" src="{{getGravatar this 40}}" style="width: 40px;border-radius: 50%;"/>
       </div>
       <div class="member-list-item-profile">
-        {{displayName this}}
-        <span>&nbsp;({{this.email}})</span>
+        <div>
+          {{displayName this}}: {{this.profileName}}
+          <span>&nbsp;({{this.email}})</span> ID: <a href="/snaxter/profile/{{this.userId}}" target="_blank">{{this.userId}}</a>
+        </div>
+        <div>
+          Created at: {{this.createdAt}}
+        </div>
+        <div>
+          Type: {{this.isSeller}}
+        </div>
+        <div>
+          Address:
+          {{this.address.fullName}},
+          {{this.address.address1}} {{this.address.address2}},
+          {{this.address.postal}} {{this.address.city}},
+          {{this.address.region}}, {{this.address.country}},
+          {{this.address.phone}}
+        </div>
+
       </div>
       <div class="member-list-item-controls">
         <button class="btn btn-default" data-event-action="showMemberSettings" data-i18n="accountsUI.manage">Manage</button>

@@ -80,6 +80,10 @@ Meteor.methods({
 
       // if we don't have existing inventory we create backorders
       if (totalRequiredQty > availableInventoryQty) {
+        ReactionCore.Log.debug("Not enough inventory ", totalRequiredQty, " of ",availableInventoryQty);
+        //throw new Meteor.Error(403, "Not enough inventory "+ totalRequiredQty+ " of "+availableInventoryQty);
+
+        /*
         // TODO put in a dashboard setting to allow backorder or altenate handler to be used
         let backOrderQty = Number(totalRequiredQty - availableInventoryQty - existingReservationQty);
         ReactionInventory.Log.info(`no inventory found, create ${backOrderQty} ${backorderStatus}`);
@@ -96,6 +100,7 @@ Meteor.methods({
 
         Meteor.call("inventory/backorder", reservation, backOrderQty);
         existingReservationQty = backOrderQty;
+        */
       }
       // if we have inventory available, only create additional required reservations
       ReactionInventory.Log.debug("existingReservationQty", existingReservationQty);

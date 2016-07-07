@@ -185,6 +185,8 @@ function denormalize(id, field) {
   case "inventoryPolicy":
   case "inventoryQuantity":
   case "inventoryManagement":
+    ReactionCore.Log.info("denormalize() isSoldOut(variants): ",isSoldOut(variants),"doc.type:",doc.type,"id:",id,"variants:",variants);
+
     Object.assign(update, {
       isSoldOut: isSoldOut(variants),
       isLowQuantity: isLowQuantity(variants),
@@ -214,8 +216,9 @@ function denormalize(id, field) {
  */
 function isSoldOut(variants) {
   return variants.every(variant => {
+    ReactionCore.Log.info("isSoldOut() - variant.inventoryManagement:",variant.inventoryManagement,"variant.inventoryPolicy:",variant.inventoryPolicy,"ReactionCore.getVariantQuantity(variant):",ReactionCore.getVariantQuantity(variant));
     if (variant.inventoryManagement && variant.inventoryPolicy) {
-      return ReactionCore.getVariantQuantity(variant) === 0;
+      return ReactionCore.getVariantQuantity(variant) < 1;
     }
     return false;
   });
@@ -655,7 +658,7 @@ Meteor.methods({
   "products/deleteProduct": function (productId) {
     check(productId, Match.OneOf(Array, String));
     // must have admin permission to delete
-    if (!ReactionCore.hasAdminAccess()) {
+    if (!ReactionCore.hasAdminAccess() && !Meteor.call("products/belongsToCurrentUser", productId)) {
       throw new Meteor.Error(403, "Access Denied");
     }
 
@@ -712,10 +715,21 @@ Meteor.methods({
   "products/updateProductField": function (_id, field, value) {
     check(_id, String);
     check(field, String);
-    check(value, Match.OneOf(String, Object, Array, Boolean));
+    check(value, Match.OneOf(String, Object, Array, Boolean, Date));
     // must have createProduct permission
     if (!ReactionCore.hasPermission("createProduct")) {
       throw new Meteor.Error(403, "Access Denied");
+    }
+
+    // translate date to US format for saving
+    if (field == "forSaleOnDate") {
+      if (value == null || value == "") {
+        throw new Meteor.Error(403, "forSaleOnDateIsNoDate");
+      }
+      value = moment(value, "DD.MM.YYYY").format('MM/DD/YYYY');
+    }
+    if (field == "latestOrderDate") {
+      value = moment(value, "DD.MM.YYYY HH:mm").format('MM/DD/YYYY HH:mm');
     }
 
     const doc = ReactionCore.Collections.Products.findOne(_id);
@@ -723,10 +737,27 @@ Meteor.methods({
     let stringValue = EJSON.stringify(value);
     let update = EJSON.parse("{\"" + field + "\":" + stringValue + "}");
 
+    ReactionCore.Log.info("products/updateProductField() ",update," id",_id," type",type);
+
     // we need to use sync mode here, to return correct error and result to UI
     const result = ReactionCore.Collections.Products.update(_id, {
-      $set: update
-    }, { selector: { type: type } });
+        $set: update
+      },
+      { selector: { type: type } },
+      function (error, num) {
+        //ReactionCore.Log.info("products/updateProductField() update error",error);
+        if (error != null) {
+          let reason = "Reason for error not found";
+          if (error.sanitizedError != null) {
+            reason = error.sanitizedError.reason;
+          }
+          else if (error.reason != null) {
+            reason = error.reason;
+          }
+          throw new Meteor.Error(403, reason);
+        }
+      }
+    );
 
     if (typeof result === "number") {
       if (type === "variant" && ~toDenormalize.indexOf(field)) {
@@ -830,7 +861,7 @@ Meteor.methods({
     }).count();
 
     if (productCount === 0 && relatedTagsCount === 0) {
-      return ReactionCore.Collections.Tags.remove(tagId);
+      //return ReactionCore.Collections.Tags.remove(tagId);
     }
   },
 

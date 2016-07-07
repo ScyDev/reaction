@@ -17,9 +17,20 @@ Template.cartCheckout.onCreated(function () {
   if (ReactionCore.Subscriptions.Cart.ready()) {
     const cart = ReactionCore.Collections.Cart.findOne();
     if (cart.workflow && cart.workflow.status === "new") {
-        // if user logged in as normal user, we must pass it through the first stage
+      // if user logged in as normal user, we must pass it through the first stage
       Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutLogin", cart._id);
     }
+    // make all steps available immediately
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutAddressBook");
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutAddressBook");
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "coreCheckoutShipping");
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "coreCheckoutShipping");
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "coreCheckoutShipping");
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutReview");
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutReview");
+
+    // always show cart on checkout
+    Session.set("displayCart", true);
   }
 });
 

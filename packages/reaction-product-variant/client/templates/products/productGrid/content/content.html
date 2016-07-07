@@ -4,6 +4,9 @@
       <div class="overlay">
         <div class="overlay-title">{{title}}</div>
         <div class="currency-symbol">{{formatPrice displayPrice}}</div>
+        <div class="for-sale-on-date"><div class="info-icon fa fa-clock-o"></div> <div class="info-text">{{ prettifyDate forSaleOnDate }}</div></div>
+        <div class="location-text"><div class="info-icon fa fa-map"></div> <div class="info-text">{{> locationFieldDisplay }}</div></div>
+        <div class="inventory-text"><div class="info-icon fa fa-pie-chart"></div> <div class="info-text">{{ copiedInventoryQuantity }} {{ i18n 'accountsUI.inventoryUnit' 'pieces' }}</div></div>
       </div>
     </a>
   </div>

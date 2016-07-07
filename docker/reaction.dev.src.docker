@@ -84,7 +84,7 @@ COPY bin/docker /usr/bin
 RUN chmod +x \
 /usr/bin/build-meteor.sh \
 /usr/bin/build-packages.sh \
-/usr/bin/cleanup.sh \
+#/usr/bin/cleanup.sh \
 /usr/bin/entrypoint.sh \
 /usr/bin/clone-packages.sh
 

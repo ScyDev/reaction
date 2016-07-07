@@ -1,0 +1,1 @@
+Template.newOpenCartDrawer.replaces("openCartDrawer");

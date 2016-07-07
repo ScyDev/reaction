@@ -168,6 +168,7 @@ Object.assign(ReactionCore, {
       i18nKey = `admin.${app.registry[0].provides}.${registryLabel}`;
     }
     registry.i18nKeyLabel = `${i18nKey}Label`;
+    //console.log("Looking for i18n string: ",i18nKey);
     registry.i18nKeyDescription = `${i18nKey}Description`;
     registry.i18nKeyPlaceholder = `${i18nKey}Placeholder`;
     registry.i18nKeyTooltip = `${i18nKey}Tooltip`;

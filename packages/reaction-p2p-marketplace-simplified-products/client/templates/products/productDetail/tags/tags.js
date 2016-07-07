@@ -52,6 +52,7 @@ Template.productTagDropdownInputForm.helpers({
 /* ### !!! helpers MUST be set on originaL templates name !!! ### */
 Template.productTagInputForm.events({
   "click .tag-input-hashtag": function () {
+    /*
     return Meteor.call("products/setHandleTag", ReactionProduct.selectedProductId(), this._id,
       function (error, result) {
         if (result) {
@@ -60,6 +61,7 @@ Template.productTagInputForm.events({
           });
         }
       });
+      */
   },
   "click .tag-input-group-remove": function () {
     return Meteor.call("products/removeProductTag", ReactionProduct.selectedProductId(),
@@ -97,7 +99,7 @@ Template.productTagInputForm.events({
         function (error) {
           template.$(".tags-submit-new").val("").focus();
           if (error) {
-            Alerts.toast("Tag already exists, or is empty.", "error");
+            Alerts.toast(i18next.t("productDetail.tagExists", "Tag already exists, or is empty."), "error");
             return false;
           }
         });

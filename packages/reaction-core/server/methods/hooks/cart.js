@@ -15,14 +15,18 @@ ReactionCore.MethodHooks.after("cart/submitPayment", function (options) {
       "paymentSubmitted");
 
     if (cart) {
-      if (cart.items && cart.billing[0].paymentMethod) {
+      if (!cart.billing) {
+        ReactionCore.Log.info('ReactionCore.MethodHooks.after("cart/submitPayment") No billing address after payment! Meteor.userId(): ',Meteor.userId(),' options: ',options);
+      }
+
+      if (cart.items && cart.billing && cart.billing[0].paymentMethod) {
         const orderId = Meteor.call("cart/copyCartToOrder", cart._id);
         // Return orderId as result from this after hook call.
         // This is done by extending the existing result.
         result.orderId = orderId;
       } else {
         throw new Meteor.Error(
-          "An error occurred verifing payment method. Failed to save order."
+          "An error occurred verifing payment method. Failed to save order. Meteor.userId(): ",Meteor.userId()," options: ",options
         );
       }
     }

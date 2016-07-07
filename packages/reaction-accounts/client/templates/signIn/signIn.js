@@ -1,3 +1,4 @@
+
 /**
  * onCreated: Login form sign in view
  */
@@ -61,6 +62,9 @@ Template.loginFormSignInView.events({
     Meteor.loginWithPassword(username, password, (error) => {
       if (error) {
         // Show some error messages above the form fields
+        console.log("login fail: ",error);
+        let i18nKey = ReactionCore.toI18nKey(error.reason);
+        error.reason = i18next.t("accountsUI.error."+i18nKey);
         templateInstance.formMessages.set({
           alerts: [error]
         });

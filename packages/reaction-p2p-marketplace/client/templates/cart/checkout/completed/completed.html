@@ -1,0 +1,44 @@
+<template name="cartCompletedMarketplace">
+
+  {{#with order}}
+    <div class="container">
+      <div class="cart-completed-orders">
+        <div class="row">
+          <div class="completed-order-confirmation">
+            <h3><span data-i18n="cartCompleted.thankYou">Thank you!</span></h3>
+            <div id="order-status">
+              <p><span data-i18n="cartCompleted.yourOrderIsNow">Your order number is:</span>&nbsp;{{transactionId}}</p>
+            </div>
+            <div>
+              {{#unless email}}
+              <p>
+                <div class="alert alert-success">
+                  <span data-i18n="cartCompleted.registerGuest">Hello! Add an email and receive order updates.</span>
+                  <div class="input-group col-sm-4">
+                    <input type="email" name="email" class="form-control" placeholder="email" id="update-order-email" aria-describedby="update-order-email">
+                    <span class="input-group-addon" id="update-order" data-i18n="app.submit">Submit</span>
+                  </div>
+                </div>
+              </p>
+              {{else}}
+                <span data-i18n="cartCompleted.trackYourDelivery">Order confirmation have been sent to</span>
+                <span>{{email}}</span>
+              {{/unless}}
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          {{> dashboardOrdersList}}
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <br/>
+    <br/>
+    <div class="spinnerBox">
+      {{>spinner}}
+      <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
+    </div>
+  {{/with}}
+</template>

@@ -1,21 +1,30 @@
 <template name="sellerOrders">
-  {{#if hasPermission 'account/seller/sellerorders'}}
-    <div class="seller-orders container-fluid-sm">
-      <div class="panel-heading">
-        <h3 class="panel-title">Orders</h3>
-      </div>
-
-      {{#each order in sellerOrders}}
-        {{> sellerOrdersListItem order}}
-      {{else}}
-
-        <div class="empty-view-message">
-            <i class="fa fa-shopping-bag"></i>
-            <p data-i18n="order.ordersNotFound">No Orders Found</p>
+    {{#if hasPermission 'account/seller/sellerorders'}}
+      <div class="seller-orders container-fluid-sm">
+        <div class="panel-heading">
+          <h3 class="panel-title" data-i18n="admin.dashboard.sellerOrdersLabel">Orders</h3>
         </div>
-      {{/each}}
-    </div>
-  {{/if}}
+
+        {{#if isOrdersSubReady}}
+
+          {{#each order in sellerOrders}}
+            {{> sellerOrdersListItem order}}
+          {{else}}
+
+            <div class="empty-view-message">
+                <i class="fa fa-shopping-bag"></i>
+                <p>{{i18n 'order.ordersNotFound' 'No orders found'}}</p>
+            </div>
+          {{/each}}
+        {{else}}
+          <div class="spinnerBox">
+              {{>spinner}}
+              <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
+          </div>
+        {{/if}}
+
+      </div>
+    {{/if}}
 </template>
 
 <template name="sellerOrderListFilters">
@@ -48,9 +57,11 @@
         <div class="order-detail-item status">
           {{> sellerOrderStatusDetail}}
         </div>
+        <!--
         <div class="order-detail-item summary">
           {{> ordersListSummary}}
         </div>
+      -->
       </div>
     <div class="order-panel-items">
       {{> ordersListItems}}
@@ -73,7 +84,7 @@
 
 <template name="sellerOrderStatusDetail">
   <div class="col-xs-8">
-    <div data-i18n="orderDetail.created">Created {{orderAge}} {{dateFormat createdAt format="MMM D, YYYY hh:mm:ss A"}}</div>
+    <span data-i18n="cartCompleted.ordered">Ordered</span> {{dateFormat createdAt format="DD.MM.YYYY HH:mm"}}
     {{#if shipmentTracking}}
     <p>Tracking: <a href="#">{{shipmentTracking}}</a></p>
     {{/if}}

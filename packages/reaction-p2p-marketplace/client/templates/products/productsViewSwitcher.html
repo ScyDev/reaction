@@ -1,7 +1,30 @@
 <template name="productsViewSwitcher">
   <div class="viewSwitch">
     <h2>
-      <div> | <span id="productGridView">Grid</span> | <span id="productListView">List</span> | <span id="productMapView">Map</span> | </div>
+      <div>
+        <div class="viewSwitchItem">
+          <span id="productGridView">
+          <i id="icon-grid" class="view-switcher-icon fa fa-th"></i>
+          <span>{{i18n 'products.gridView' 'Grid'}}</span>
+          </span>
+        </div>
+        <div class="viewSwitchItem">
+          <span id="productListView">
+          <i id="icon-list" class="view-switcher-icon fa fa-list"></i>
+          <span>{{i18n 'products.listView' 'List'}}</span>
+          </span>
+        </div>
+        {{#unless Session "productFilters/showAllMine"}}
+        <div class="viewSwitchItem">
+          <span id="productMapView">
+          <i id="icon-map" class="view-switcher-icon fa fa-map"></i>
+          <span>{{i18n 'products.mapView' 'Map'}}</span>
+          </span>
+        </div>
+        {{/unless}}
+      </div>
     </h2>
   </div>
+
+  <div class="clear"></div>
 </template>

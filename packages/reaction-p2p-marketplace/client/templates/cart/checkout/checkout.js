@@ -1,0 +1,1 @@
+Template.cartCheckoutMarketplace.replaces("cartCheckout");

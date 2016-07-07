@@ -13,6 +13,11 @@
           "addProductLabel": "Add Product",
           "accountsLabel": "Accounts"
         },
+        "userAccountDropdown": {
+          "profileLabel": "Profile",
+          "myProductsLabel": "My Products",
+          "myOrdersLabel": "My Orders"
+        },
         "dashboard": {
           "accountsLabel": "Accounts",
           "accountsDescription": "Manage how members sign into your shop",
@@ -37,6 +42,8 @@
           "connectLabel": "Connect",
           "connectDescription": "Connect Reaction as a deployed service",
           "ordersLabel": "Orders",
+          "sellerOrdersLabel": "My Orders",
+          "sellerProductsLabel": "My Products",
           "ordersDescription": "Fulfill your orders",
           "paypalLabel": "PayPal",
           "paypalDescription": "PayPal payments",
@@ -86,7 +93,7 @@
         "save": "Save",
         "saveAndContinue": "Save and continue",
         "saveChanges": "Save Changes",
-        "selectOne": "(Select One)",
+        "selectOne": "(Select one)",
         "cancel": "Cancel",
         "submit": "Submit",
         "delete": "Delete",
@@ -104,12 +111,26 @@
         "shopSettings": "Shop Settings",
         "dashboard": "Dashboard",
         "print": "Print",
+        "offline": "No connection",
+				"appIsOffline": "No connection to server at this time, please try again in a bit.",
         "notFound": "This page was not found.",
         "pageNotFound": "This page was not found.",
         "notFoundTitle": "Oops!",
         "notFoundError": "Page not found.",
         "productNotFound": "This product was not found.",
-        "loadMoreProducts": "Load more products"
+        "loadMoreProducts": "Load more products",
+        "monthJanuary": "January",
+        "monthFebruary": "February",
+        "monthMarch": "March",
+        "monthApril": "April",
+        "monthMay": "May",
+        "monthJune": "June",
+        "monthJuly": "July",
+        "monthAugust": "August",
+        "monthSeptember": "September",
+        "monthOctober": "October",
+        "monthNovember": "November",
+        "monthDecember": "December"
       },
       "shopSettings": {
         "general": "General",
@@ -140,8 +161,11 @@
         "search": "Search products..."
       },
       "productDetail": {
+        "productDetail": "Product detail",
         "productManagement": "Product management",
         "makeInvisible": "Make invisible",
+        "isActive": "This product is under review. It will be visible soon.",
+        "isVisible": "This product is visible to customers.",
         "isNotVisible": "This product is not visible to customers.",
         "makeItVisible": "You can make it visible",
         "whenYouAreDone": "when you're done editing.",
@@ -149,6 +173,7 @@
         "tagsAdd": "Add tag",
         "tagsEdit": "Edit tags",
         "tagExists": "Tag already exists, or is empty.",
+        "dropFile": "Drop file to upload",
         "dropFiles": "Drop files to upload",
         "addInventory": "Add Inventory",
         "barcode": "Barcode",
@@ -176,23 +201,55 @@
         "publishProductHidden": "is now hidden",
         "clonedAlert": "Cloned",
         "deletedAlert": "Deleted",
+        "areYouSure": "Are you sure?",
+        "deletedProductConfirm": "Delete this product?",
+        "deletedProductsConfirm": "Delete selected products?",
+        "yes": "Yes",
+				"no": "No",
+        "deletedProductFailed": "There was an error deleting",
         "startTracking": "Start Tracking",
         "addBarcode": "Add Barcode",
         "quantity": "Quantity",
         "quantityGreaterThanZero": "Error: Quantity must be greater than zero",
         "forSaleOnDate": "For sale on date",
+        "pickupTime": "Pickup time",
+        "pickupTimeFrom": "From",
+        "pickupTimeTo": "To",
+        "latestOrderDate": "Order before",
+        "lastOrderTime": "At",
+        "changeSaved": "Product saved",
         "makeActive": "Activate",
         "makeInactive": "Deactivate",
         "notFoundTitle": "Oops!",
         "notFoundError": "This is not the product you were looking for.",
-        "tagsAdd": "Add tag"
+        "tagsAdd": "Add tag",
+        "location": "Location",
+        "needsReview": "Product changed, it needs to be activated again.",
+		    "pickupTimeFromIsRequired": "Pickup time 'from' is required [HH:MM]",
+		    "pickupTimeToIsRequired": "Pickup time 'to' is required [HH:MM]",
+        "forSaleOnDateIsNoDate": "For sale date is not a date",
+		    "latestOrderDateMustBeADate": "Latest order date must be a date",
+        "notLoggedIn": "Not logged in",
+		    "youNeedToLogIn": "You need to log in or register.",
+        "cantChangeOrderedProduct": "Can't change a product that has already been ordered.",
+        "latestOrderDateValueAfterPickupDateTime": "Latest order time can't be after pickup time.",
+        "latestOrderDateNotOnSaleDate": "The latest order date is not on for sale date . Are you sure?",
+        "latestOrderDateNearPickupTime": "The latest order date is very near the pickup time. Are you sure?"
+      },
+      "products": {
+        "all": "ALL",
+        "gridView": "Grid",
+        "listView": "List",
+        "mapView": "Map",
+        "noLocationFound": "No location found"
       },
       "tags": {
         "addTag": "Add Tag",
         "addGroupTag": "Add Group Tag",
         "addSubTag": "Add Sub Tag",
         "removeTag": "Remove Tag",
-        "createTag": "Create Tag"
+        "createTag": "Create Tag",
+        "noTag": "No tag"
       },
       "productDetailEdit": {
         "title": "Product title",
@@ -209,7 +266,10 @@
         "duplicateProduct": "Duplicate Product",
         "pinProduct": "Pin Product",
         "toggleSize": "Toggle Size",
-        "deleteProduct": "Delete Product",
+    "duplicateProduct": "Duplicate Product",
+        "pinProduct": "Pin Product",
+        "toggleSize": "Toggle Size",
+    "deleteProduct": "Delete Product",
         "publish": "Publish",
         "moreOptions": "More Options"
       },
@@ -262,6 +322,7 @@
         "reference": "Reference",
         "invoice": "Invoice",
         "ordersNotFound": "No orders found",
+        "orderNumber": "Order number",
         "approveInvoice": "Approve",
         "makeAdjustments": "Make Adjustments",
         "capturePayment": "Capture Payment",
@@ -279,7 +340,11 @@
           "completed": "Completed",
           "canceled": "Canceled",
           "refunded": "Refunded"
-        }
+        },
+        "outOfStock": "No longer available",
+				"productInventoryHasChanged": "We're sorry. Somebody bought this product while you were shopping.",
+        "cartMissingAddress": "Cart is missing an address",
+        "cartMissingAddressText": "Something went wrong at our end. We'll investigate. Please try again."
       },
       "orderShipping": {
         "shipTo": "Ship To",
@@ -300,13 +365,16 @@
       "cartCompleted": {
         "thankYou": "Thank you!",
         "itemsFrom": "item(s) from",
-        "yourOrderIsNow": "Your order is now",
+        "yourOrderIsNow": "Your order number is:",
         "summaryMessage": "Thank you for your order.",
         "submitted": "submitted",
         "registerGuest": "Hello! Add an email and receive order updates.",
-        "trackYourDelivery": "Order updates will be sent to",
+        "trackYourDelivery": "Order confirmation has been sent to:",
         "noOrdersFound": "No orders found.",
-        "adminMessage": "You are viewing orders as an administrator"
+        "adminMessage": "You are viewing orders as an administrator",
+        "ordered": "Ordered",
+        "on": "on",
+        "seller": "Seller"
       },
       "checkoutLogin": {
         "welcome": "Welcome, it's so good to see you.",
@@ -317,6 +385,7 @@
         "guestMessage": "You can checkout without creating an account. You'll have a chance to create an account later."
       },
       "addressBookGrid": {
+        "addressBook": "Address Book",
         "addAddress": "Add Address",
         "chooseAddress": "Choose shipping & billing address",
         "createDefault": "Create your default address",
@@ -388,6 +457,20 @@
           "isShippingDefault": "Make this your default shipping address?",
           "isBillingDefault": "Make this your default billing address?",
           "isCommercial": "This is a commercial address."
+        },
+        "search": {
+          "searchBoxDateLabel": "Date",
+          "searchBoxSaleOnDateLabel": "For sale on date",
+          "searchBoxDatePlaceholder": "Choose date...",
+          "searchBoxLocationLabel": "Place",
+          "searchBoxMealTimeLabel": "Meal Time",
+          "searchBoxLunch": "Lunch",
+          "searchBoxDinner": "Dinner",
+          "searchBoxLocationPlaceholder": "City name...",
+          "noProductsFound": "No products found",
+          "searchBoxSaleOnDateLabel": "For sale on date",
+          "searchBoxTitle": "Title",
+          "searchBoxTitlePlaceholder": "By title ..."
         }
       },
       "address": {
@@ -418,7 +501,21 @@
         "processingError": "There was a problem with your payment.",
         "completeYourOrder": "Complete your order",
         "noPaymentMethods": "No payment methods are configured.",
-        "configureNow": "Configure now."
+        "configureNow": "Configure now.",
+        "payerName": "Cardholder name",
+        "cardNumber": "Card number",
+        "expireMonth": "Expiration month",
+        "expireYear": "Expiration year",
+        "cvv": "CVV",
+        "resubmitPayment": "Resubmit payment",
+        "submitting": "Process payment",
+        "braintreeErrors": {
+					"81703": "Credit card type is not accepted by this merchant account.",
+          "81715": "Credit card is invalid.",
+          "processorResponse": {
+            "2038": "Processor Declined"
+          }
+				}
       },
       "checkoutReview": {
         "review": "Review"
@@ -474,8 +571,10 @@
         "forgotPassword": "Reset password",
         "ifYouAlreadyHaveAnAccount": "If you already have an account",
         "name": "Name",
+        "description": "Description",
         "newPassword": "New Password",
         "newPasswordAgain": "New Password (again)",
+        "oldPassword": "Current Password",
         "optional": "Optional",
         "or": "or",
         "password": "Password",
@@ -497,6 +596,7 @@
         "signupCode": "Registration Code",
         "signUpWithYourEmailAddress": "Register with your email address",
         "terms": "Terms of Use",
+        "updateYourInfo": "Update your info",
         "updateYourPassword": "Update your password",
         "updatePasswordAndContinue": "Update and continue",
         "updatedServiceConfiguration": "Updated service configuration for {{service}}",
@@ -505,6 +605,15 @@
         "with": "with",
         "checkoutAsGuest": "Checkout without user account",
         "role": "Role",
+        "userDecision": "You decide!",
+        "userDecisionDesc": "Decide if you want to sell or buy.",
+        "isSeller": "I want to sell products",
+        "isBuyer": "I want to buy products",
+        "boughtOrders": "My purchases",
+        "readTerms": "Read the terms and conditions",
+        "acceptingTerms": "I accept the terms and conditions",
+        "inventoryUnit": "pieces",
+        "theProduct": "unnamed product",
         "info": {
           "emailSent": "Email Sent",
           "emailVerified": "Email verified",
@@ -531,6 +640,7 @@
           "usernameRequired": "Username is required.",
           "usernameTooShort": "Name must be at least 3 characters long.",
           "emailAlreadyExists": "Email already exists.",
+          "Email already exists": "Email already exists",
           "emailDoesntMatchTheCriteria": "Email doesn't match the criteria.",
           "errorSendingEmail": "Error sending email, possible configuration issue.",
           "unableToSendInvitationEmail": "Unable to send invitation email.",
@@ -547,6 +657,7 @@
           "noMatchingLoginAttemptFound": "No matching login attempt found",
           "passwordIsOld": "Password is old. Please reset your password.",
           "incorrectPassword": "Incorrect password",
+          "errorTooManyRequestsPleaseSlowDownYouMustWaitSecondsBeforeTryingAgain": "Too many requests. Please slow down and wait a while.",
           "invalidEmail": "Invalid email",
           "addressMustBeAValidEMailAddress": "Invalid Email",
           "mustBeLoggedIn": "Must be logged in",
@@ -561,14 +672,69 @@
           "verifyEmailLinkExpired": "Verify email link expired",
           "verifyEmailLinkIsForUnknownAddress": "Verify email link is for unknown address",
           "matchFailed": "Match failed",
-          "unknownError": "Unknown error"
+          "unknownError": "Unknown error",
+          "description": "Description",
+          "invalidDescription": "Description too long. Max 1000 characters.",
+					"noProductsFound": "No products found",
+          "mustAcceptTerms": "You must accept the terms and conditions",
+          "noAddress": "No address",
+          "youNeedToEnterYourAddress": "You need to enter your address.",
+          "imageTooBig": "Image too big",
+          "imageTooBigText": "Please try a smaller image. Max {{maxKb}} KB."
+        },
+        "mails": {
+          "welcome": {
+            "subject": "Welcome to {{shopName}}"
+          },
+          "invited": {
+            "subject": "You have been invited to join {{shopName}}"
+          },
+          "productReview": {
+						"subject": "New product to be reviewed from {{userName}}"
+					},
+          "orderUpdate": {
+            "subject": "Order from {{shopName}}",
+            "subjectSeller": "New order from {{shopName}}"
+          }
         }
       },
       "error": {
         "nameRequired": "Name is required.",
         "isRequired": "{{field}} is required.",
         "mustBeNumber": "{{field}} must be a number.",
-        "variantFieldIsRequired": "Variant {{number}} {{field}} is required."
+        "variantFieldIsRequired": "Variant {{number}} {{field}} is required.",
+        "noProfileAddress": "You need to save your address on your profile first"
+      },
+      "profile": {
+          "products": {
+            "noProductsFound": "No products found."
+          }
+      },
+      "globalMessages": {
+        "required": "[label] is required",
+        "minString": "[label] must be at least [min] characters",
+        "maxString": "[label] cannot exceed [max] characters",
+        "minNumber": "[label] must be at least [min]",
+        "maxNumber": "[label] cannot exceed [max]",
+        "minNumberExclusive": "[label] must be greater than [min]",
+        "maxNumberExclusive": "[label] must be less than [max]",
+        "minDate": "[label] must be on or after [min]",
+        "maxDate": "[label] cannot be after [max]",
+        "badDate": "[label] is not a valid date",
+        "minCount": "You must specify at least [minCount] values",
+        "maxCount": "You cannot specify more than [maxCount] values",
+        "noDecimal": "[label] must be an integer",
+        "notAllowed": "[value] is not an allowed value",
+        "expectedString": "[label] must be a string",
+        "expectedNumber": "[label] must be a number",
+        "expectedBoolean": "[label] must be a boolean",
+        "expectedArray": "[label] must be an array",
+        "expectedObject": "[label] must be an object",
+        "expectedConstructor": "[label] must be a [type]",
+        "keyNotInSchema": "[key] is not allowed by the schema",
+        "notUnique": "[label] must be unique",
+        "insertNotAllowed": "[label] cannot be set during an insert",
+        "updateNotAllowed": "[label] cannot be set during an update"
       }
     }
   }

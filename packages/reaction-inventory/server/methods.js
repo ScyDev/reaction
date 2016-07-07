@@ -155,6 +155,15 @@ Meteor.methods({
         ReactionInventory.Log.info(
           `adjust variant ${variant._id} from ${itemCount} to ${results}`
         );
+
+        // copy variant quantity to product for easy display
+        ReactionCore.Collections.Products.update({
+          _id: product.ancestors[0]
+        }, {
+          $set: {
+            copiedInventoryQuantity: variant.qty
+          }
+        }, { selector: { type: "simple" } });
       }
     }
   },

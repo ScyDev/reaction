@@ -1,0 +1,2 @@
+
+Template.variantFormMarketplace.replaces('variantForm');

@@ -1,4 +1,63 @@
 
+@import "{reactioncommerce:reaction-ui}/client/styles/variables.less";
+@import "{reactioncommerce:reaction-ui}/client/styles/mixins.less";
+
 .viewSwitch {
     text-align: center;
+    cursor: default;
+    padding-bottom: 40px;
+}
+
+.viewSwitch span {
+  cursor: pointer;
+}
+
+.viewSwitch i {
+  padding: 0 0 0 10px;
+}
+
+.viewSwitchItem {
+  float: left;
+  width: 33.33%;
+
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 480px) {
+  .viewSwitchItem {
+    margin-bottom: 10px;
+  }
+
+  .view-switcher-icon {
+    clear: both;
+    display:block
+  }
+
+  .viewSwitchItem span {
+    font-size: 14px;
+  }
+
+}
+@media screen and (min-width: 480px) and (max-width: 600px) {
+  .viewSwitchItem {
+    font-size: 18px;
+  }
+}
+@media screen and (min-width: 480px) {
+  .viewSwitchItem {
+  }
+}
+
+.viewSwitch .viewSwitchItem:hover span span {
+  text-decoration: underline overline;
+}
+
+.clear {
+  clear: both;
+}
+
+.no-products-found {
+  margin-top: 100px;
+  text-align: center;
+  width: 100%;
 }

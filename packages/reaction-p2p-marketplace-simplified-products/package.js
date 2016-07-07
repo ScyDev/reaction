@@ -36,15 +36,33 @@ Package.onUse(function(api) {
 
   api.use("aldeed:template-extension");
 
+  api.use("scydev:reaction-p2p-marketplace-seller");
+
+  api.addFiles('client/templates/products/productDetail/simplifiedProductBuyer.css', 'client', {isAsset: true});
+
+  api.addFiles('client/templates/products/productDetail/simplifiedProductSeller.css', 'client', {isAsset: true});
+
   api.addFiles([
                 'reaction-p2p-marketplace-simplified-products.js',
                 'client/templates/products/productDetail/productDetailHideVariants.js',
-                'client/templates/cart/checkout/shipping/shipping.js',
+                'client/templates/products/productDetail/simplifiedProduct.html',
+                'client/templates/products/productDetail/simplifiedProduct.js',
+                'client/templates/cart/checkout/checkout.less',
                 'client/templates/products/productDetail/tags/tags.html',
                 'client/templates/products/productDetail/tags/tags.js',
+                'client/templates/products/productDetail/tags/tags.less',
+                'client/templates/cart/cartDrawer/cartSubTotals/cartSubTotals.html',
+                'client/templates/cart/cartDrawer/cartSubTotals/cartSubTotals.js',
+                'client/templates/cart/cartDrawer/cartItems/cartItems.html',
+                'client/templates/cart/cartDrawer/cartItems/cartItems.js',
+                'client/templates/cart/cartDrawer/cartDrawer.html',
+                'client/templates/cart/cartDrawer/cartDrawer.js',
+                'client/templates/cart/cartDrawer/cartDrawer.less'
               ],
               'client'
               );
+
+  api.addFiles('server/methods/products.js', 'server');
 
 });
 

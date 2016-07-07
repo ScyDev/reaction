@@ -51,14 +51,20 @@ while read -r PACKAGE; do
     # if we've not checked it, now would be a good time
     if [ "$REPO" ]; then
       if [ ! -d "$PKGDST/$REPO" ]; then
-       echo "Git clone: $PACKAGE @ $GITURL TO $PKGDST/$REPO"
-       git -C $PKGDST clone $GITURL
+       # NO! we only work with what we already have
+       echo "NOT Git clone: $PACKAGE @ $GITURL TO $PKGDST/$REPO. We only build with the fixed state we already have."
+
+       #echo "Git clone: $PACKAGE @ $GITURL TO $PKGDST/$REPO"
+       #git -C $PKGDST clone $GITURL
       else
         # check if we're actually a git repo, we might be a local that been published
         if [ -d "$PKGDST/$REPO/.git" ]; then
+          # NO! we only work with what we already have
+          echo "NOT Git pull: $PACKAGE IN $PKGDST/$REPO. We only build with the fixed state we already have."
+
           # yeah, we've got local repos already. let's just pull
-          echo "Git pull: $PACKAGE IN $PKGDST/$REPO"
-          git -C $PKGDST/$REPO pull
+          #echo "Git pull: $PACKAGE IN $PKGDST/$REPO"
+          #git -C $PKGDST/$REPO pull
         else
           echo "Skipping: $PACKAGE IN $PKGDST/$REPO"
         fi

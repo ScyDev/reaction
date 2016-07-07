@@ -6,26 +6,35 @@
  */
 
 Template.addressBook.onCreated(function () {
-  let account = ReactionCore.Collections.Accounts.findOne({
-    userId: Meteor.userId()
-  });
-
   this.currentViewTemplate = ReactiveVar("addressBookAdd");
   this.templateData = ReactiveVar({});
-  if (account) {
-    if (account.profile) {
-      if (account.profile.addressBook) {
-        if (account.profile.addressBook.length > 0) {
-          this.currentViewTemplate.set("addressBookGrid");
 
-          // TODO: make this more bullet proof
-          // Assume that if we"re seeing the address book grid
-          // then we should have both a default billing and shipping
-          // address selected
+  ReactionSubscriptions.clear();
+  ReactionCore.Subscriptions.Account = ReactionSubscriptions.subscribe("Accounts", Meteor.userId());
+  console.log("addressBook.js: sub ready? ",ReactionCore.Subscriptions.Account.ready());
+
+  this.autorun(() => {
+    // because sometimes subscription seems to be missing or filtered wrong, current users account just can't be loaded
+    if (ReactionCore.Subscriptions.Account.ready()) {
+      console.log("addressBook.js: Account sub ready");
+      let account = ReactionCore.Collections.Accounts.findOne({_id: Meteor.userId()});
+      console.log("addressBook.js: account for ",Meteor.userId()," ",account);
+
+      if (account) {
+        if (account.profile) {
+          if (account.profile.addressBook) {
+            if (account.profile.addressBook.length === 0) {
+              console.log("addressBook.js: this.currentViewTemplate.set('addressBookAdd')");
+              this.currentViewTemplate.set("addressBookAdd");
+            } else {
+              console.log("addressBook.js: this.currentViewTemplate.set('addressBookGrid')");
+              this.currentViewTemplate.set("addressBookGrid");
+            }
+          }
         }
       }
     }
-  }
+  });
 });
 
 // Template.addressBook.onRendered(function () {
@@ -106,9 +115,11 @@ Template.addressBook.events({
   },
 
   "click [data-event-action=cancelAddressEdit], form submit, showMainView": function (event) {
+    console.log("fired: click [data-event-action=cancelAddressEdit], form submit, showMainView");
     event.preventDefault();
     event.stopPropagation();
 
-    Template.instance().currentViewTemplate.set("addressBookGrid");
+    Template.instance().currentViewTemplate.set("addressBookGrid"); // replaces address form with address grid
+    console.log('Template.instance().currentViewTemplate.set("addressBookGrid");');
   }
 });

@@ -325,11 +325,27 @@ Meteor.methods({
     }
     // performs calculations admissibility of adding product to cart
     const quantity = quantityProcessing(product, variant, itemQty);
+    ReactionCore.Log.info("cart/addToCart quantity: ",quantity);
+
     // performs search of variant inside cart
     const cartVariantExists = cart.items && cart.items
       .some(item => item.variants._id === variantId);
 
     if (cartVariantExists) {
+      // compare quantity
+      let itemInCart = null;
+      for (let item of cart.items) {
+        if (item.productId == productId) {
+          ReactionCore.Log.info("cart/addToCart this item already ",item.quantity," times in cart");
+          itemInCart = item;
+        }
+      }
+      ReactionCore.Log.info("cart/addToCart calculated items in cart ",(parseInt(quantity) + parseInt(itemInCart.quantity))," available: ",variant.inventoryQuantity, " condition result: ",((parseInt(quantity) + parseInt(itemInCart.quantity)) > parseInt(variant.inventoryQuantity)) );
+      if ((parseInt(quantity) + parseInt(itemInCart.quantity)) > parseInt(variant.inventoryQuantity)) {
+        ReactionCore.Log.info(`cart/addToCart: Not enough items in stock`);
+        throw new Meteor.Error(403, "Not enough items in stock");
+      }
+
       return ReactionCore.Collections.Cart.update({
         "_id": cart._id,
         "items.variants._id": variantId
@@ -356,6 +372,21 @@ Meteor.methods({
       });
     }
 
+    // compare quantity
+    if (quantity > variant.inventoryQuantity) {
+      Log.warn(`cart/addToCart: Not enough items in stock`);
+      throw new Meteor.Error(403, "Not enough items in stock");
+    }
+    /*
+    ReactionCore.Collections.Products.update({
+      _id: item.variants._id
+    }, {
+      $inc: {
+        inventoryQuantity: -item.quantity
+      }
+    }, { selector: { type: "variant" } });
+    */
+
     // cart variant doesn't exist
     return ReactionCore.Collections.Cart.update({
       _id: cart._id
@@ -367,7 +398,8 @@ Meteor.methods({
           productId: productId,
           quantity: quantity,
           variants: variant,
-          type: product.type
+          type: product.type,
+          sellerId: product.userId
         }
       }
     }, function (error, result) {
@@ -573,7 +605,8 @@ Meteor.methods({
             _id: itemClone._id,
             productId: itemClone.productId,
             shopId: itemClone.shopId,
-            variantId: itemClone.variants._id
+            variantId: itemClone.variants._id,
+            sellerId: itemClone.sellerId
           });
         }
       }
@@ -597,14 +630,31 @@ Meteor.methods({
 
     if (orderId) {
       // TODO: check for successful orders/inventoryAdjust
-//      Meteor.call("orders/inventoryAdjust", orderId);
+      ReactionCore.Log.info("cart/copyCartToOrder: calling orders/inventoryAdjust");
+
+      Meteor.defer(function(){
+        // this call prevents the rest of this method from running?!
+        // however with defer() it doesn't
+        Meteor.call("orders/inventoryAdjust", orderId);
+      });
+
+      ReactionCore.Log.info("cart/copyCartToOrder: called orders/inventoryAdjust");
       ReactionCore.Collections.Cart.remove({
         _id: order.cartId
       });
+      ReactionCore.Log.info("cart/copyCartToOrder: removed by cartId");
+
+      ReactionCore.Log.info("cart/copyCartToOrder: removing cart by userId!");
+      ReactionCore.Collections.Cart.remove({
+        userId: order.userId
+      });
+      ReactionCore.Log.info("cart/copyCartToOrder: removed by userId");
+
       // create a new cart for the user
       // even though this should be caught by
       // subscription handler, it's not always working
       let newCartExists = ReactionCore.Collections.Cart.find(order.userId);
+
       if (newCartExists.count() === 0) {
         Meteor.call("cart/createCart", this.userId, sessionId);
         // after recreate new cart we need to make it looks like previous by
@@ -895,6 +945,8 @@ Meteor.methods({
    * @return {String} returns update result
    */
   "cart/submitPayment": function (paymentMethod) {
+    ReactionCore.Log.info("cart/submitPayment: ");
+
     check(paymentMethod, ReactionCore.Schemas.PaymentMethod);
     let checkoutCart = ReactionCore.Collections.Cart.findOne({
       userId: Meteor.userId()
@@ -940,6 +992,9 @@ Meteor.methods({
         }
       };
     }
+
+    // simulate longer response time until order completed
+    //Meteor._sleepForMs(2000);
 
     return ReactionCore.Collections.Cart.update(selector, update,
       function (error, result) {

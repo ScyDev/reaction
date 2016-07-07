@@ -1,0 +1,41 @@
+<template name="profileImageGallery">
+<div id="galleryDropPane" class="galleryDropPane">
+  <ul class="gallery">
+    {{#each media }}
+      {{> profileImageDetail}}
+    {{else}}
+     <li>
+        <img src= "/resources/placeholder.gif" class="img-responsive" id="img-upload">
+     </li>
+    {{/each}}
+  </ul>
+  {{>profileImageUploader}}
+</div>
+
+</template>
+
+<template name="profileImageDetail">
+  <li class="gallery-sortable" data-index="{{_id}}">
+    <img src="{{url uploading='/resources/placeholder.gif' storing='/resources/placeholder.gif' store='large'}}" class="img-responsive" alt="{{title}}">
+    {{#unless this.isUploaded}}
+      {{> FS.UploadProgressBar bootstrap=true}}
+    {{/unless}}
+
+    <!-- should check if this is logged in users own profile -->
+    {{#if isMyProfile}}
+      <div class="gallery-tools">
+        <a class="image-remove-link" data-index="{{_id}}"><i class="remove-image fa fa-times-circle fa-2x"></i></a>
+      </div>
+    {{/if}}
+  </li>
+</template>
+
+<template name="profileImageUploader">
+  <!-- should check if this is logged in users own profile -->
+  {{#if isMyProfile}}
+  <div id="dropzone" class="dropzone">
+   <input name="files" id="files" class="hidden" type="file" multiple/>
+    <div class="btn btn-default btn-block" id="btn-upload" data-i18n="productDetail.dropFile">Drop file to upload</div>
+  </div>
+  {{/if}}
+</template>

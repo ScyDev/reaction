@@ -43,13 +43,23 @@ window.LoginFormSharedHelpers = {
 };
 
 Template.registerHelper("getGravatar", function (currentUser, size) {
+  //console.log( "getGravatar |", currentUser )
   const options = {
     secure: true,
     size: size,
     default: "identicon"
   };
   const user = currentUser || Accounts.user();
+  //console.log( "getGravatar | user", user )
   if (!user) return false;
+
+  const profileImage = ReactionCore.Collections.Media.findOne({"metadata.userId": user._id}, {sort: {"metadata.priority": 1}});
+  if (profileImage) {
+    //console.log( "getGravatar | profile image:", profileImage.url({ store: "thumbnail" }) )
+    return profileImage.url({ store: "thumbnail" })
+  }
+  //console.log( "getGravatar | fetching gravatar..." )
+
   const account = ReactionCore.Collections.Accounts.findOne(user._id);
   // first we check picture exists. Picture has higher priority to display
   if (account && account.profile && account.profile.picture) {
@@ -65,6 +75,8 @@ Template.registerHelper("getGravatar", function (currentUser, size) {
  * registerHelper displayName
  */
 Template.registerHelper("displayName", function (displayUser) {
+  //ReactionCore.Log.error("displayName: ",displayUser);
+
   const user = displayUser || Accounts.user();
   if (user) {
     if (user.profile && user.profile.name) {
