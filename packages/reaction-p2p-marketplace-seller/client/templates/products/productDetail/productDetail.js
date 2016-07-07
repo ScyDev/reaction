@@ -7,7 +7,11 @@ Template.productDetail.events({ // for some strange reason our custom event need
     let errorMsg = "";
     const self = this;
 
-    const selectedProduct = ReactionProduct.selectedProduct();
+    const productId = ReactionProduct.selectedProductId();
+    let productBelongingToCurrUser = ReactionCore.Collections.Products.findOne({_id:productId, userId:Meteor.userId()})
+    if (Roles.userIsInRole(Meteor.userId(), "admin", ReactionCore.getShopId())) {
+      productBelongingToCurrUser = ReactionCore.Collections.Products.findOne({_id:productId})
+    }
 
     if (!self.title) {
       errorMsg += `${i18next.t("error.isRequired", { field: i18next.t("productDetailEdit.title") })}\n`;
