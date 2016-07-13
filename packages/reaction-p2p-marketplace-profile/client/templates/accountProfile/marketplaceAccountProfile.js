@@ -73,13 +73,18 @@ Template.accountProfile.helpers( // for some strange reason our custom heleprs n
 
       hasPasswordService: function() {
         return !!Package["accounts-password"];
+      },
+
+      displayEmail: function() {
+        let user = Meteor.users.findOne({_id: Meteor.userId()});
+        return user.emails[0].address;
       }
   }
 );
 
 Template.accountProfile.events({ // for some strange reason our custom event needs to be speficied on the template that we override. doesn't work with our new template name.
   "submit form#profile-form": function (event, template) {
-    console.log("Template.marketplaceAccountProfile.events(submit form)");
+    console.log("Template.marketplaceAccountProfile.events(submit form#profile-form)");
     event.preventDefault();
 
     // var usernameInput = template.$(".login-input--username");
@@ -131,6 +136,41 @@ Template.accountProfile.events({ // for some strange reason our custom event nee
     console.log("updated profile info ");
 
   },
+
+  "submit form#email-form": function (event, template) {
+    console.log("Template.marketplaceAccountProfile.events(submit form#email-form)");
+    event.preventDefault();
+
+    let emailInput = template.$(".profile-input-email");
+
+    let email = emailInput.val().trim();
+
+    let validatedEmail = ProfileFormValidation.email(email);
+    console.log("submit email form ", email);
+    console.log("submit email form ", validatedEmail);
+    let templateInstance = Template.instance();
+    let errors = {};
+
+    templateInstance.formMessages.set({});
+
+    if (validatedEmail !== true) {
+      errors.email = validatedEmail.reason;
+    }
+
+    if ($.isEmptyObject(errors) === false) {
+      templateInstance.formMessages.set({
+        errors: errors
+      });
+      // prevent signup
+      return;
+    }
+
+    Meteor.call("accounts/updateEmailAddress", Meteor.userId(), email);
+
+    console.log("updated email info ");
+
+  },
+
   "click #passwordChangeButton": function (event, template) {
     $('#passwordChangeContainer').fadeIn();
     $('#passwordChangeButton').hide();
