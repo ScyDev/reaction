@@ -673,7 +673,9 @@
           "noAddress": "No address",
           "youNeedToEnterYourAddress": "You need to enter your address.",
           "imageTooBig": "Image too big",
-          "imageTooBigText": "Please try a smaller image. Max {{maxKb}} KB."
+          "imageTooBigText": "Please try a smaller image. Max {{maxKb}} KB.",
+					"emailNeeded": "Email is mandatory",
+          "emailNeededText": "Please enter a valid email address."
         },
         "mails": {
           "welcome": {

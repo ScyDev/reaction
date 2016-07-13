@@ -681,8 +681,10 @@
 					"mustAcceptTerms": "Du musst die AGB akzeptieren",
           "noAddress": "Keine Adresse",
           "youNeedToEnterYourAddress": "Du musst Deine Adresse eingeben.",
-          "imageTooBig": "Bild ist zu gross",
-          "imageTooBigText": "Bitte versuchs mit einem kleineren Bild. Max {{maxKb}} KB."
+					"imageTooBig": "Bild ist zu gross",
+          "imageTooBigText": "Bitte versuchs mit einem kleineren Bild. Max {{maxKb}} KB.",
+					"emailNeeded": "E-Mail Adresse benötigt",
+          "emailNeededText": "Bitte gib eine gültige E-Mail Adresse ein."
 				},
         "mails": {
           "welcome": {

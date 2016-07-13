@@ -18,6 +18,21 @@ Template.accountProfile.onCreated(() => {
 });
 
 Template.accountProfile.onDestroyed(function() {
+  let user = Meteor.users.findOne({_id: Meteor.userId()});
+  if (user.emails == null || user.emails.length == 0) {
+    Alerts.alert(
+      {
+        title: i18next.t("accountsUI.error.emailNeeded", "Email is mandatory"),
+        text: i18next.t("accountsUI.error.emailNeededText", {defaultValue: "Please enter a valid email address"}),
+        type: "error",
+      },
+      function() {
+        // ...
+      }
+    );
+    ReactionRouter.go("account/profile");
+  }
+
   // stop that subscription, because we want it only on this page, not on any other
   if (ReactionCore.MeteorSubscriptions_ProductsForOrdersHistory != null) {
     ReactionCore.MeteorSubscriptions_ProductsForOrdersHistory.stop();
