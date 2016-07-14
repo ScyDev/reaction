@@ -1,4 +1,5 @@
 
+Template.marketplaceLoginDropdown.replaces("loginDropdown");
 Template.marketplaceUserDropdown.replaces("userDropdown");
 
 Template.loginDropdown.events({

@@ -52,12 +52,6 @@ Template.registerHelper("getGravatar", function (currentUser, size) {
   const user = currentUser || Accounts.user();
   //console.log( "getGravatar | user", user )
   if (!user) return false;
-
-  const profileImage = ReactionCore.Collections.Media.findOne({"metadata.userId": user._id}, {sort: {"metadata.priority": 1}});
-  if (profileImage) {
-    //console.log( "getGravatar | profile image:", profileImage.url({ store: "thumbnail" }) )
-    return profileImage.url({ store: "thumbnail" })
-  }
   //console.log( "getGravatar | fetching gravatar..." )
 
   const account = ReactionCore.Collections.Accounts.findOne(user._id);

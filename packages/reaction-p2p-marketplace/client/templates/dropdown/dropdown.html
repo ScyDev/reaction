@@ -1,3 +1,33 @@
+<template name="marketplaceLoginDropdown">
+  <div class="dropdown" role="menu">
+    {{#if currentUser}}
+    <div class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000">
+      {{!--> avatar user=currentUser class="circular-icon" size="small" shape="circle"--}}
+
+      {{#if hasProfileImage currentUser}}
+        <img class="circular-icon" src="{{getProfileImage currentUser 40}}" style="width: 40px; border-radius: 50%;" />
+      {{else}}
+        <img class="circular-icon" src="{{getGravatar currentUser 40}}" style="width: 40px; border-radius: 50%;" />
+      {{/if}}
+
+      <!--temporary not in use, due to length of username and positioning of shoping cart when mobile use -->
+      <span id="logged-in-display-name"> {{displayName}}<b class="caret"></b></span>
+    </div>
+    <div class="dropdown-menu pull-right" role="menu">
+      {{> userDropdown}}
+    </div>
+    {{else}}
+    <div class="accounts-dropdown" data-event-category="accounts" data-event-action="accounts-dropdown-click">
+      <div class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-delay="1000">
+        <span data-i18n="accountsUI.signIn">Sign In</span><b class="caret"></b></div>
+      <div class="accounts-dialog accounts-layout dropdown-menu pull-right">
+        {{> loginForm}}
+      </div>
+    </div>
+    {{/if}}
+  </div>
+</template>
+
 <template name="marketplaceUserDropdown">
   <div class="user-accounts-dropdown">
     <div class="user-accounts-dropdown-content">

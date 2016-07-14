@@ -40,6 +40,7 @@ Package.onUse(function(api) {
   api.use("reactioncommerce:reaction-router");
   api.use("kadira:blaze-layout@2.3.0");
 
+  api.addFiles("client/helpers/helpers.js", ["client"]);
   api.addFiles('client/helpers/validation.js', 'client');
   api.addFiles('client/templates/accountProfile/marketplaceAccountProfile.html', 'client');
   api.addFiles('client/templates/accountProfile/marketplaceAccountProfile.js', 'client');
