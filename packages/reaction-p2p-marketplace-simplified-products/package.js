@@ -62,6 +62,7 @@ Package.onUse(function(api) {
               'client'
               );
 
+  api.addFiles('server/methods/accounts.js', 'server');
   api.addFiles('server/methods/products.js', 'server');
 
 });
