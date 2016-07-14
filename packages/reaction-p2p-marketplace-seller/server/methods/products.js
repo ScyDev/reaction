@@ -150,7 +150,7 @@ Meteor.methods({
     const shop = ReactionCore.Collections.Shops.findOne(shopId);
     //const product = ReactionCore.Collections.Products.findOne(productId);
     let adminEmail = process.env.REACTION_EMAIL;
-    ReactionCore.Log.info(`Wanna send product review mail to: `,adminEmail);
+    ReactionCore.Log.info(`Wanna send product review mail for product `,productId,` from user `,userId,` to: `,adminEmail);
 
     if (!adminEmail || !adminEmail.length > 0) {
       return true;
@@ -167,6 +167,12 @@ Meteor.methods({
     ReactionCore.i18nextInitForServer(i18next);
     ReactionCore.Log.info("sendProductReviewEmail: i18n server test:", i18next.t('accountsUI.mails.productReview.subject'));
 
+    let userEmail = "";
+    if (Meteor.user().emails && Meteor.user().emails.length > 0) {
+      userEmail = Meteor.user().emails[0].address
+    }
+    ReactionCore.Log.info("sendProductReviewEmail: userEmail ",userEmail);
+
     // fetch and send templates
     SSR.compileTemplate("products/reviewProduct", ReactionEmailTemplate("products/reviewProduct"));
     try {
@@ -179,7 +185,7 @@ Meteor.methods({
           shop: shop,
           user: Meteor.user(),
           productId: productId,
-          userEmail: Meteor.user().emails[0].address
+          userEmail: userEmail
         })
       });
     } catch (e) {

@@ -7,7 +7,11 @@ Template.productDetail.events({ // for some strange reason our custom event need
     let errorMsg = "";
     const self = this;
 
-    const selectedProduct = ReactionProduct.selectedProduct();
+    const productId = ReactionProduct.selectedProductId();
+    let selectedProduct = ReactionCore.Collections.Products.findOne({_id:productId, userId:Meteor.userId()})
+    if (Roles.userIsInRole(Meteor.userId(), "admin", ReactionCore.getShopId())) {
+      selectedProduct = ReactionCore.Collections.Products.findOne({_id:productId})
+    }
 
     if (!self.title) {
       errorMsg += `${i18next.t("error.isRequired", { field: i18next.t("productDetailEdit.title") })}\n`;
@@ -50,7 +54,7 @@ Template.productDetail.events({ // for some strange reason our custom event need
       }
       const pickupDate = moment( selectedProduct.forSaleOnDate );
       const latestOrderDate = moment( selectedProduct.latestOrderDate );
-      
+
       const lastestOrderDateTooLate = latestOrderDate.format( "YYYY-MM-DD" ) > pickupDate.format( "YYYY-MM-DD" );
       delta = 1000;
       if( pickupDate.format( "YYYY-MM-DD" ) == latestOrderDate.format( "YYYY-MM-DD" ) ) {

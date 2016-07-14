@@ -139,7 +139,7 @@ Template.profileImageDetail.helpers({
 });
 Template.profileImageUploader.helpers({
   isMyProfile: function () {
-    return isMyProfile(Template.instance().view.parentView.parentView.templateInstance());
+    return isMyProfile(Template.instance().view.parentView.parentView.parentView.templateInstance());
   }
 });
 
