@@ -1,0 +1,16 @@
+<template name="marketplaceSettings">
+  <div class="panel panel-default">
+
+    <div class="panel-body">
+      {{#autoForm collection="ReactionCore.Collections.Packages" schema="ReactionCore.Schemas.MarketplacePackageConfig" doc=packageData type="update" id="marketplace-update-form"}}
+        {{>afQuickField name='settings.public.autoselect_country' type="boolean-select" trueLabel="True" falseLabel="False" style="width: auto"}}
+        <button type="submit" class="btn btn-primary pull-right">Update</button>
+      {{/autoForm}}
+    </div>
+  </div>
+
+</template>
+
+<template name="marketplace">
+
+</template>

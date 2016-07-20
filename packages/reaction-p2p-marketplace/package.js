@@ -46,6 +46,8 @@ Package.onUse(function(api) {
 
   api.addFiles("client/templates/style.less", ["client"]);
 
+  api.addFiles("client/templates/addressBook/form/form.html", ["client"]);
+  api.addFiles("client/templates/addressBook/form/form.js", ["client"]);
   api.addFiles("client/templates/products/productsViewSwitcher.html", ["client"]);
   api.addFiles("client/templates/products/productsMarketplace.html", ["client"]);
   api.addFiles("client/templates/products/productsMarketplace.js", ["client"]);
@@ -56,7 +58,12 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/dropdown/dropdown.html", ["client"]);
   api.addFiles("client/templates/dropdown/dropdown.js", ["client"]);
   api.addFiles("client/templates/dropdown/dropdown.less", ["client"]);
+  api.addFiles("client/templates/settings/marketplace.html", ["client"]);
+  api.addFiles("client/templates/settings/marketplace.js", ["client"]);
 
+  api.addFiles("common/schemas.js");
+
+  api.addFiles("server/register.js", ["server"]);
   api.addFiles("server/methods/cart.js", ["server"]);
   api.addFiles("server/methods/checkout.js", ["server"]);
 
