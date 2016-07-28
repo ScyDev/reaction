@@ -48,28 +48,26 @@ ReactionCore.MethodHooks.after("accounts/addressBookUpdate",
   }
 );
 */
-Meteor.methods(
-  {
-    "accounts/getUserAddress": function (userId, addCountry) {
-      check(userId, Match.Optional(String, null));
-      //ReactionCore.Log.info("User address string: ",addCountry);
-      check(addCountry, Boolean);
 
-      let account =  ReactionCore.Collections.Accounts.findOne({userId: userId});
-      //ReactionCore.Log.info("User address book: ",account.profile.addressBook);
+this.getUserAddress = (userId, addCountry = false) => {
+  check(userId, Match.Optional(String, null));
+  check(addCountry, Boolean);
 
-      if (account != null && account.profile.addressBook != null && account.profile.addressBook.length > 0) {
-        let address = account.profile.addressBook[0];
-        let addressString = address.address1+" "+address.address2+", "+address.postal+" "+address.city
-        if (addCountry) {
-          addressString = addressString+", "+address.country
-        }
+  const account =  ReactionCore.Collections.Accounts.findOne({ userId });
+  //ReactionCore.Log.info("User address book:", account.profile.addressBook);
 
-        ReactionCore.Log.info("User address string: ",addressString);
-        return addressString;
-      }
+  if (account != null && account.profile.addressBook != null && account.profile.addressBook.length > 0) {
+    const address = account.profile.addressBook[0];
+    let addressString = address.address1 + " " + address.address2 + ", " + address.postal + " " + address.city;
+    if (addCountry) addressString = addressString + ", " + address.country;
 
-      return null;
-    },
+    // ReactionCore.Log.info("User address string:", addressString);
+    return addressString.replace("undefined", "").replace(/\s+/g, " ").replace(/\s+,/g, " ");
   }
-);
+
+  return null;
+}
+
+Meteor.methods({
+    "accounts/getUserAddress": (userId, addCountry) => getUserAddress(userId, addCountry),
+});

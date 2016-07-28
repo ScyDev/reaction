@@ -3,11 +3,9 @@
  */
 
 Template.productMapSingle.onRendered(function() {
-  GoogleMaps.load();
+  GoogleMaps.load({ key: "AIzaSyCmlt5MvBoOU-DXW57z8ehNzz4AO_bL418" }); // TODO: Get API key from settings
 });
 
-let Media;
-Media = ReactionCore.Collections.Media;
 Template.productMapSingle.helpers({
   // products: function () {
   //   return getProductsByTag(this.tag);
@@ -22,7 +20,7 @@ Template.productMapSingle.helpers({
     }
     if (variants.length > 0) {
       let variantId = variants[0]._id;
-      defaultImage = Media.findOne({
+      defaultImage = ReactionCore.Collections.Media.findOne({
         "metadata.variantId": variantId,
         "metadata.priority": 0
       });
@@ -44,60 +42,32 @@ Template.productMapSingle.helpers({
 });
 
 Template.productMapSingle.onCreated(function() {
+  const handle = ReactionRouter.getParam("handle");
+  const product = ReactionCore.Collections.PublicProducts.findOne({ handle }) || ReactionCore.Collections.SellerProducts.findOne({ handle });
+  if (!product) return;
+
+  const { location = {} } = product;
+  if (!location.lat || !location.lng) return;
+
   // We can use the `ready` callback to interact with the map API once the map is ready.
-  GoogleMaps.ready('map', function(map) {
-    let handle = ReactionRouter.getParam("handle");
-    let product = ReactionCore.Collections.Products.findOne({
-      handle: handle
+  GoogleMaps.ready('map', map => {
+    new google.maps.Marker({
+       position: location,
+       map: map.instance,
+       title: product.title,
+       animation: google.maps.Animation.DROP,
     });
-    //console.log('prod %o', product);
-    let prodOwner = ReactionCore.Collections.Accounts.findOne({
-      userId: product.userId
-    });
-    //console.log('owner %o', prodOwner);
+    map.instance.setCenter(location);
 
-    Meteor.call("accounts/getUserAddress", product.userId, true, function(error, result) {
-      if(!error && result) {
-        let address = result;
-        console.log('address', address);
-
-        var geocoder = new google.maps.Geocoder();
-        geocoder.geocode(
-          {
-            'address': address
-          },
-          function(results, status) {
-             if(status == google.maps.GeocoderStatus.OK) {
-                new google.maps.Marker({
-                   position: results[0].geometry.location,
-                   map: map.instance,
-                   title: product.title,
-                   animation: google.maps.Animation.DROP,
-                });
-                let location = results[0].geometry.location;
-                console.log("resolved location: "+location.lat()+"/"+location.lng());
-                map.instance.setCenter(location);
-
-                if (product.userId == Meteor.userId()) {
-                  Meteor.users.update(
-                    {
-                      _id: Meteor.userId() // from client, updates always need to reference _id
-                    },
-                    {
-                      $set: {
-                        "profile.latitude": location.lat(),
-                        "profile.longitude": location.lng()
-                      }
-                    }
-                  );
-
-                  console.log("updated profile lat/long");
-                }
-              }
-          });
-        }
-
-      }
-    );
+    /* Do we need this update here? */
+    // if (product.userId == Meteor.userId()) {
+    //   Meteor.users.update({ _id: Meteor.userId() }, {
+    //     $set: {
+    //       "profile.latitude": location.lat(),
+    //       "profile.longitude": location.lng()
+    //     }
+    //   });
+    //   console.log("updated profile lat/long");
+    // }
   });
 });

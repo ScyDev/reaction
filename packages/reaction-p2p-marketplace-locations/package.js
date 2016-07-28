@@ -59,7 +59,6 @@ Package.onUse(function (api) {
     "client/templates/products/locationField/locationField.js",
     "client/templates/products/locationFieldDisplay/locationFieldDisplay.html",
     "client/templates/products/locationFieldDisplay/locationFieldDisplay.js",
-    "client/templates/products/productDetail/productDetail.js"
   ],
   "client");
 

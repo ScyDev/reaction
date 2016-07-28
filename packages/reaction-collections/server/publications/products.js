@@ -1,3 +1,5 @@
+/* TODO: Revert to commit 'ce860f4a828261bf3a2e8275fdab3922bb2f8bf7' */
+
 //
 // define search filters as a schema so we can validate
 // params supplied to the products publication

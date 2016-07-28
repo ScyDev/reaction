@@ -1,6 +1,6 @@
 <template name="productList">
   <div class="product-list">
-    {{#if isProdsSubReady}}
+    {{#if TemplateContext "dataLoaded"}}
       <table class="table table-hover">
         <tbody>
           {{#each products}}
@@ -20,23 +20,22 @@
                     {{/with}}
                   </a>
 
-
                   <!-- price from list. not working? -->
                   <div><h3>{{formatPrice variants.[0].price}}</h3></div>
                   <!-- using price from grid. -->
                   <div class="currency-symbol"><h3>{{formatPrice displayPrice}}</h3></div>
 
-                    {{#if cart.showItemLowInventoryWarning variants.[0]}}
-                      <div class="badge badge-low-inv-warning">{{variants.[0].inventoryQuantity}} Left!</div>
-                    {{/if}}
+                  {{#if cart.showItemLowInventoryWarning variants.[0]}}
+                    <div class="badge badge-low-inv-warning">{{variants.[0].inventoryQuantity}} Left!</div>
+                  {{/if}}
 
-                    <div class="for-sale-on-date">{{ prettifyDate forSaleOnDate }}</div>
-                    <div class="location-text">{{> locationFieldDisplay }}</div>
+                  <div class="for-sale-on-date">{{ prettifyDate forSaleOnDate }}</div>
+                  <div class="location-text">{{ location.address }}</div>
+                  {{#if copiedInventoryQuantity }}
                     <div class="location-text">{{ copiedInventoryQuantity }} {{ i18n 'accountsUI.inventoryUnit' 'pieces' }}</div>
+                  {{/if}}
                 </div>
-                  <div class="product-desc">
-                    {{{description}}}
-                  </div>
+                <div class="product-desc">{{{description}}}</div>
               </td>
             </tr>
             {{else}}
@@ -50,12 +49,12 @@
             {{/each}}
         </tbody>
       </table>
-      {{#if loadingMoreProducts}}{{>spinner}}{{/if}}
-  {{else}}
+      {{#if TemplateContext "loadingMoreData"}}{{>spinner}}{{/if}}
+    {{else}}
       <div class="spinnerBox">
           {{>spinner}}
           <p class="textForSpinner">{{i18n 'app.loading' 'Loading Data'}}</p>
       </div>
-  {{/if}}
+    {{/if}}
   </div>
 </template>

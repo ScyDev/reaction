@@ -1,5 +1,40 @@
-
 Template.productsMarketplace.replaces("products");
+
+function productsMarketplaceOnCreated() {
+  if (typeof this.data !== "object" || this.data === null ) this.data = {};
+  this.publication = this.data.publication || "publicProducts";
+  // console.log("productsMarketplace(products)", this.data, this.publication)
+}
+Template.products.onCreated(productsMarketplaceOnCreated);
+Template.productsMarketplace.onCreated(productsMarketplaceOnCreated);
+
+const productsMarketplaceHelpers = {
+  productsViewOptions: () => ({
+    publication: Template.instance().publication,
+    filtersAccessor: Template.instance().publication,
+  }),
+  searchBoxOptions: () => {
+    const publication = Template.instance().publication;
+    const filters = publication === "publicProducts" ? {
+      title: false,
+      tags: false,
+    } : {
+      forSaleDateTitle: false,
+      mealTime: false,
+      location: false,
+    };
+    return {
+      filtersAccessor: publication,
+      filters,
+    };
+  },
+  viewSwitcherOptions: () => ({
+    mapViewEnabled: Template.instance().publication === "publicProducts",
+  }),
+};
+Template.products.helpers(productsMarketplaceHelpers)
+Template.productsMarketplace.helpers(productsMarketplaceHelpers)
+
 
 Template.productsViewSwitcher.events({
   "click #productListView": function () {
@@ -19,6 +54,11 @@ Template.productsViewSwitcher.events({
     return $(".product-map").show();
   },
 });
+
+Template.productsViewSwitcher.helpers({
+  mapViewEnabled: () => Template.instance().data.mapViewEnabled,
+});
+
 
 Template.registerHelper("isLoggedIn", function (showInfoPopup) {
   if (typeof ReactionCore === "object") {

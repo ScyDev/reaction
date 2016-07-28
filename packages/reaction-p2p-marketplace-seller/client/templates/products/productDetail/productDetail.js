@@ -1,22 +1,57 @@
 
 Template.productDetailMarketplace.replaces("productDetail");
+// Event handlers are to be specified on the template that we override for indirect template calls.
 
-Template.productDetail.events({ // for some strange reason our custom event needs to be speficied on the template that we override. doesn't work with our new template name.
+Template.productDetail.onCreated(function() {
+  const self = this;
+
+  /* Collect the product ID from URL */
+  const productId = self.productId();
+  // console.info("productDetailMarketplace.onCreated", self.templateId, productId);
+  if (!productId) return;
+
+  // console.log( "Calling 'products/checkIfExpired' method with productId", productId)
+  Meteor.call("products/checkIfExpired", productId);
+
+  const setProductDetails = (collection, product, canEdit) => {
+    self.product = product;
+    self.collection = collection;
+    self.canEdit = canEdit || self.canEdit;
+  }
+
+  /* We subscribe both to PublicProducts and SellerProducts in parallel. If something found in the latter, it wins. */
+  const selector = { _id: productId };
+  self.subscribe("publicProducts", { selector }, () => {
+    const collection = ReactionCore.Collections.PublicProducts;
+    const product = ReactionCore.Collections.PublicProducts.findOne(selector);
+    // console.warn("PublicProducts result collected", typeof product !== "undefined");
+    if (product) setProductDetails(collection, product, ReactionCore.hasAdminAccess());
+  });
+  self.subscribe("sellerProducts", {selector}, () => {
+    const collection = ReactionCore.Collections.SellerProducts;
+    const product = collection.findOne(selector);
+    // console.warn("SellerProducts result collected", typeof product !== "undefined");
+    if (product) setProductDetails(collection, product, true);
+  });
+});
+
+Template.productDetail.onRendered(function() {
+  console.info("productDetailMarketplace.onRendered");
+});
+
+Template.productDetail.events({
   "click .toggle-product-isActive-link": function (event, template) {
     Alerts.removeSeen();
     let errorMsg = "";
     const self = this;
 
-    const productId = ReactionProduct.selectedProductId();
-    let selectedProduct = ReactionCore.Collections.Products.findOne({_id:productId, userId:Meteor.userId()})
-    if (Roles.userIsInRole(Meteor.userId(), "admin", ReactionCore.getShopId())) {
-      selectedProduct = ReactionCore.Collections.Products.findOne({_id:productId})
-    }
+    const selectedProduct = Template.instance().product;
 
     if (!self.title) {
       errorMsg += `${i18next.t("error.isRequired", { field: i18next.t("productDetailEdit.title") })}\n`;
       template.$(".title-edit-input").focus();
     }
+    // console.log("toggle-product-isActive-link", self._id, self)
     const variants = ReactionProduct.getVariants(self._id);
     for (let variant of variants) {
       let index = _.indexOf(variants, variant);
@@ -56,7 +91,7 @@ Template.productDetail.events({ // for some strange reason our custom event need
       const latestOrderDate = moment( selectedProduct.latestOrderDate );
 
       const lastestOrderDateTooLate = latestOrderDate.format( "YYYY-MM-DD" ) > pickupDate.format( "YYYY-MM-DD" );
-      delta = 1000;
+      let delta = 1000;
       if( pickupDate.format( "YYYY-MM-DD" ) == latestOrderDate.format( "YYYY-MM-DD" ) ) {
         const fromHours = parseInt( selectedProduct.pickupTimeFrom.slice(0, 2) );
         const fromMinutes = parseInt( selectedProduct.pickupTimeFrom.slice(3) );
@@ -109,7 +144,6 @@ Template.productDetail.events({ // for some strange reason our custom event need
       else {
         execMeteorCallActivateProduct();
       }
-
     }
   },
   "click .save-product-link": function (event, template) {
@@ -120,51 +154,42 @@ Template.productDetail.events({ // for some strange reason our custom event need
 });
 
 Template.registerHelper("belongsToCurrentUser", function (productId) {
-  if (_.isArray(productId) === true) {
-    productId = productId[0];
-  }
-
-  let productBelongingToCurrUser = ReactionCore.Collections.Products.findOne({_id:productId, userId:Meteor.userId()})
-  //console.log("Template.helpers.belongsToCurrentUser() Product ",productId," belongs to ",Meteor.userId(),"?");
-  //console.log("Template.helpers.belongsToCurrentUser() productBelongingToCurrUser ",productBelongingToCurrUser);
-  return ((productBelongingToCurrUser != null) || ReactionCore.hasAdminAccess());
+  if (_.isArray(productId) === true) productId = productId[0];
+  // console.warn( "belongsToCurrentUser", Template.instance().canEdit || typeof ReactionCore.Collections.SellerProducts.findOne({ _id: productId }) !== "undefined" || ReactionCore.hasAdminAccess() );
+  return Template.instance().canEdit || typeof ReactionCore.Collections.SellerProducts.findOne({ _id: productId }) !== "undefined" || ReactionCore.hasAdminAccess();
 });
 
 Template.productDetail.helpers({
-  "displayProductDetail": (productId) => {
-  if (_.isArray(productId) === true) {
-    productId = productId[0];
-  }
+  // product: () => Template.instance().subscriptionsReady() && Template.instance().product,
+  product: () => {
+    const self = Template.instance();
+    return self.subscriptionsReady() && self.collection.findOne({_id: self.productId()});
+  },
 
-  let product = ReactionCore.Collections.Products.findOne({_id:productId})
-  const shopId = ReactionCore.getShopId();
+  displayProductDetail: () => {
+    const { product } = Template.instance();
+    const shopId = ReactionCore.getShopId();
 
-  console.log("displayProductDetail: ", productId, product);
-  if (product.userId == Meteor.userId()
+    // const productId = Template.instance().productId();
+    // console.log("displayProductDetail: ", productId, product);
+    if (product.userId == Meteor.userId()
           || Roles.userIsInRole(Meteor.userId(), ["admin"], shopId)
           || (product.isActive && product.isVisible)
         ) {
-          console.log("yes, display product detail");
-          return true;
-        }
-        else {
-          console.log("don't display product detail");
-          return false;
-        }
-  }
+      console.log("yes, display product detail");
+      return true;
+    } else {
+      console.log("don't display product detail");
+      return false;
+    }
+  },
 });
 
-
-Template.productDetail.onRendered(function(){
-  const productId = ReactionProduct.selectedProductId();
-  console.log( "Calling 'products/checkIfExpired' method with productId", productId)
-  if( productId ) Meteor.call("products/checkIfExpired", productId);
-});
 
 Template.productDetail.onDestroyed(function(){
   console.log("Template productDetail destroyed! showing ReactionProduct: ",ReactionProduct);
 
-  const productId = ReactionProduct.selectedProductId();
+  const productId = Template.instance().productId();
   const media = ReactionCore.Collections.Media.findOne({
     "metadata.productId": productId,
     "metadata.priority": 0,
@@ -176,6 +201,6 @@ Template.productDetail.onDestroyed(function(){
       && $('.product-detail-edit.description-edit .description-edit-input').val() == ""
       && media == null) {
     console.log("delete empty product!");
-    ReactionCore.Collections.Products.remove({_id: productId});
+    Template.instance().collection.remove({_id: productId}); // TODO: This is insecure to change data from client side! Need to be fixed!
   }
 });

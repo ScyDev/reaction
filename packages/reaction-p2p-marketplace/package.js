@@ -57,8 +57,17 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/dropdown/dropdown.js", ["client"]);
   api.addFiles("client/templates/dropdown/dropdown.less", ["client"]);
 
+  api.addFiles("client/collections/index.js", ["client"]);
+  api.addFiles("client/helpers/globals.js", ["client"]);
+  api.addFiles("client/helpers/products.js", ["client"]);
+  api.addFiles("client/helpers/tags.js", ["client"]);
+
   api.addFiles("server/methods/cart.js", ["server"]);
   api.addFiles("server/methods/checkout.js", ["server"]);
+
+  api.addFiles("server/publications/pub-utils.js", ["server"]);
+  api.addFiles("server/publications/publicProducts.js", ["server"]);
+  api.addFiles("server/publications/sellerProducts.js", ["server"]);
 
   api.addFiles("client/templates/cart/checkout/checkout.html", "client");
   api.addFiles("client/templates/cart/checkout/checkout.js", "client");
@@ -70,8 +79,6 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/dashboard/orders/list/items/items.js", "client");
   api.addFiles("client/templates/dashboard/orders/list/itemSeller/itemSeller.html", "client");
   api.addFiles("client/templates/dashboard/orders/list/itemSeller/itemSeller.js", "client");
-
-
 });
 
 Package.onTest(function(api) {

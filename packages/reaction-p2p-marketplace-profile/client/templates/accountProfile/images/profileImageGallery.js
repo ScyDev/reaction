@@ -81,14 +81,14 @@ function updateImagePriorities() {
 Template.profileImageGallery.onCreated(function () {
   const userId = this.data.userId || Meteor.userId(); // something strange by the way we pass the userId from template
   this.data.userId = userId;
-  console.log( "Template.profileImageGallery.onCreated |", this.data.userId)
+  // console.log( "Template.profileImageGallery.onCreated |", this.data.userId)
 
   ReactionCore.Subscriptions.ProfileUser = ReactionSubscriptions.subscribe("ProfileUser", userId);
 
   this.autorun(() => {
     if (!ReactionCore.Subscriptions.ProfileUser.ready()) return;
     const profileUser = Meteor.users.findOne({_id: userId});
-    console.log("Template.profileImageGallery.onCreated | userId:", userId, "profileUser:", profileUser);
+    // console.log("Template.profileImageGallery.onCreated | userId:", userId, "profileUser:", profileUser);
     this.data.profileViewUser = profileUser;
   });
 });
@@ -99,13 +99,13 @@ Template.profileImageGallery.onCreated(function () {
 
 Template.profileImageGallery.helpers({
   media: function () {
-    let template = Template.instance();
+    const template = Template.instance();
     const userId = template.data.userId;
     let mediaArray = [];
     if (ReactionCore.Subscriptions.ProfileUser.ready()) {
-      if (template.data.profileViewUser._id) {
+      if (userId) {
         mediaArray = Media.find({
-          "metadata.userId": template.data.profileViewUser._id
+          "metadata.userId": userId
         }, {
           sort: {
             "metadata.priority": 1
@@ -117,7 +117,6 @@ Template.profileImageGallery.helpers({
   },
   profile: function () {
     let template = Template.instance();
-    const userId = template.data.userId;
     if (ReactionCore.Subscriptions.ProfileUser.ready()) {
       return template.data.profileViewUser.profile;
     }
@@ -126,20 +125,20 @@ Template.profileImageGallery.helpers({
 
 function isMyProfile(template) {
   if (ReactionCore.Subscriptions.ProfileUser.ready()) {
-    if (template.data.profileViewUser._id == Meteor.userId()) {
-      return true;
-    }
+    if (template.data.profileViewUser._id == Meteor.userId()) return true;
   }
 }
 
 Template.profileImageDetail.helpers({
   isMyProfile: function () {
-    return isMyProfile(Template.instance().view.parentView.parentView.parentView.templateInstance());
+    const instance = Template.instance().view.parentView.parentView.parentView.templateInstance
+    return instance ? isMyProfile(instance()) : false;
   }
 });
 Template.profileImageUploader.helpers({
   isMyProfile: function () {
-    return isMyProfile(Template.instance().view.parentView.parentView.parentView.templateInstance());
+    const instance = Template.instance().view.parentView.parentView.parentView.templateInstance
+    return instance ? isMyProfile(instance()) : false;
   }
 });
 

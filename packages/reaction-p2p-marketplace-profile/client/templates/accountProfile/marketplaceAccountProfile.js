@@ -39,63 +39,62 @@ Template.accountProfile.onDestroyed(function() {
   }
 });
 
-Template.accountProfile.helpers( // for some strange reason our custom heleprs needs to be speficied on the template that we override. doesn't work with our new template name.
-{
-      isProdsSubReady: function() {
-        if (ReactionCore.MeteorSubscriptions_ProductsForOrdersHistory.ready()) {
-          return true;
-        }
-        else {
-          return false;
-        }
-      },
-      messages: function () {
-        return Template.instance().formMessages.get();
-      },
+// Event handlers are to be specified on the template that we override for indirect template calls.
+Template.accountProfile.helpers({
+  isProdsSubReady: function() {
+    if (ReactionCore.MeteorSubscriptions_ProductsForOrdersHistory.ready()) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  },
+  messages: function () {
+    return Template.instance().formMessages.get();
+  },
 
-      hasError: function(error) {
-        // True here means the field is valid
-        // We're checking if theres some other message to display
-        if (error !== true && typeof error !== "undefined") {
-          return "has-error has-feedback";
-        }
+  hasError: function(error) {
+    // True here means the field is valid
+    // We're checking if theres some other message to display
+    if (error !== true && typeof error !== "undefined") {
+      return "has-error has-feedback";
+    }
 
-        return false;
-      },
+    return false;
+  },
 
-      formErrors: function() {
-        return Template.instance().formErrors.get();
-      },
+  formErrors: function() {
+    return Template.instance().formErrors.get();
+  },
 
-      uniqueId: function () {
-        return Template.instance().uniqueId;
-      },
+  uniqueId: function () {
+    return Template.instance().uniqueId;
+  },
 
-      services: function() {
-        let serviceHelper = new ReactionServiceHelper();
-        return serviceHelper.services();
-      },
+  services: function() {
+    let serviceHelper = new ReactionServiceHelper();
+    return serviceHelper.services();
+  },
 
-      shouldShowSeperator: function() {
-        let serviceHelper = new ReactionServiceHelper();
-        let services = serviceHelper.services();
-        let enabledServices = _.where(services, {
-          enabled: true
-        });
+  shouldShowSeperator: function() {
+    let serviceHelper = new ReactionServiceHelper();
+    let services = serviceHelper.services();
+    let enabledServices = _.where(services, {
+      enabled: true
+    });
 
-        return !!Package["accounts-password"] && enabledServices.length > 0;
-      },
+    return !!Package["accounts-password"] && enabledServices.length > 0;
+  },
 
-      hasPasswordService: function() {
-        return !!Package["accounts-password"];
-      },
+  hasPasswordService: function() {
+    return !!Package["accounts-password"];
+  },
 
-      displayEmail: function() {
-        let user = Meteor.users.findOne({_id: Meteor.userId()});
-        return user.emails[0].address;
-      }
+  displayEmail: function() {
+    let user = Meteor.users.findOne({_id: Meteor.userId()});
+    return user.emails[0].address;
   }
-);
+});
 
 Template.accountProfile.events({ // for some strange reason our custom event needs to be speficied on the template that we override. doesn't work with our new template name.
   "submit form#profile-form": function (event, template) {
@@ -191,3 +190,37 @@ Template.accountProfile.events({ // for some strange reason our custom event nee
     $('#passwordChangeButton').hide();
   }
 });
+
+
+/* Fetch new coordinates when seller's address is changed within the profile */
+AutoForm.hooks({ addressBookEditForm: {
+  onSubmit: function (address) {
+    this.event.preventDefault();
+
+    const addressStr = (address.address1 + " " + address.address2 + ", " + address.postal + " " + address.city
+                        + ", " + address.country)
+                       .replace("undefined", "").replace(/\s+/g, " ").replace(/\s+,/g, " ");
+    console.log("YAHOO!", address, addressStr);
+
+    GoogleMaps.load({ key: "AIzaSyCmlt5MvBoOU-DXW57z8ehNzz4AO_bL418" }); // TODO: Get API key from settings
+    Tracker.autorun(c => {
+      if (!GoogleMaps.loaded()) return;
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ address: addressStr }, (results, status) => {
+        if (status == google.maps.GeocoderStatus.OK) {
+          const { location } = results[0].geometry;
+          Meteor.users.update({ _id: Meteor.userId() }, {
+            $set: {
+              "profile.latitude": location.lat(),
+              "profile.longitude": location.lng(),
+            }
+          });
+          console.log("updated profile lat/lng");
+        }
+      });
+      c.stop();
+    });
+  }
+}});
+
+

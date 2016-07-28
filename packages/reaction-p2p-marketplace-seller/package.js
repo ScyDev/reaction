@@ -80,7 +80,6 @@ Package.onUse(function(api) {
 
   api.addFiles('server/publications/orders.js', 'server');
   api.addFiles('server/publications/productsForOrdersHistory.js', 'server');
-  api.addFiles('server/publications/product.js', 'server');
   api.addFiles('server/methods/accounts.js', 'server');
   api.addFiles('server/methods/products.js', 'server');
   api.addFiles('server/methods/cart.js', 'server');

@@ -4,7 +4,7 @@
     https://forums.meteor.com/t/if-template-subscriptionsready-is-firing-too-soon/8752/10
     Use a specific helper instead of Template.subscriptionsReady
     -->
-    {{#if isProdsSubReady}}
+    {{#if TemplateContext "dataLoaded"}}
       <ul class="product-grid-list list-unstyled" id="product-grid-list">
         {{#each products}}
           {{> productGridItems}}
@@ -16,7 +16,15 @@
           </div>
         {{/each}}
       </ul>
-      {{#if loadingMoreProducts}}{{>spinner}}{{/if}}
+      {{#if TemplateContext "loadingMoreData"}}
+        <div class="spinnerBoxSmall">{{>spinner}}</div>
+      {{else}}
+        {{#if moreProductsAvailable}}
+          <div class="row" id="productScrollLimitLoader">
+            <button id="loadMoreItems" class="btn btn-default btn-block" data-i18n="app.loadMoreProducts" data-event-action="loadMoreProducts">Load more products</button>
+          </div>
+        {{/if}}
+      {{/if}}
     {{else}}
       <div class="spinnerBox">
           {{>spinner}}
@@ -24,10 +32,4 @@
       </div>
     {{/if}}
   </div>
-
-  {{#if loadMoreProducts}}
-    <div class="row" id="productScrollLimitLoader">
-        <button class="btn btn-default btn-block" data-i18n="app.loadMoreProducts" data-event-action="loadMoreProducts">Load more products</button>
-    </div>
-  {{/if}}
 </template>
