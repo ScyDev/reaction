@@ -50,7 +50,13 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/products/productsMarketplace.html", ["client"]);
   api.addFiles("client/templates/products/productsMarketplace.js", ["client"]);
   api.addFiles("client/templates/products/products.less", ["client"]);
+
+  api.addFiles("client/templates/products/productGrid/productGrid.html", ["client"]);
+  api.addFiles("client/templates/products/productGrid/productGrid.js", ["client"]);
+  api.addFiles("client/templates/products/productList/productList.html", ["client"]);
+  api.addFiles("client/templates/products/productList/productList.js", ["client"]);
   api.addFiles("client/templates/products/productList/productList.less", ["client"]);
+
   api.addFiles("client/templates/cart/checkout/header/header.html", ["client"]);
   api.addFiles("client/templates/cart/checkout/header/header.js", ["client"]);
   api.addFiles("client/templates/dropdown/dropdown.html", ["client"]);
