@@ -89,20 +89,8 @@ Template.accountsDashboard.helpers({
 
           if (Roles.userIsInRole(member.userId, "owner", shopId)) {
             member.role = "owner";
-          }
-          else if (Roles.userIsInRole(member.userId, "guest", shopId)) {
-            let account = ReactionCore.Collections.Accounts.findOne({_id: user._id});
-
+          } else if (Roles.userIsInRole(member.userId, "guest", shopId)) {
             member.role = "guest";
-
-            member.profileName = user.profile.name;
-            if (account.isSeller) { member.isSeller = "Seller" } else { member.isSeller = "Buyer" };
-
-            member.createdAt = account.createdAt;
-            console.log("account.isSeller: ",account.isSeller);
-            if (account.profile.addressBook && account.profile.addressBook.length > 0) {
-              member.address = account.profile.addressBook[0];
-            }
           }
 
           return member;

@@ -3,8 +3,6 @@
  *
  */
 Template.cartDrawerItems.onRendered(function () {
-  return;
-  
   return $(function () {
       var cartSwiper = $(".cart-drawer-swiper-container").swiper({
       autoplayStopOnLast : true,
