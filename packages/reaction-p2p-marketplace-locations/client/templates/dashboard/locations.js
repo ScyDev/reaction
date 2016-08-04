@@ -1,7 +1,8 @@
 Template.locationsSettings.helpers({
   packageData: function() {
     return ReactionCore.Collections.Packages.findOne({
-      name: 'reaction-locations'
+      // name: 'reaction-locations'
+      name: "reaction-p2p-marketplace-locations"
     });
   },
 

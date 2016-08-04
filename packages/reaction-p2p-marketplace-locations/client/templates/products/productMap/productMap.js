@@ -6,7 +6,7 @@ Template.productMap.inheritsHooksFrom(["productGridP2p"]);
 const filtersAccessor = "publicProducts";
 const collection = ReactionCore.Collections.PublicProducts;
 
-Template.productMap.onRendered(() => GoogleMaps.load({ key: "AIzaSyCmlt5MvBoOU-DXW57z8ehNzz4AO_bL418" }) ); // TODO: Get API key from settings
+Template.productMap.onRendered(() => GoogleMaps.load({ key: getGoogleMapsApiKey() }));
 
 Template.productMap.helpers({
   mapOptions: () => {
@@ -26,7 +26,7 @@ let markers = {};
 function addMarker(map, product) {
   if (!map || !product) return;
   const { location, userId } = product
-  if (!location.lat || !location.lng) return
+  if (!location || !location.lat || !location.lng) return
   // console.log("Adding marker for seller", userId);
 
   const markerData = markers[userId];
@@ -110,6 +110,7 @@ function centerMapToMeaningfulPlace(template, map) {
 
 Template.productMap.onCreated(function() {
   const self = this;
+  initializeViewData(self, "publicProducts", filtersAccessor, 0);
   GoogleMaps.ready("map", map => {
     markers = {};
     /* Track the current set of filters and rerun Products observation. */

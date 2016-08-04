@@ -123,6 +123,11 @@ Template.profileImageGallery.helpers({
   },
 });
 
+Template.registerHelper( "dropFileToUploadText", () => {
+  const size = Math.trunc(ReactionCore.Collections.Media.options.filter.maxSize / 1024);
+  return i18next.t("productDetail.dropFile", { size, defaultValue: "Drop file to upload" }) + ` (max ${size}KB)`;
+})
+
 function isMyProfile(template) {
   if (ReactionCore.Subscriptions.ProfileUser.ready()) {
     if (template.data.profileViewUser._id == Meteor.userId()) return true;

@@ -11,3 +11,10 @@ ReactionCore.Collections.MapMarkers.allow({
     return !! userId;
   }
 });
+
+
+this.getGoogleMapsApiKey = () =>
+  ReactionCore.Collections.Packages.findOne(
+    {name: "reaction-p2p-marketplace-locations"},
+    {fields: {"settings.public.googleMapsApiKey": 1}}
+    ).settings.public.googleMapsApiKey

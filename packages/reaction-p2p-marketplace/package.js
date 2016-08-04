@@ -40,9 +40,21 @@ Package.onUse(function(api) {
 
   api.use("aldeed:template-extension");
 
+
+  api.addFiles("common/collections/collectionFS.js", ["client", "server"]);
+  api.addFiles("common/schemas/schemas.js", ["client", "server"]);
+
   api.addFiles('reaction-p2p-marketplace.js');
 
+  api.addFiles("server/register.js", ["server"]);
+
   api.addFiles("server/methods/accounts.js", "server");
+  api.addFiles("server/methods/cart.js", ["server"]);
+  api.addFiles("server/methods/checkout.js", ["server"]);
+
+  api.addFiles("server/publications/pub-utils.js", ["server"]);
+  api.addFiles("server/publications/publicProducts.js", ["server"]);
+  api.addFiles("server/publications/sellerProducts.js", ["server"]);
 
   api.addFiles("client/templates/style.less", ["client"]);
 
@@ -71,18 +83,14 @@ Package.onUse(function(api) {
   api.addFiles("client/helpers/products.js", ["client"]);
   api.addFiles("client/helpers/tags.js", ["client"]);
 
-  api.addFiles("server/methods/cart.js", ["server"]);
-  api.addFiles("server/methods/checkout.js", ["server"]);
-
-  api.addFiles("server/publications/pub-utils.js", ["server"]);
-  api.addFiles("server/publications/publicProducts.js", ["server"]);
-  api.addFiles("server/publications/sellerProducts.js", ["server"]);
-
   api.addFiles("client/templates/cart/checkout/checkout.html", "client");
   api.addFiles("client/templates/cart/checkout/checkout.js", "client");
   api.addFiles("client/templates/cart/checkout/completed/completed.html", "client");
   api.addFiles("client/templates/cart/checkout/completed/completed.js", "client");
+
   api.addFiles("client/templates/dashboard/dashboard.js", "client");
+  api.addFiles("client/templates/dashboard/settings/settings.html", "client");
+  api.addFiles("client/templates/dashboard/settings/settings.js", "client");
   api.addFiles("client/templates/dashboard/orders/list/ordersList.html", "client");
   api.addFiles("client/templates/dashboard/orders/list/ordersList.js", "client");
   api.addFiles("client/templates/dashboard/orders/list/items/items.html", "client");

@@ -160,10 +160,9 @@ Template.registerHelper("belongsToCurrentUser", function (productId) {
 });
 
 Template.productDetail.helpers({
-  // product: () => Template.instance().subscriptionsReady() && Template.instance().product,
   product: () => {
     const self = Template.instance();
-    return self.subscriptionsReady() && self.collection.findOne({_id: self.productId()});
+    return self.subscriptionsReady() && self.collection && self.collection.findOne({_id: self.productId()});
   },
 
   displayProductDetail: () => {

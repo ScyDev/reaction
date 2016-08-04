@@ -28,6 +28,11 @@ ReactionCore.Schemas.LocationsPackageConfig = new SimpleSchema([
       type: Object,
       optional: true
     },
+    "settings.public.googleMapsApiKey": {
+      type: String,
+      label: "Google Maps API key",
+      optional: true
+    },
     "settings.public.apps": {
       type: Object,
       label: "Locations Settings",

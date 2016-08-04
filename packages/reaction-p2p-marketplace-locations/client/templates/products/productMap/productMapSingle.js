@@ -3,7 +3,7 @@
  */
 
 Template.productMapSingle.onRendered(function() {
-  GoogleMaps.load({ key: "AIzaSyCmlt5MvBoOU-DXW57z8ehNzz4AO_bL418" }); // TODO: Get API key from settings
+  GoogleMaps.load({ key: getGoogleMapsApiKey() });
 });
 
 Template.productMapSingle.helpers({

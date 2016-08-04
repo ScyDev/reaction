@@ -202,7 +202,7 @@ AutoForm.hooks({ addressBookEditForm: {
                        .replace("undefined", "").replace(/\s+/g, " ").replace(/\s+,/g, " ");
     console.log("YAHOO!", address, addressStr);
 
-    GoogleMaps.load({ key: "AIzaSyCmlt5MvBoOU-DXW57z8ehNzz4AO_bL418" }); // TODO: Get API key from settings
+    GoogleMaps.load({ key: getGoogleMapsApiKey() });
     Tracker.autorun(c => {
       if (!GoogleMaps.loaded()) return;
       const geocoder = new google.maps.Geocoder();
