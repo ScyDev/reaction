@@ -35,8 +35,10 @@ Package.onUse(function(api) {
   api.use("reactioncommerce:core@0.10.0");
   api.use("reactive-var");
 
-  api.use("sacha:spin");
+  api.use("utilities:spin");
   api.use("scydev:reaction-search@0.0.2");
+
+  api.use("aldeed:template-extension");
 
   api.addFiles('reaction-p2p-marketplace.js');
 
@@ -51,6 +53,9 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/products/productList/productList.less", ["client"]);
   api.addFiles("client/templates/cart/checkout/header/header.html", ["client"]);
   api.addFiles("client/templates/cart/checkout/header/header.js", ["client"]);
+  api.addFiles("client/templates/dropdown/dropdown.html", ["client"]);
+  api.addFiles("client/templates/dropdown/dropdown.js", ["client"]);
+  api.addFiles("client/templates/dropdown/dropdown.less", ["client"]);
 
   api.addFiles("server/methods/cart.js", ["server"]);
   api.addFiles("server/methods/checkout.js", ["server"]);

@@ -10,7 +10,8 @@ Template.productDetailEdit.helpers({
     } else {
       return i18next.t(i18nKey);
     }
-  }
+  },
+  getType: ( type = "text" ) => type
 });
 
 /**

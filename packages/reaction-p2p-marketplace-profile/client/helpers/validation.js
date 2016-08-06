@@ -21,7 +21,26 @@ window.ProfileFormValidation = {
     // Invalid
     return {
       "error": "INVALID_DESCRIPTION",
-      "reason": i18next.t("accountsUI.error.invalidDescription", {defaultValue: "Dscription too long"})
+      "reason": i18next.t("accountsUI.error.invalidDescription", {defaultValue: "Description too long"})
     };
   },
+  email: function(email, optional) {
+
+    email = email.trim();
+
+    // Valid
+    if (optional === true && email.length === 0) {
+      return true;
+    } else if (email.indexOf('@') !== -1) {
+      return true;
+    }
+
+    // Invalid
+    return {
+      error: "INVALID_EMAIL",
+      reason: i18next.t('accountsUI.error.invalidEmail')
+    };
+
+  },
+
 };

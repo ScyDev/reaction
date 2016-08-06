@@ -14,12 +14,14 @@
           <span>{{i18n 'products.listView' 'List'}}</span>
           </span>
         </div>
+        {{#unless Session "productFilters/showAllMine"}}
         <div class="viewSwitchItem">
           <span id="productMapView">
           <i id="icon-map" class="view-switcher-icon fa fa-map"></i>
           <span>{{i18n 'products.mapView' 'Map'}}</span>
           </span>
         </div>
+        {{/unless}}
       </div>
     </h2>
   </div>

@@ -111,6 +111,8 @@
         "shopSettings": "Shop Settings",
         "dashboard": "Dashboard",
         "print": "Print",
+        "offline": "No connection",
+				"appIsOffline": "No connection to server at this time, please try again in a bit.",
         "notFound": "This page was not found.",
         "pageNotFound": "This page was not found.",
         "notFoundTitle": "Oops!",
@@ -223,13 +225,16 @@
         "tagsAdd": "Add tag",
         "location": "Location",
         "needsReview": "Product changed, it needs to be activated again.",
-		"pickupTimeFromIsRequired": "Pickup time 'from' is required",
-		"pickupTimeToIsRequired": "Pickup time 'to' is required",
+		    "pickupTimeFromIsRequired": "Pickup time 'from' is required [HH:MM]",
+		    "pickupTimeToIsRequired": "Pickup time 'to' is required [HH:MM]",
         "forSaleOnDateIsNoDate": "For sale date is not a date",
-		"latestOrderDateMustBeADate": "Latest order date must be a date",
+		    "latestOrderDateMustBeADate": "Latest order date must be a date",
         "notLoggedIn": "Not logged in",
-		"youNeedToLogIn": "You need to log in or register.",
-        "cantChangeOrderedProduct": "Can't change a product that has already been ordered."
+		    "youNeedToLogIn": "You need to log in or register.",
+        "cantChangeOrderedProduct": "Can't change a product that has already been ordered.",
+        "latestOrderDateValueAfterPickupDateTime": "Latest order time can't be after pickup time.",
+        "latestOrderDateNotOnSaleDate": "The latest order date is not on for sale date . Are you sure?",
+        "latestOrderDateNearPickupTime": "The latest order date is very near the pickup time. Are you sure?"
       },
       "products": {
         "all": "ALL",
@@ -243,7 +248,8 @@
         "addGroupTag": "Add Group Tag",
         "addSubTag": "Add Sub Tag",
         "removeTag": "Remove Tag",
-        "createTag": "Create Tag"
+        "createTag": "Create Tag",
+        "noTag": "No tag"
       },
       "productDetailEdit": {
         "title": "Product title",
@@ -336,7 +342,9 @@
           "refunded": "Refunded"
         },
         "outOfStock": "No longer available",
-				"productInventoryHasChanged": "We're sorry. Somebody bought this product while you were shopping."
+				"productInventoryHasChanged": "We're sorry. Somebody bought this product while you were shopping.",
+        "cartMissingAddress": "Cart is missing an address",
+        "cartMissingAddressText": "Something went wrong at our end. We'll investigate. Please try again."
       },
       "orderShipping": {
         "shipTo": "Ship To",
@@ -452,10 +460,17 @@
         },
         "search": {
           "searchBoxDateLabel": "Date",
+          "searchBoxSaleOnDateLabel": "For sale on date",
           "searchBoxDatePlaceholder": "Choose date...",
           "searchBoxLocationLabel": "Place",
+          "searchBoxMealTimeLabel": "Meal Time",
+          "searchBoxLunch": "Lunch",
+          "searchBoxDinner": "Dinner",
           "searchBoxLocationPlaceholder": "City name...",
-          "noProductsFound": "No products found"
+          "noProductsFound": "No products found",
+          "searchBoxSaleOnDateLabel": "For sale on date",
+          "searchBoxTitle": "Title",
+          "searchBoxTitlePlaceholder": "By title ..."
         }
       },
       "address": {
@@ -665,7 +680,9 @@
           "noAddress": "No address",
           "youNeedToEnterYourAddress": "You need to enter your address.",
           "imageTooBig": "Image too big",
-          "imageTooBigText": "Please try a smaller image. Max {{maxKb}} KB."
+          "imageTooBigText": "Please try a smaller image. Max {{maxKb}} KB.",
+					"emailNeeded": "Email is mandatory",
+          "emailNeededText": "Please enter a valid email address."
         },
         "mails": {
           "welcome": {

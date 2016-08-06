@@ -1,7 +1,5 @@
 
-var adminId = db.getCollection('users').findOne({'emails.address': 'c7i2sbtw@localhost'}, {_id: 1});
-
-db.getCollection('users').find({_id: {$ne: adminId._id}}).forEach(function(user) {
+db.getCollection('users').find({}).forEach(function(user) {
   var set = {
     isDecided: false,
     isSeller: false,
@@ -27,9 +25,7 @@ db.getCollection('users').find({_id: {$ne: adminId._id}}).forEach(function(user)
 
 #############################################
 
-var adminId = db.getCollection('users').findOne({'emails.address': 'c7i2sbtw@localhost'}, {_id: 1});
-
-db.getCollection('users').find({_id: {$ne: adminId._id}}).forEach(function(user) {
+db.getCollection('users').find({}).forEach(function(user) {
 
   db.users.update({_id:user._id},
     {

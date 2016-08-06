@@ -1,4 +1,36 @@
 
+Meteor.methods({
+  "cart/deleteCart": function (cartId, sessionId) {
+    check(cartId, String);
+    check(sessionId, String);
+
+    ReactionCore.Log.info("cart/deleteCart: ",cartId);
+    ReactionCore.Collections.Cart.remove({
+      _id: cartId
+    });
+
+    let userId = Meteor.userId();
+    Meteor.call("cart/createCart", userId, sessionId);
+  }
+});
+
+Meteor.methods({
+  "cart/deleteCartAdresses": function (cartId, sessionId) {
+    check(cartId, String);
+    check(sessionId, String);
+
+    ReactionCore.Log.info("cart/deleteCartAdresses: ",cartId);
+    ReactionCore.Collections.Cart.update({_id: cartId},
+      {
+        $set: {
+          billing: [],
+          shipping: []
+        }
+      }
+    );
+  }
+});
+
 ReactionCore.MethodHooks.before('cart/addToCart', function(options) {
   ReactionCore.Log.info("ReactionCore.MethodHooks.before('cart/addToCart') options: ", options);
 

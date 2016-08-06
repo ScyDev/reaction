@@ -15,13 +15,22 @@ Meteor.publish("Accounts", function (userId) {
   if (!shopId) {
     return this.ready();
   }
+
+  const usersSelector = `{"roles.${shopId}": {"$nin": ["anonymous"]}}`;
+  let nonAnonUsers = Meteor.users.find(EJSON.parse(usersSelector), {fields: {_id: 1}}).fetch();
+  nonAnonUsers = _.pluck(nonAnonUsers, '_id');
+  //ReactionCore.Log.info("publish(Accounts): ",nonAnonUsers);
+
   // global admin can get all accounts
   if (Roles.userIsInRole(this.userId, ["owner"], Roles.GLOBAL_GROUP)) {
-    return Accounts.find();
+    return Accounts.find({
+      _id: {$in: nonAnonUsers}
+    });
     // shop admin gets accounts for just this shop
   } else if (Roles.userIsInRole(this.userId, ["admin", "owner"], shopId)) {
     return Accounts.find({
-      shopId: shopId
+      shopId: shopId,
+      _id: {$in: nonAnonUsers}
     });
   }
   // regular users should get just their account

@@ -1,0 +1,15 @@
+<template name="marketplaceUserDropdown">
+  <div class="user-accounts-dropdown">
+    <div class="user-accounts-dropdown-content">
+      {{> accountsDropdownApps}}
+    </div>
+    <div class="btn btn-primary btn-block" id="logout" data-i18n="accountsUI.signOut">Sign Out</div>
+
+    <div id="userDropdownSpinnerContainer" style="display: none;">
+      <div class="spinnerBox">
+        {{>spinner}}
+      </div>
+    </div>
+  </div>
+
+</template>

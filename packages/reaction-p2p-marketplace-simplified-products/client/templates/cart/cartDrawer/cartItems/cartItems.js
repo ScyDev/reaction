@@ -1,0 +1,1 @@
+Template.newCartDrawerItems.replaces("cartDrawerItems");

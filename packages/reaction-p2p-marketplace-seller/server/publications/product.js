@@ -1,52 +1,55 @@
-/**
- * product detail publication
- * @param {String} productId - productId or handle
- * @return {Object} return product cursor
- */
-Meteor.publish("Product", function (productId) {
-  check(productId, Match.OptionalOrNull(String));
-  if (!productId) {
-    ReactionCore.Log.info("ignoring null request on Product subscription");
-    return this.ready();
-  }
-  let _id;
-  let shop = ReactionCore.getCurrentShop();
-  // verify that shop is ready
-  if (typeof shop !== "object") {
-    return this.ready();
-  }
 
-  let selector = {};
-  selector.isVisible = true;
-  selector.isActive = true;
+// TO BE DELETED AFTER REVIEW - DUPLICATES 'PRODUCT' PUBLICATION FROM 'REACTION:COLLECTIONS'
 
-  if (Roles.userIsInRole(this.userId, ["owner", "admin", "createProduct"],
-      shop._id) || belongsToCurrentUser(productId)) {
-    selector.isVisible = {
-      $in: [true, false]
-    };
-    selector.isActive = {
-      $in: [true, false]
-    };
-  }
-  // TODO review for REGEX / DOS vulnerabilities.
-  if (productId.match(/^[A-Za-z0-9]{17}$/)) {
-    selector._id = productId;
-    // TODO try/catch here because we can have product handle passed by such regex
-    _id = productId;
-  } else {
-    selector.handle = {
-      $regex: productId,
-      $options: "i"
-    };
-    const products = ReactionCore.Collections.Products.find(selector).fetch();
-    if (products.length > 0) {
-      _id = products[0]._id;
-    } else {
-      return this.ready();
-    }
-  }
-  selector = { $or: [{ _id: _id }, { ancestors: { $in: [_id] }}] };
+// /**
+// * product detail publication
+// * @param {String} productId - productId or handle
+// * @return {Object} return product cursor
+// */
+// Meteor.publish("Product", function (productId) {
+//   check(productId, Match.OptionalOrNull(String));
+//   if (!productId) {
+//     ReactionCore.Log.info("ignoring null request on Product subscription");
+//     return this.ready();
+//   }
+//   let _id;
+//   let shop = ReactionCore.getCurrentShop();
+//   // verify that shop is ready
+//   if (typeof shop !== "object") {
+//     return this.ready();
+//   }
 
-  return ReactionCore.Collections.Products.find(selector);
-});
+//   let selector = {};
+//   selector.isVisible = true;
+//   selector.isActive = true;
+
+//   if (Roles.userIsInRole(this.userId, ["owner", "admin", "createProduct"],
+//       shop._id) || belongsToCurrentUser(productId)) {
+//     selector.isVisible = {
+//       $in: [true, false]
+//     };
+//     selector.isActive = {
+//       $in: [true, false]
+//     };
+//   }
+//   // TODO review for REGEX / DOS vulnerabilities.
+//   if (productId.match(/^[A-Za-z0-9]{17}$/)) {
+//     selector._id = productId;
+//     // TODO try/catch here because we can have product handle passed by such regex
+//     _id = productId;
+//   } else {
+//     selector.handle = {
+//       $regex: productId,
+//       $options: "i"
+//     };
+//     const products = ReactionCore.Collections.Products.find(selector).fetch();
+//     if (products.length > 0) {
+//       _id = products[0]._id;
+//     } else {
+//       return this.ready();
+//     }
+//   }
+//   selector = { $or: [{ _id: _id }, { ancestors: { $in: [_id] }}] };
+
+//   return ReactionCore.Collections.Products.find(selector);
+// });

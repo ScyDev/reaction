@@ -17,6 +17,23 @@ function belongsToCurrentUser(productId) {
   return ((productBelongingToCurrUser != null) || ReactionCore.hasAdminAccess());
 }
 
+function isLatestOrderDateAfterPickupTime(product) {
+  // check if latestOrderDate is after pickupTime
+  let latestOrderDateValue = moment(product.latestOrderDate);
+  let pickupDateTime = moment(
+                        moment(product.forSaleOnDate).format("DD.MM.YYYY")+" "+product.pickupTimeFrom,
+                        "DD.MM.YYYY HH:mm"
+                      );
+
+  ReactionCore.Log.info("'products/activateProduct' latestOrderDateValue ",latestOrderDateValue.toString()," pickupTime ",pickupDateTime.toString());
+
+  if (latestOrderDateValue.isAfter(pickupDateTime)) {
+    ReactionCore.Log.info("'products/activateProduct' latestOrderDateValue ",latestOrderDateValue.toString()," can't be after pickupDateTime ",pickupDateTime.toString());
+    throw new Meteor.Error(403, "productDetail.latestOrderDateValueAfterPickupDateTime");
+  }
+
+}
+
 /**
  * @function setProductInvisibleAndInactive
  * @description set the product insvisible and inactive
@@ -57,11 +74,11 @@ Meteor.methods({
 
     if (!ReactionCore.hasAdminAccess()) {
       let account =  ReactionCore.Collections.Accounts.findOne({userId: Meteor.userId()});
-      if (account.profile.addressBook.length <= 0) {
+      if (!account.profile.addressBook || account.profile.addressBook.length === 0) {
         ReactionCore.Log.info("No address. throw error!");
         throw new Meteor.Error(403, "error.noProfileAddress");
-        //errorMsg += "Profile address required.";
-        //template.$(".title-edit-input").focus();
+        // errorMsg += "Profile address required.";
+        // template.$(".title-edit-input").focus();
       }
     }
 
@@ -70,6 +87,8 @@ Meteor.methods({
       ancestors: { $in: [productId] }
     }).fetch();
     let variantValidator = true;
+
+    isLatestOrderDateAfterPickupTime(product);
 
     if (typeof product === "object" && product.title.length > 1) {
       if (variants.length > 0) {
@@ -131,7 +150,7 @@ Meteor.methods({
     const shop = ReactionCore.Collections.Shops.findOne(shopId);
     //const product = ReactionCore.Collections.Products.findOne(productId);
     let adminEmail = process.env.REACTION_EMAIL;
-    ReactionCore.Log.info(`Wanna send product review mail to: `,adminEmail);
+    ReactionCore.Log.info(`Wanna send product review mail for product `,productId,` from user `,userId,` to: `,adminEmail);
 
     if (!adminEmail || !adminEmail.length > 0) {
       return true;
@@ -148,6 +167,12 @@ Meteor.methods({
     ReactionCore.i18nextInitForServer(i18next);
     ReactionCore.Log.info("sendProductReviewEmail: i18n server test:", i18next.t('accountsUI.mails.productReview.subject'));
 
+    let userEmail = "";
+    if (Meteor.user().emails && Meteor.user().emails.length > 0) {
+      userEmail = Meteor.user().emails[0].address
+    }
+    ReactionCore.Log.info("sendProductReviewEmail: userEmail ",userEmail);
+
     // fetch and send templates
     SSR.compileTemplate("products/reviewProduct", ReactionEmailTemplate("products/reviewProduct"));
     try {
@@ -160,7 +185,7 @@ Meteor.methods({
           shop: shop,
           user: Meteor.user(),
           productId: productId,
-          userEmail: Meteor.user().emails[0].address
+          userEmail: userEmail
         })
       });
     } catch (e) {
@@ -172,7 +197,9 @@ Meteor.methods({
 
     var product = ReactionCore.Collections.Products.findOne({_id: productId});
     //ReactionCore.Log.info("is",moment(product.latestOrderDate).utcOffset('+0000')," < ",moment().utcOffset('+0200'),"?");
-    if (product && product.soldOne && moment(product.latestOrderDate).utcOffset('+0000').isBefore(moment().utcOffset('+0200'))) {
+    /* Assuming it is not necessary to shift time anymore */
+    // if (product && product.soldOne && moment(product.latestOrderDate).utcOffset('+0000').isBefore(moment().utcOffset('+0200'))) {
+    if (product && product.soldOne && moment(product.latestOrderDate).isBefore(moment())) {
       ReactionCore.Log.info("Method products/checkIfExpired() product expired: ",productId);
       ReactionCore.Collections.Products.update(productId,
         {
@@ -246,7 +273,7 @@ ReactionCore.MethodHooks.before('products/deleteProduct', function(options) {
   }
 
   var product = ReactionCore.Collections.Products.findOne({_id: productId});
-  if (product.soldOne) {
+  if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') Product was sold. Deny changes!");
     throw new Meteor.Error(403, "Can't change ordered product");
   }
@@ -262,36 +289,10 @@ ReactionCore.MethodHooks.before('products/updateProductField', function(options)
   }
 
   var product = ReactionCore.Collections.Products.findOne({_id: productId});
-  if (product.soldOne) {
+  if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') Product was sold. Deny changes!");
     throw new Meteor.Error(403, "Can't change ordered product");
   }
-
-/*
-  unfortunately, this gives error:  Exception while invoking method 'products/updateProductField' Error: Did not check() all arguments during call to 'products/updateProductField'
-  moving this to core for the time being.
-
-  // translate date to US format for saving
-  if (options.arguments.length >= 3) {
-    if (options.arguments[1] == "forSaleOnDate") {
-      //ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') from:",options.arguments[2]);
-
-      // this seems to provoke: Exception while invoking method 'products/updateProductField' Error: Did not check() all arguments during call to 'products/updateProductField'
-      // but the value is still saved...
-      options.arguments[2] = moment(options.arguments[2], "DD.MM.YYYY").format('MM/DD/YYYY');
-
-      //ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductField') to:",options.arguments[2]);
-    }
-    if (options.arguments[1] == "latestOrderDate") {
-      // this seems to provoke: Exception while invoking method 'products/updateProductField' Error: Did not check() all arguments during call to 'products/updateProductField'
-      // but the value is still saved...
-      options.arguments[2] = moment(options.arguments[2], "DD.MM.YYYY HH:mm").format('MM/DD/YYYY HH:mm');
-    }
-  }
-  check(options.arguments[0], String);
-  check(options.arguments[1], String);
-  check(options.arguments[2], Match.OneOf(String, Object, Array, Boolean, Date));
-*/
 });
 
 ReactionCore.MethodHooks.before('products/updateVariant', function(options) {
@@ -301,7 +302,7 @@ ReactionCore.MethodHooks.before('products/updateVariant', function(options) {
   //ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateVariant') fullVariant: ", fullVariant);
 
   var product = ReactionCore.Collections.Products.findOne({_id: {$in:fullVariant.ancestors} });
-  if (product.soldOne) {
+  if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateVariant') Product was sold. Deny changes!");
     throw new Meteor.Error(403, "Can't change ordered product");
   }
@@ -366,7 +367,7 @@ ReactionCore.MethodHooks.before('products/updateProductTags', function(options) 
   }
 
   var product = ReactionCore.Collections.Products.findOne({_id: productId});
-  if (product.soldOne) {
+  if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductTags') Product was sold. Deny changes!");
     throw new Meteor.Error(403, "Can't change ordered product");
   }
@@ -382,7 +383,7 @@ ReactionCore.MethodHooks.before('products/removeProductTag', function(options) {
   }
 
   var product = ReactionCore.Collections.Products.findOne({_id: productId});
-  if (product.soldOne) {
+  if (product != null && product.soldOne) {
     ReactionCore.Log.info("ReactionCore.MethodHooks.before('products/updateProductTags') Product was sold. Deny changes!");
     throw new Meteor.Error(403, "Can't change ordered product");
   }

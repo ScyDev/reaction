@@ -79,7 +79,6 @@ Package.onUse(function(api) {
   api.addFiles('common/collections/collections.js');
 
   api.addFiles('server/publications/orders.js', 'server');
-  api.addFiles('server/publications/products.js', 'server');
   api.addFiles('server/publications/productsForOrdersHistory.js', 'server');
   api.addFiles('server/publications/product.js', 'server');
   api.addFiles('server/methods/accounts.js', 'server');

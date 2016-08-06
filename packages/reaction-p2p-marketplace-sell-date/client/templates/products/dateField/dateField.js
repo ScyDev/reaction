@@ -77,6 +77,16 @@ var dtpTooltipsDe = {
 		nextCentury: 'Nächstes Jahrhundert'
 };
 
+function setLatestOrderMaxDate() {
+  // set maxDate on latestOrderDate Datetimepicker
+  const value = $('.forSaleOnDate-edit-input').val();
+  if( !value ) return;
+  let maxDate = moment(value, "DD.MM.YYYY").startOf('day');
+  maxDate = moment(maxDate.format("DD.MM.YYYY")+" "+$(".pickupTimeFrom-edit-input").val(), "DD.MM.YYYY HH:mm");
+  //maxDate = maxDate.subtract(1, "hour");
+  console.log("setting max Date: "+maxDate.toString());
+  $('.datetimepicker-latestOrderDate').data("DateTimePicker").maxDate(maxDate);
+}
 
 function initDatepickers() {
 
@@ -103,26 +113,37 @@ function initDatepickers() {
 
   $('.datetimepicker-forSaleOnDate').off();
   $('.datetimepicker-forSaleOnDate').on("dp.change", function(event) {
-    //console.log("datetimepicker-forSaleOnDate changed: ",event.date);
+    console.log("datetimepicker-forSaleOnDate changed: ",event.date.toString());
 
-    let fixedDatetime = event.date;
+    const fixedDatetime = event.date;
     $('.forSaleOnDate-edit-input').val(fixedDatetime.format("DD.MM.YYYY"));
 		Alerts.removeSeen();
     $('.forSaleOnDate-edit-input').trigger("change");
+
+    setLatestOrderMaxDate();
+
+    // automatically set latest order date to same day
+    let newLatestOrderDate = moment(fixedDatetime).add(9.5, "hours");
+    let newLatestOrderDateFormatted = newLatestOrderDate.format("DD.MM.YYYY HH:mm");
+    console.log("datetimepicker-forSaleOnDate changed newLatestOrderDate: ",newLatestOrderDate.toString());
+    $('.latestOrderDate-dummy-input').val(newLatestOrderDateFormatted);
+    $('.latestOrderDate-edit-input').val(newLatestOrderDateFormatted);
+    $('.latestOrderDate-edit-input').trigger("change");
+    $('.datetimepicker-latestOrderDate').data("DateTimePicker").date(newLatestOrderDate);
   });
 
 	// ######################################################################
 
 	// set date from real input field
   let dateTimePickerDefaultDate_latestOrderDate = $('.latestOrderDate-edit-input').val();
-	//console.log("read dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
+	// console.log("read dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
 	if (dateTimePickerDefaultDate_latestOrderDate == null || dateTimePickerDefaultDate_latestOrderDate == "") {
 		//dateTimePickerDefaultDate_latestOrderDate = moment().add(1, 'days').hour(8)
 	}
 	else {
 		dateTimePickerDefaultDate_latestOrderDate = moment(dateTimePickerDefaultDate_latestOrderDate, "DD.MM.YYYY HH:mm")
 	}
-	//console.log("new dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
+	// console.log("new dateTimePickerDefaultDate_latestOrderDate: ",dateTimePickerDefaultDate_latestOrderDate);
 
   $('.datetimepicker-latestOrderDate').datetimepicker({
     format: "dddd DD.MM.YYYY HH:mm", //
@@ -132,12 +153,13 @@ function initDatepickers() {
     tooltips: dtpTooltipsDe,
 		keepInvalid: true,
 		useCurrent: false,
+    //maxDate: moment($('.forSaleOnDate-edit-input')).add(9.5, "hours"),
 		defaultDate: dateTimePickerDefaultDate_latestOrderDate
   });
 
   $('.datetimepicker-latestOrderDate').off();
   $('.datetimepicker-latestOrderDate').on("dp.change", function(event) {
-    //console.log("datetimepicker changed: ",event.date);
+    // console.log("datetimepicker changed: ",event.date);
 
     let fixedDatetime = event.date;
     $('.latestOrderDate-edit-input').val(fixedDatetime.format("DD.MM.YYYY HH:mm"));
@@ -148,11 +170,34 @@ function initDatepickers() {
 	// also save manual changes to date and time
 	$('.latestOrderDate-dummy-input').off("keyup");
 	$('.latestOrderDate-dummy-input').on("keyup", function(event) {
-    //console.log("latestOrderDate-dummy-input changed: ",event);
+    // console.log("latestOrderDate-dummy-input changed: ",event);
 
 		$('.latestOrderDate-edit-input').val(event.target.value);
     $('.latestOrderDate-edit-input').trigger("change");
   });
+
+  setLatestOrderMaxDate();
+
+	const initTimePicker = (name) => {
+		const pickerChangeHandler = ( event, input ) => {
+			input.val(event.target.value);
+			Alerts.removeSeen();
+	    input.trigger("change");
+
+      setLatestOrderMaxDate();
+		}
+		const dummyInput = $( `.${name}-dummy-input` );
+		const realInput = $( `.${name}-edit-input` );
+		dummyInput.datetimepicker({ format: "HH:mm" });
+		dummyInput.val(realInput.val());
+	  dummyInput.on("dp.change", event => pickerChangeHandler(event, realInput) );
+		// also save manual changes to date and time
+		dummyInput.off("keyup");
+		dummyInput.on("keyup", event => pickerChangeHandler(event, realInput) );
+	}
+
+	initTimePicker("pickupTimeFrom");
+	initTimePicker("pickupTimeTo");
 
   console.log("activated datepicker");
 }
@@ -192,7 +237,7 @@ Template.registerHelpers(
 			return moment(inDate).locale("de").format('dddd DD.MM.YYYY');
     },
     prettifyDateTime: function(inDate) {
-      return moment(inDate).locale("de").utcOffset('+0000').format('dddd DD.MM.YYYY HH:mm'); // UTC+0000 corresponds to GMT+0200 ?
+      return moment(inDate).locale("de").format('dddd DD.MM.YYYY HH:mm');
     }
   }
 );

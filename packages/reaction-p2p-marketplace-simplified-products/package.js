@@ -39,7 +39,7 @@ Package.onUse(function(api) {
   api.use("scydev:reaction-p2p-marketplace-seller");
 
   api.addFiles('client/templates/products/productDetail/simplifiedProductBuyer.css', 'client', {isAsset: true});
-  
+
   api.addFiles('client/templates/products/productDetail/simplifiedProductSeller.css', 'client', {isAsset: true});
 
   api.addFiles([
@@ -53,6 +53,8 @@ Package.onUse(function(api) {
                 'client/templates/products/productDetail/tags/tags.less',
                 'client/templates/cart/cartDrawer/cartSubTotals/cartSubTotals.html',
                 'client/templates/cart/cartDrawer/cartSubTotals/cartSubTotals.js',
+                'client/templates/cart/cartDrawer/cartItems/cartItems.html',
+                'client/templates/cart/cartDrawer/cartItems/cartItems.js',
                 'client/templates/cart/cartDrawer/cartDrawer.html',
                 'client/templates/cart/cartDrawer/cartDrawer.js',
                 'client/templates/cart/cartDrawer/cartDrawer.less'

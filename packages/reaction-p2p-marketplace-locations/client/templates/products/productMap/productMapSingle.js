@@ -9,9 +9,9 @@ Template.productMapSingle.onRendered(function() {
 let Media;
 Media = ReactionCore.Collections.Media;
 Template.productMapSingle.helpers({
-  products: function () {
-    return getProductsByTag(this.tag);
-  },
+  // products: function () {
+  //   return getProductsByTag(this.tag);
+  // },
   media: function () {
     let defaultImage;
     let variants = [];

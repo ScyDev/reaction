@@ -100,7 +100,7 @@
 				"create": "Erstellen",
 				"close": "Schliessen",
 				"settings": "Einstellungen",
-				"loading": "Laden",
+				"loading": "Daten werden geladen",
 				"toggle": "Umschalten",
 				"toggleEditMode": "Toggle Edit Mode",
 				"warning": "Ups!",
@@ -111,6 +111,8 @@
 				"shopSettings": "Shop Settings",
 				"dashboard": "Dashboard",
 				"print": "Print",
+				"offline": "Keine Verbindung",
+				"appIsOffline": "Zur Zeit keine Verbindung möglich, bitte versuche es in ein paar Augenblicken wieder",
 				"notFound": "This page was not found.",
 				"pageNotFound": "This page was not found.",
 				"notFoundTitle": "Oops!",
@@ -223,13 +225,16 @@
 				"tagsAdd": "Tag hinzufügen",
 				"location": "Standort",
 				"needsReview": "Mahlzeit ist geändert, sie muss wieder aktiviert werden.",
-				"pickupTimeFromIsRequired": "Abholzeit 'Von' wird benötigt",
-				"pickupTimeToIsRequired": "Abholzeit 'Bis' wird benötigt",
+				"pickupTimeFromIsRequired": "Abholzeit 'Von' wird benötigt [HH:MM]",
+				"pickupTimeToIsRequired": "Abholzeit 'Bis' wird benötigt [HH:MM]",
 				"forSaleOnDateIsNoDate": "Verkaufsdatum ist kein Datum",
 				"latestOrderDateMustBeADate": "Letzte Bestellung muss ein Datum sein",
 				"notLoggedIn": "Hunger?",
 				"youNeedToLogIn": "Melde Dich an und die Mahlzeit gehört Dir.",
-		    "cantChangeOrderedProduct": "Eine Mahlzeit die bereits bestellt wurde kann nicht mehr geändert werden."
+		    "cantChangeOrderedProduct": "Eine Mahlzeit die bereits bestellt wurde kann nicht mehr geändert werden.",
+				"latestOrderDateValueAfterPickupDateTime": "Letzter Bestellzeitpunkt darf nicht nach Abholzeit liegen.",
+				"latestOrderDateNotOnSaleDate": "Der späteste Bestellzeitpunkt ist nicht am Abholtag. Bist Du sicher?",
+        "latestOrderDateNearPickupTime": "Der späteste Bestellzeitpunkt ist sehr nahe an der Abholzeit. Bist Du sicher?"
 			},
 			"products": {
 				"all": "ALLE",
@@ -243,7 +248,8 @@
 				"addGroupTag": "Add Group Tag",
 				"addSubTag": "Add Sub Tag",
 				"removeTag": "Remove Tag",
-				"createTag": "Create Tag"
+				"createTag": "Create Tag",
+				"noTag": "Keine Kategorie"
 			},
 			"productDetailEdit": {
 				"title": "Produkttitel",
@@ -333,7 +339,9 @@
 					"refunded": "Refunded"
 				},
 				"outOfStock": "Nicht mehr verfügbar",
-				"productInventoryHasChanged": "Sorry. Jemand hat dieses Produkt gekauft während Du am shoppen warst. Passe Deinen Warenkorb an."
+				"productInventoryHasChanged": "Sorry. Jemand hat dieses Produkt gekauft während Du am shoppen warst. Passe Deinen Warenkorb an.",
+				"cartMissingAddress": "Warenkorb hat keine Adresse",
+				"cartMissingAddressText": "Da ist bei uns etwas schief gelaufen. Wir werden das untersuchen. Bitte probiers nochmals."
 			},
 			"orderShipping": {
 				"shipTo": "Ship To",
@@ -448,11 +456,17 @@
 					"isCommercial": "Das ist eine Geschäftsadresse"
 				},
 				"search": {
-          "searchBoxDateLabel": "Wann möchtest Du essen?",
+					"searchBoxDateLabel": "Wann möchtest Du essen?",
 					"searchBoxDatePlaceholder": "Tag auswählen...",
-          "searchBoxLocationLabel": "Wo möchtest Du essen",
-          "searchBoxLocationPlaceholder": "PLZ oder Ort...",
-          "noProductsFound": "Leider keine Mahlzeiten gefunden, probier es mit anderen Suchkriterien."
+					"searchBoxLocationLabel": "Wo möchtest Du essen",
+					"searchBoxMealTimeLabel": "Essenszeit",
+					"searchBoxLunch": "Mittag",
+					"searchBoxDinner": "Abend",
+					"searchBoxLocationPlaceholder": "PLZ oder Ort...",
+					"noProductsFound": "Leider keine Mahlzeiten gefunden, probier es mit anderen Suchkriterien.",
+					"searchBoxSaleOnDateLabel": "Zu verkaufen am",
+					"searchBoxTitle": "Titel",
+          "searchBoxTitlePlaceholder": "Titel suchen ..."
         }
 
 			},
@@ -673,8 +687,10 @@
 					"mustAcceptTerms": "Du musst die AGB akzeptieren",
           "noAddress": "Keine Adresse",
           "youNeedToEnterYourAddress": "Du musst Deine Adresse eingeben.",
-          "imageTooBig": "Bild ist zu gross",
-          "imageTooBigText": "Bitte versuchs mit einem kleineren Bild. Max {{maxKb}} KB."
+					"imageTooBig": "Bild ist zu gross",
+          "imageTooBigText": "Bitte versuchs mit einem kleineren Bild. Max {{maxKb}} KB.",
+					"emailNeeded": "E-Mail Adresse benötigt",
+          "emailNeededText": "Bitte gib eine gültige E-Mail Adresse ein."
 				},
         "mails": {
           "welcome": {

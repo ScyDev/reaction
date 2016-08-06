@@ -42,6 +42,19 @@ Meteor.publish("Product", function (productId) {
       return this.ready();
     }
   }
+
+  // products are always visible to owners and admins
+  if (!Roles.userIsInRole(this.userId, ["admin"])) {
+    selector.isVisible = true;
+    // only products enabled by their owner
+    selector.isActive = true;
+  }
+
+  // check quantity
+  _.extend(selector, {
+    isSoldOut: false
+  });
+
   selector = { $or: [{ _id: _id }, { ancestors: { $in: [_id] }}] };
 
   return ReactionCore.Collections.Products.find(selector);
