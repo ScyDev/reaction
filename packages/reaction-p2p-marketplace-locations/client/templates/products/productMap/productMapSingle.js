@@ -2,7 +2,7 @@
  * productMap helpers
  */
 
-Template.productMapSingle.onRendered(function() {
+Template.productMapSingle.onRendered(function () {
   GoogleMaps.load({ key: getGoogleMapsApiKey() });
 });
 
@@ -30,7 +30,7 @@ Template.productMapSingle.helpers({
     }
     return false;
   },
-  mapOptions: function() {
+  mapOptions: function () {
     if (GoogleMaps.loaded()) {
       return {
         center: new google.maps.LatLng(47.3770309, 8.5077843), // start pos zürich 47.3770309,8.5077843
@@ -38,10 +38,12 @@ Template.productMapSingle.helpers({
         reactionTag: this.tag
       };
     }
+
+    return null;
   }
 });
 
-Template.productMapSingle.onCreated(function() {
+Template.productMapSingle.onCreated(function () {
   const handle = ReactionRouter.getParam("handle");
   const product = ReactionCore.Collections.PublicProducts.findOne({ handle }) || ReactionCore.Collections.SellerProducts.findOne({ handle });
   if (!product) return;
@@ -50,24 +52,13 @@ Template.productMapSingle.onCreated(function() {
   if (!location.lat || !location.lng) return;
 
   // We can use the `ready` callback to interact with the map API once the map is ready.
-  GoogleMaps.ready('map', map => {
-    new google.maps.Marker({
-       position: location,
-       map: map.instance,
-       title: product.title,
-       animation: google.maps.Animation.DROP,
+  GoogleMaps.ready("map", map => {
+    google.maps.Marker({
+      position: location,
+      map: map.instance,
+      title: product.title,
+      animation: google.maps.Animation.DROP
     });
     map.instance.setCenter(location);
-
-    /* Do we need this update here? */
-    // if (product.userId == Meteor.userId()) {
-    //   Meteor.users.update({ _id: Meteor.userId() }, {
-    //     $set: {
-    //       "profile.latitude": location.lat(),
-    //       "profile.longitude": location.lng()
-    //     }
-    //   });
-    //   console.log("updated profile lat/long");
-    // }
   });
 });
