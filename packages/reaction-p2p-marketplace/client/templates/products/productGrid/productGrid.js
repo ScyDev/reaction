@@ -16,7 +16,7 @@ function loadMoreItems(templateInstance, force = false) {
   }
 }
 
-Template.productGridP2p.onCreated(function() {
+Template.marketplaceProductGrid.onCreated(function() {
   const self = this;
   if (typeof self.data !== "object" || self.data === null ) self.data = {};
   // console.log("productGrid", self.data)
@@ -28,13 +28,13 @@ Template.productGridP2p.onCreated(function() {
   self.autorun(() => !ReactionCore.isActionViewOpen() && self.selectedProducts.set([]));
 });
 
-Template.productGridP2p.onRendered(function() {
+Template.marketplaceProductGrid.onRendered(function() {
   const self = this;
   /* React on #main view scroll */
   $("#main").on("scroll", () => loadMoreItems(self));
 });
 
-Template.productGridP2p.events({
+Template.marketplaceProductGrid.events({
   "click #loadMoreItems": (event) => {
     event.preventDefault();
     loadMoreItems(Template.instance(), true);
@@ -62,9 +62,9 @@ Template.productGridP2p.events({
 });
 
 /**
- * productGridP2p helpers
+ * marketplaceProductGrid helpers
  */
-Template.productGridP2p.helpers({
+Template.marketplaceProductGrid.helpers({
   moreProductsAvailable: () => {
     return ReactionCore.Collections.PublicProducts.find().count() >= Template.instance().scrollLimit.get();
   },
