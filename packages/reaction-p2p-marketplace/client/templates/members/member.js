@@ -1,7 +1,7 @@
-Template.memberP2p.replaces("member");
+Template.marketplaceMember.replaces("member");
 
 Template.member.helpers({
-  getUserAccount: function(userId) {
+  getUserAccount: function (userId) {
     ReactionCore.Collections.Accounts.findOne({_id: userId});
   }
 });
