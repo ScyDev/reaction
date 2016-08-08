@@ -1,4 +1,4 @@
-Template.productListP2p.onCreated(function() {
+Template.marketplaceProductList.onCreated(function() {
   const self = this;
   if (typeof self.data !== "object" || self.data === null ) self.data = {};
   // console.log("productList", self.data)
@@ -10,7 +10,7 @@ Template.productListP2p.onCreated(function() {
 /**
  * productList helpers
  */
-Template.productListP2p.helpers({
+Template.marketplaceProductList.helpers({
   products: () => {
     const self = Template.instance();
     /* If additional data is loading use the previous fetch result */

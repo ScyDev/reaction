@@ -1,7 +1,7 @@
 
-Template.productMap.inheritsHelpersFrom(["productGridP2p"]);
-Template.productMap.inheritsEventsFrom(["productGridP2p"]);
-Template.productMap.inheritsHooksFrom(["productGridP2p"]);
+Template.productMap.inheritsHelpersFrom(["marketplaceProductGrid"]);
+Template.productMap.inheritsEventsFrom(["marketplaceProductGrid"]);
+Template.productMap.inheritsHooksFrom(["marketplaceProductGrid"]);
 
 const filtersAccessor = "publicProducts";
 const collection = ReactionCore.Collections.PublicProducts;
