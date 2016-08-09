@@ -42,25 +42,26 @@ window.LoginFormSharedHelpers = {
   }
 };
 
-Template.registerHelper("getGravatar", function (currentUser, size) {
-  //console.log( "getGravatar |", currentUser )
+Template.registerHelper("getGravatar", function (user, size) {
+  user = user || Accounts.user();
+  if (!user) return false;
+  const userId = user.userId || user._id;
+  // console.log( "getGravatar | user", userId );
+
   const options = {
     secure: true,
     size: size,
-    default: "identicon"
+    default: "identicon",
   };
-  const user = currentUser || Accounts.user();
-  //console.log( "getGravatar | user", user )
-  if (!user) return false;
 
-  const profileImage = ReactionCore.Collections.Media.findOne({"metadata.userId": user._id}, {sort: {"metadata.priority": 1}});
+  const profileImage = ReactionCore.Collections.Media.findOne({"metadata.userId": userId}, {sort: {"metadata.priority": 1}});
   if (profileImage) {
-    //console.log( "getGravatar | profile image:", profileImage.url({ store: "thumbnail" }) )
+    // console.log( "getGravatar | profile image:", profileImage.url({ store: "thumbnail" }) )
     return profileImage.url({ store: "thumbnail" })
   }
-  //console.log( "getGravatar | fetching gravatar..." )
+  // console.log( "getGravatar | fetching gravatar..." )
 
-  const account = ReactionCore.Collections.Accounts.findOne(user._id);
+  const account = ReactionCore.Collections.Accounts.findOne(userId);
   // first we check picture exists. Picture has higher priority to display
   if (account && account.profile && account.profile.picture) {
     return account.profile.picture;

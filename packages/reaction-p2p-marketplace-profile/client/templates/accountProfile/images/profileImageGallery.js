@@ -23,8 +23,7 @@ function uploadHandler(event) {
     const toGrid = 1;
 
     return FS.Utility.eachFile(event, function (file) {
-      let fileObj;
-      fileObj = new FS.File(file);
+      const fileObj = new FS.File(file);
       fileObj.metadata = {
         ownerId: userId,
         userId: userId,
@@ -32,23 +31,15 @@ function uploadHandler(event) {
         priority: count,
         toGrid: +toGrid // we need number
       };
-      Media.insert(fileObj, function(error, id) {
-        if (error) {
-          console.log("error: ",error);
-          if (error.reason == "imageTooBig") {
-            Alerts.alert(
-              {
-                title: i18next.t("accountsUI.error.imageTooBig", "Image too big"),
-                text: i18next.t("accountsUI.error.imageTooBigText", {defaultValue: "Please try a smaller image", maxKb: error.details.maxKb}),
-                type: "error",
-              },
-              function() {
-                // ...
-              }
-            );
-          }
-        }
-      });
+      try { Media.insert(fileObj); }
+      catch(error) {
+        console.log("error:", error);
+        if (error.reason == "imageTooBig") Alerts.alert({
+            title: i18next.t("accountsUI.error.imageTooBig", "Image too big"),
+            text: i18next.t("accountsUI.error.imageTooBigText", {defaultValue: "Please try a smaller image", maxKb: error.details.maxKb}),
+            type: "error",
+        });
+      }
       return count++;
     });
   }
@@ -128,24 +119,13 @@ Template.registerHelper( "dropFileToUploadText", () => {
   return i18next.t("productDetail.dropFile", { size, defaultValue: "Drop file to upload" }) + ` (max ${size}KB)`;
 })
 
-function isMyProfile(template) {
-  if (ReactionCore.Subscriptions.ProfileUser.ready()) {
-    if (template.data.profileViewUser._id == Meteor.userId()) return true;
-  }
+const isMyProfile = () => {
+  const instance = Template.instance().view.parentView.parentView.parentView.templateInstance
+  return instance && ReactionCore.Subscriptions.ProfileUser.ready()
+                  && instance().data.profileViewUser._id == Meteor.userId() ? true : false;
 }
-
-Template.profileImageDetail.helpers({
-  isMyProfile: function () {
-    const instance = Template.instance().view.parentView.parentView.parentView.templateInstance
-    return instance ? isMyProfile(instance()) : false;
-  }
-});
-Template.profileImageUploader.helpers({
-  isMyProfile: function () {
-    const instance = Template.instance().view.parentView.parentView.parentView.templateInstance
-    return instance ? isMyProfile(instance()) : false;
-  }
-});
+Template.profileImageDetail.helpers({ isMyProfile });
+Template.profileImageUploader.helpers({ isMyProfile });
 
 Template.profileImageGallery.onRendered(function () {
   return this.autorun(function () {

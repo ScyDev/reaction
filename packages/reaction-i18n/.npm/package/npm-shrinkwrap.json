@@ -10,12 +10,7 @@
       "version": "0.0.4"
     },
     "i18next-sprintf-postprocessor": {
-      "version": "0.0.6",
-      "dependencies": {
-        "sprintf-js": {
-          "version": "1.0.3"
-        }
-      }
+      "version": "0.0.6"
     },
     "jquery-i18next": {
       "version": "0.0.14"

@@ -45,9 +45,8 @@ if (Meteor.isClient) Tracker.autorun(() => {
   const maxUploadSize = package.settings.public.maxUploadSize;
   ReactionCore.Collections.Media.filters({
     maxSize: maxUploadSize,
-    onInvalid: function (message) {
-      // do stuff if error
-      throw new Meteor.Error(403, "imageTooBig", { maxKb: (maxUploadSize / 1024), message });
-    }
+    onInvalid: message => {
+      throw new Meteor.Error(403, "imageTooBig", { maxKb: Math.trunc(maxUploadSize / 1024), message });
+    },
   })
 })
