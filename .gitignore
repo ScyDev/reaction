@@ -21,3 +21,6 @@ npm-debug.log
 packages/reaction-core/lib/bower
 
 jsdoc.json
+
+npm-shrinkwrap.json
+.npm

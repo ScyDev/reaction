@@ -47,6 +47,7 @@ Package.onUse(function(api) {
   api.addFiles('reaction-p2p-marketplace.js');
 
   api.addFiles("server/register.js", ["server"]);
+  api.addFiles("server/security.js", ["server"]);
 
   api.addFiles("server/methods/accounts.js", "server");
   api.addFiles("server/methods/cart.js", ["server"]);

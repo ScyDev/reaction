@@ -85,14 +85,6 @@ Security.defineMethod("ifSessionIdMatches", {
 /**
  * Define all security rules
  */
- Security.defineMethod('ifNotProtecedFields', {
-   fetch: ['isDecided','isSeller', 'acceptedTerms'],
-   deny: function(type, arg, userId, doc, fields, modifier) {
-     if (_.intersection(fields, ['isDecided', 'isSeller', 'acceptedTerms']).length > 0) {
-       return true;
-     }
-   }
- });
 
 /**
  * admin security
@@ -122,10 +114,6 @@ Security.permit(["insert", "update", "remove"]).collections([
 
 Security.permit(["insert", "update", "remove"]).collections([Media]).ifHasRole({
   role: ["admin", "owner", "createProduct"],
-  group: ReactionCore.getShopId()
-}).ifFileBelongsToShop().apply();
-Security.permit(["insert", "remove"]).collections([Media]).ifHasRole({
-  role: ["guest"],
   group: ReactionCore.getShopId()
 }).ifFileBelongsToShop().apply();
 
@@ -176,7 +164,7 @@ Cart.permit(["insert", "update", "remove"]).ifHasRole({
 Accounts.permit(["insert", "update"]).ifHasRole({
   role: ["anonymous", "guest"],
   group: ReactionCore.getShopId()
-}).ifUserIdMatches().ifNotProtecedFields().apply();
+}).ifUserIdMatches().apply();
 
 /*
  * apply download permissions to file collections
