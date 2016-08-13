@@ -6,11 +6,12 @@
 function loadMoreItems(templateInstance, force = false) {
   if (!templateInstance || !templateInstance.scrollLimit || templateInstance.loadingMoreData.get()) return
 
-  const scrollContainer = $("#main"); // To find better way to determine scroll container
-  const scrollPosition = scrollContainer.scrollTop();
+  const loadMoreButton = document.getElementById("productScrollLimitLoader");
+  const reachedLoadMoreButton = loadMoreButton && loadMoreButton.getBoundingClientRect().top < window.innerHeight - 100;
+  // console.log("scroll", reachedLoadMoreButton, loadMoreButton && loadMoreButton.getBoundingClientRect(), window.innerHeight - 100 )
 
   /* Scrolled to the bottom */
-  if (force || scrollContainer.prop('scrollHeight') - scrollContainer.height() ===  scrollPosition) {
+  if (force || reachedLoadMoreButton) {
     templateInstance.loadingMoreData.set(true);
     templateInstance.scrollLimit.set(templateInstance.scrollLimit.get() + ITEMS_INCREMENT || 24);
   }
@@ -32,6 +33,7 @@ Template.marketplaceProductGrid.onRendered(function() {
   const self = this;
   /* React on #main view scroll */
   $("#main").on("scroll", () => loadMoreItems(self));
+  $(window).on("scroll", () => loadMoreItems(self));
 });
 
 Template.marketplaceProductGrid.events({
