@@ -163,6 +163,7 @@ reactioncommerce:reaction-catalog@0.2.1
 reactioncommerce:reaction-checkout@1.0.0
 reactioncommerce:reaction-collections@2.0.1
 reactioncommerce:reaction-dashboard@1.0.0
+reactioncommerce:reaction-email-templates@0.2.0
 reactioncommerce:reaction-i18n@2.0.0
 reactioncommerce:reaction-layout@1.0.0
 reactioncommerce:reaction-logger@0.1.0

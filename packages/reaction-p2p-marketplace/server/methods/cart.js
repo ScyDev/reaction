@@ -30,14 +30,16 @@ ReactionCore.MethodHooks.before("cart/addToCart", function(options) {
   const variant = ReactionCore.Collections.Products.findOne(variantId);
   if (!product || !variant) return;
 
+  /* WARNING: This message could not be changed as on the client side it is expected to be exactly the same */
+  const errorMessage = "Not enough items in stock";
+
   let quantity = itemQty;
   const MIN = variant.minOrderQuantity || 1;
   const MAX = variant.inventoryQuantity || Infinity;
 
   if (MIN > MAX) {
-    const message = `BEFORE cart/addToCart: productId ${product._id}, variantId ${variant._id}. InventoryQuantity lower then minimum order`;
-    Log.warn(message);
-    throw new Meteor.Error(403, message);
+    Log.warn(`BEFORE cart/addToCart: productId ${product._id}, variantId ${variant._id}. InventoryQuantity lower then minimum order`);
+    throw new Meteor.Error(403, errorMessage);
   }
 
   if (quantity < MIN) quantity = MIN;
@@ -51,9 +53,8 @@ ReactionCore.MethodHooks.before("cart/addToCart", function(options) {
   Log.info(`BEFORE cart/addToCart: ${variant.inventoryQuantity} items in inventory, ${quantityInCart} items in cart, trying to add ${quantity} items`);
 
   if (quantity + quantityInCart > variant.inventoryQuantity) {
-    const message = `BEFORE cart/addToCart: productId ${product._id}, variantId ${variant._id}. Not enough items in stock`;
-    Log.warn(message);
-    throw new Meteor.Error(403, message);
+    Log.warn(`BEFORE cart/addToCart: productId ${product._id}, variantId ${variant._id}. Not enough items in stock`);
+    throw new Meteor.Error(403, errorMessage);
   }
 });
 
@@ -76,9 +77,11 @@ ReactionCore.MethodHooks.before("cart/addToCart", function(options) {
 
 /* Add sellerId to the order object */
 ReactionCore.MethodHooks.after("cart/addToCart", function(options) {
+  const result = options.result;
+
   const [ productId, variantId, itemQty ] = options.arguments;
   const cart = ReactionCore.Collections.Cart.findOne({ userId: Meteor.userId() });
-  if (!cart) return;
+  if (!cart) return result;
 
   const product = ReactionCore.Collections.Products.findOne(productId);
   ReactionCore.Collections.Cart.update(
@@ -87,14 +90,18 @@ ReactionCore.MethodHooks.after("cart/addToCart", function(options) {
   );
 
   ReactionCore.Log.info("AFTER cart/addToCart: cart:", cart._id, "updated");
+
+  return result;
 });
 
 
 /* Decrease the number of items in the stock when the order process in finished */
 ReactionCore.MethodHooks.after("cart/copyCartToOrder", function(options) {
   const [ cartId ] = options.arguments;
+  const result = options.result;
+
   const order = ReactionCore.Collections.Orders.findOne({ cartId });
-  if (!order) return;
+  if (!order) return result;
 
   Log.info("AFTER cart/copyCartToOrder: calling orders/inventoryAdjust, order", order._id);
   Meteor.defer(() => Meteor.call("orders/inventoryAdjust", order._id));
@@ -106,6 +113,8 @@ ReactionCore.MethodHooks.after("cart/copyCartToOrder", function(options) {
 
   // ReactionCore.Log.info("AFTER cart/copyCartToOrder: removing cart by userId");
   // ReactionCore.Collections.Cart.remove({ userId: order.userId });
+
+  return result;
 });
 
 
