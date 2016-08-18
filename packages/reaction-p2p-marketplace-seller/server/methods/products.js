@@ -173,6 +173,8 @@ Meteor.methods({
     }
     ReactionCore.Log.info("sendProductReviewEmail: userEmail ",userEmail);
 
+    /* TODO: (Meteor 1.3+) remove this hack and use the 'import' to load the proper ReactionEmailTemplate */
+    const ReactionEmailTemplate = global.ReactionEmailTemplate
     // fetch and send templates
     SSR.compileTemplate("products/reviewProduct", ReactionEmailTemplate("products/reviewProduct"));
     try {
