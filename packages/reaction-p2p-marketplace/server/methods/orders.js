@@ -72,9 +72,7 @@ replaceMethod("orders/sendNotification", function (order) {
       buyerAddress: order.billing[0].address,
     };
     const from = `${shop.name} <${shop.emails[0].address}>`;
-    /* TODO: When switching to Meteor 1.3+ remove this hack
-       and use the 'import' to load the proper ReactionEmailTemplate
-     */
+    /* TODO: (Meteor 1.3+) remove this hack and use the 'import' to load the proper ReactionEmailTemplate */
     const ReactionEmailTemplate = global.ReactionEmailTemplate
 
     // email templates can be customized in Templates collection
