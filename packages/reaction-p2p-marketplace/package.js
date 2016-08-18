@@ -19,6 +19,7 @@ Package.onUse(function(api) {
   api.use("meteor-base");
   api.use("mongo");
   api.use("blaze-html-templates");
+  api.use("email");
   api.use("session");
   api.use("jquery");
   api.use("tracker");
@@ -40,6 +41,8 @@ Package.onUse(function(api) {
 
   api.use("aldeed:template-extension");
 
+  api.use("scydev:reaction-email-templates-custom@0.2.0");
+  api.imply("scydev:reaction-email-templates-custom");
 
   api.addFiles("common/collections/collectionFS.js", ["client", "server"]);
   api.addFiles("common/schemas/schemas.js", ["client", "server"]);

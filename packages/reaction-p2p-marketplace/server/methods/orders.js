@@ -19,24 +19,21 @@ replaceMethod("orders/sendNotification", function (order) {
     let shipment = order.shipping[0];
 
     ReactionCore.configureMailUrl();
-    ReactionCore.Log.info("orders/sendNotification", order.workflow.status);
+    Log.info("orders/sendNotification", order.workflow.status);
     // handle missing root shop email
     if (!shop.emails[0].address) {
       shop.emails[0].address = "no-reply@reactioncommerce.com";
-      ReactionCore.Log.warn("No shop email configured. Using no-reply to send mail");
+      Log.warn("No shop email configured. Using no-reply to send mail");
     }
     // anonymous users without emails.
     if (!order.email) {
-      ReactionCore.Log.warn("No shop email configured. Using anonymous order.");
+      Log.warn("No shop email configured. Using anonymous order.");
       return true;
     }
-    // email templates can be customized in Templates collection
-    // loads defaults from reaction-email-templates/templates
-    let tpl = `orders/${order.workflow.status}`;
 
     ReactionCore.i18nextInitForServer(i18next);
 
-    ReactionCore.Log.info(`orders/sendNotification: transactionId ${order.billing[0].paymentMethod.transactionId}, userName ${user.userName}, buyer address ${order.billing[0].address}`);
+    Log.info(`orders/sendNotification: transactionId ${order.billing[0].paymentMethod.transactionId}, userName ${user.userName}, buyer address ${order.billing[0].address}`);
     const compiledItemList = order.items.map(item => {
       const product = ReactionCore.Collections.Products.findOne(item.productId);
       const account = ReactionCore.Collections.Accounts.findOne(product.userId);
@@ -47,6 +44,7 @@ replaceMethod("orders/sendNotification", function (order) {
         forSaleOnDate: moment(product.forSaleOnDate).format("DD.MM.YYYY"),
       };
     })
+    // Log.info("orders/sendNotification compiledItemList", compiledItemList);
 
     /* Group items by sellerId (product.userId) */
     const sellerSortedItemList = [];
@@ -63,57 +61,67 @@ replaceMethod("orders/sendNotification", function (order) {
         items: [item],
       });
     });
-    //ReactionCore.Log.info("orders/sendNotification sellerSortedItemList1", sellerSortedItemList);
+    // Log.info("orders/sendNotification sellerSortedItemList1", sellerSortedItemList);
 
-    // ReactionCore.Log.info("orders/sendNotification to buyer:", order.email);
+    const commonHtmlFields = {
+      homepage: Meteor.absoluteUrl(),
+      shop,
+      order,
+      shipment,
+      transactionId: order.billing[0].paymentMethod.transactionId,
+      buyerAddress: order.billing[0].address,
+    };
+    const from = `${shop.name} <${shop.emails[0].address}>`;
+
+      // email templates can be customized in Templates collection
+    // loads defaults from reaction-email-templates/templates
+    let tpl = `orders/${order.workflow.status}`;
+    Log.info("Buyer HTML template:", tpl);
     SSR.compileTemplate(tpl, ReactionEmailTemplate(tpl));
+    Log.info("orders/sendNotification to buyer:", order.email);
+    const html = SSR.render(tpl, {
+      ...commonHtmlFields,
+      items: compiledItemList,
+      userName: user.userName
+    })
+    // Log.info("HTML to buyer", order.email, html);
     try {
       Email.send({
         to: order.email,
-        from: `${shop.name} <${shop.emails[0].address}>`,
+        from,
         subject: i18next.t('accountsUI.mails.orderUpdate.subject', {shopName: shop.name, defaultValue: `Order from ${shop.name}`}),
-        html: SSR.render(tpl, {
-          homepage: Meteor.absoluteUrl(),
-          shop: shop,
-          order: order,
-          shipment: shipment,
-          items: compiledItemList,
-          transactionId: order.billing[0].paymentMethod.transactionId,
-          buyerAddress: order.billing[0].address,
-          userName: user.userName
-        })
+        html
       });
     } catch (error) {
+      Log.warn(error)
       throw new Meteor.Error(403, "Unable to send order notification email to buyer.", error);
     }
 
     // change template to seller
     tpl = `orders/${order.workflow.status}SellerNotification`;
-
+    Log.info("Seller HTML template:", tpl);
+    SSR.compileTemplate(tpl, ReactionEmailTemplate(tpl));
     // send out order notification for each seller
-    for (index = 0; index < sellerSortedItemList.length; ++index) {
-      ReactionCore.Log.info("orders/sendNotification to seller:", sellerSortedItemList[index].items[0].account.emails[0].address);
-      SSR.compileTemplate(tpl, ReactionEmailTemplate(tpl));
+    sellerSortedItemList.forEach( data => {
+      Log.info("orders/sendNotification to seller:", data.items[0].account.emails[0].address);
+      const html = SSR.render(tpl, {
+        ...commonHtmlFields,
+        items: data.items,
+        userName: data.items[0].account.userName
+      });
+      Log.info("HTML to seller", data.items[0].account.emails[0].address, html)
       try {
         Email.send({
-          to: sellerSortedItemList[index].items[0].account.emails[0].address,
-          from: `${shop.name} <${shop.emails[0].address}>`,
+          to: data.items[0].account.emails[0].address,
+          from,
           subject: i18next.t('accountsUI.mails.orderUpdate.subjectSeller', {shopName: shop.name, defaultValue: `Order from ${shop.name}`}),
-          html: SSR.render(tpl, {
-            homepage: Meteor.absoluteUrl(),
-            shop: shop,
-            order: order,
-            shipment: shipment,
-            items: sellerSortedItemList[index].items,
-            transactionId: order.billing[0].paymentMethod.transactionId,
-            buyerAddress: order.billing[0].address,
-            userName: sellerSortedItemList[index].items[0].account.userName
-          })
+          html
         });
       } catch (error) {
+        Log.warn(error)
         throw new Meteor.Error(403, "Unable to send order notification email to seller.", error);
       }
-    }
+    })
   }
 });
 
@@ -121,9 +129,11 @@ replaceMethod("orders/sendNotification", function (order) {
 /* Set soldOut status on inventory adjust */
 ReactionCore.MethodHooks.after("orders/inventoryAdjust", function(options) {
   const [ orderId ] = options.arguments;
+  const result = options.result;
+
   const order = ReactionCore.Collections.Orders.findOne(orderId);
   Log.info("AFTER orders/inventoryAdjust orderId", orderId);
-  if (!order) return;
+  if (!order) return result;
 
   order.items.forEach(item => {
     Log.info("AFTER orders/inventoryAdjust item.variants._id", item.variants._id, "by", -item.quantity, "item.inventoryQuantity", item.variants.inventoryQuantity);
@@ -138,4 +148,6 @@ ReactionCore.MethodHooks.after("orders/inventoryAdjust", function(options) {
       }, { selector: { type: "simple" } });
     }
   });
+
+  return result;
 });
