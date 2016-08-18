@@ -72,8 +72,12 @@ replaceMethod("orders/sendNotification", function (order) {
       buyerAddress: order.billing[0].address,
     };
     const from = `${shop.name} <${shop.emails[0].address}>`;
+    /* TODO: When switching to Meteor 1.3+ remove this hack
+       and use the 'import' to load the proper ReactionEmailTemplate
+     */
+    const ReactionEmailTemplate = global.ReactionEmailTemplate
 
-      // email templates can be customized in Templates collection
+    // email templates can be customized in Templates collection
     // loads defaults from reaction-email-templates/templates
     let tpl = `orders/${order.workflow.status}`;
     Log.info("Buyer HTML template:", tpl);
@@ -109,7 +113,7 @@ replaceMethod("orders/sendNotification", function (order) {
         items: data.items,
         userName: data.items[0].account.userName
       });
-      Log.info("HTML to seller", data.items[0].account.emails[0].address, html)
+      // Log.info("HTML to seller", data.items[0].account.emails[0].address, html)
       try {
         Email.send({
           to: data.items[0].account.emails[0].address,
