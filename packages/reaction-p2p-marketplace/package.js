@@ -110,6 +110,8 @@ Package.onUse(function(api) {
 
   api.addFiles("client/templates/products/productGrid/productGrid.html", ["client"]);
   api.addFiles("client/templates/products/productGrid/productGrid.js", ["client"]);
+  api.addFiles("client/templates/products/productGrid/content/content.html", ["client"]);
+  api.addFiles("client/templates/products/productGrid/content/content.js", ["client"]);
   api.addFiles("client/templates/products/productList/productList.html", ["client"]);
   api.addFiles("client/templates/products/productList/productList.js", ["client"]);
   api.addFiles("client/templates/products/productList/productList.less", ["client"]);
