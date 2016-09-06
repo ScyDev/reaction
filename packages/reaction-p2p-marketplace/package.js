@@ -34,6 +34,8 @@ Package.onUse(function(api) {
   api.use('templating');
   api.use("less");
   api.use("reactioncommerce:core@0.10.0");
+  api.use("reactioncommerce:reaction-product-variant@1.0.0");
+  api.use("reactioncommerce:reaction-layout@1.0.0");
   api.use("reactive-var");
 
   api.use("utilities:spin");
@@ -46,12 +48,12 @@ Package.onUse(function(api) {
 
   /* Should be before those files, which use events/helpers overrides */
   api.addFiles("client/helpers/utilities/index.js", ["client"]);
-  api.addFiles("server/i18n.js", "server");
   api.addAssets("private/data/shop.json", "server");
   api.addFiles("server/init.js", "server");
 
   // i18n translations
   /* Due to Meteor builder bug (deduplication?!) private assets with the same CRC (regardless the filename) as ones in other packages are skipped from bundling */
+  api.addFiles("server/i18n.js", "server");
   api.addAssets("private/i18n/ar.json", "server");
   api.addAssets("private/i18n/bg.json", "server");
   api.addAssets("private/i18n/cn.json", "server");
@@ -112,6 +114,8 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/products/productGrid/productGrid.js", ["client"]);
   api.addFiles("client/templates/products/productGrid/content/content.html", ["client"]);
   api.addFiles("client/templates/products/productGrid/content/content.js", ["client"]);
+  api.addFiles("client/templates/products/productGrid/controls/controls.html", ["client"]);
+  api.addFiles("client/templates/products/productGrid/controls/controls.js", ["client"]);
   api.addFiles("client/templates/products/productList/productList.html", ["client"]);
   api.addFiles("client/templates/products/productList/productList.js", ["client"]);
   api.addFiles("client/templates/products/productList/productList.less", ["client"]);

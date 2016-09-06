@@ -25,5 +25,5 @@ Meteor.startup(() => {
 })
 
 
-const _toast = Alert.toast;
-Alert.toast = (message, type, options) => _toast(i18next.t(message), type, options);
+const _toast = Alerts.toast;
+Alerts.toast = (message, type, options) => _toast(i18next.t(message), type, options);

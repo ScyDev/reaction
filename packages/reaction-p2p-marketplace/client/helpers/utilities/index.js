@@ -12,3 +12,8 @@ Template.overrideEventHandler = (template, event, newHandler) => {
   Template[template].events({ [event]: newHandler });
 }
 
+
+Template.clone = (source, dest) => {
+  Template.__checkName(name);
+  Template[dest] = new Template(dest, Template[source].renderFunction);
+}
