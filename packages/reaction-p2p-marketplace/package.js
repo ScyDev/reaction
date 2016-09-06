@@ -42,7 +42,37 @@ Package.onUse(function(api) {
   api.use("aldeed:template-extension");
 
   api.use("scydev:reaction-email-templates-custom@0.2.0");
-  api.imply("scydev:reaction-email-templates-custom");
+
+  // i18n translations
+  /* Due to Meteor builder bug (deduplication?!) private assets with the same CRC (regardless the filename) as ones in other packages are skipped from bundling */
+  api.addAssets("private/i18n/ar.json", "server");
+  api.addAssets("private/i18n/bg.json", "server");
+  api.addAssets("private/i18n/cn.json", "server");
+  api.addAssets("private/i18n/cs.json", "server");
+  api.addAssets("private/i18n/de.json", "server");
+  api.addAssets("private/i18n/en.json", "server");
+  api.addAssets("private/i18n/el.json", "server");
+  api.addAssets("private/i18n/es.json", "server");
+  api.addAssets("private/i18n/fr.json", "server");
+  api.addAssets("private/i18n/he.json", "server");
+  api.addAssets("private/i18n/hr.json", "server");
+  api.addAssets("private/i18n/hu.json", "server");
+  api.addAssets("private/i18n/it.json", "server");
+  api.addAssets("private/i18n/my.json", "server");
+  api.addAssets("private/i18n/nl.json", "server");
+  api.addAssets("private/i18n/pl.json", "server");
+  api.addAssets("private/i18n/pt.json", "server");
+  api.addAssets("private/i18n/ru.json", "server");
+  api.addAssets("private/i18n/sl.json", "server");
+  api.addAssets("private/i18n/sv.json", "server");
+  api.addAssets("private/i18n/tr.json", "server");
+  api.addAssets("private/i18n/vi.json", "server");
+  api.addAssets("private/i18n/nb.json", "server");
+
+  api.addFiles("server/i18n.js", "server");
+
+  api.addAssets("private/data/shop.json", "server");
+  api.addFiles("server/init.js", "server");
 
   api.addFiles("common/collections/collectionFS.js", ["client", "server"]);
   api.addFiles("common/schemas/schemas.js", ["client", "server"]);
@@ -102,6 +132,8 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/dashboard/orders/list/items/items.js", "client");
   api.addFiles("client/templates/dashboard/orders/list/itemSeller/itemSeller.html", "client");
   api.addFiles("client/templates/dashboard/orders/list/itemSeller/itemSeller.js", "client");
+
+  api.imply("scydev:reaction-email-templates-custom");
 });
 
 Package.onTest(function(api) {
