@@ -23,3 +23,7 @@ Meteor.startup(() => {
     Session.set("language", "de");
   }
 })
+
+
+const _toast = Alert.toast;
+Alert.toast = (message, type, options) => _toast(i18next.t(message), type, options);
