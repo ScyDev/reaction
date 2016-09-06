@@ -3,11 +3,6 @@ Template.cartCheckoutMarketplace.replaces("cartCheckout");
 
 /* Override "click #btn-checkout" event in 'cartPanel' and 'openCartDrawer' templates */
 
-const overrideEventHandler = (template, event, newHandler) => {
-  Template[template].__eventMaps.map( map => delete map[event] );
-  Template[template].events({ [event]: newHandler });
-}
-
 const proceedToCheckout = () => {
   // allow only logged in users to do that
   if (!Blaze._globalHelpers.isLoggedIn(true)) return;
@@ -18,6 +13,23 @@ const proceedToCheckout = () => {
 }
 
 Meteor.startup(() => {
-  overrideEventHandler("cartPanel", "click #btn-checkout", proceedToCheckout);
-  overrideEventHandler("openCartDrawer", "click #btn-checkout", proceedToCheckout);
+  Template.overrideEventHandler("cartPanel", "click #btn-checkout", proceedToCheckout);
+  Template.overrideEventHandler("openCartDrawer", "click #btn-checkout", proceedToCheckout);
+});
+
+
+Template.cartCheckout.onCreated(function () {
+  if (ReactionCore.Subscriptions.Cart.ready()) {
+    // make all steps available immediately
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutAddressBook");
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutAddressBook");
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "coreCheckoutShipping");
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "coreCheckoutShipping");
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "coreCheckoutShipping");
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutReview");
+    Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutReview");
+
+    // always show cart on checkout
+    Session.set("displayCart", true);
+  }
 });
