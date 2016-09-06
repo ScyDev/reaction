@@ -119,6 +119,7 @@ Package.onUse(function(api) {
   api.addFiles("client/collections/index.js", ["client"]);
   api.addFiles("client/helpers/utilities/index.js", ["client"]);
   api.addFiles("client/helpers/globals.js", ["client"]);
+  api.addFiles("client/helpers/i18n.js", ["client"]);
   api.addFiles("client/helpers/products.js", ["client"]);
   api.addFiles("client/helpers/tags.js", ["client"]);
 
