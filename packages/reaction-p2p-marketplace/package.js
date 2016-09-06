@@ -104,6 +104,9 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/products/productsMarketplace.js", ["client"]);
   api.addFiles("client/templates/products/products.less", ["client"]);
 
+  api.addFiles("client/templates/products/productDetail/edit/edit.html", ["client"]);
+  api.addFiles("client/templates/products/productDetail/edit/edit.js", ["client"]);
+
   api.addFiles("client/templates/products/productGrid/productGrid.html", ["client"]);
   api.addFiles("client/templates/products/productGrid/productGrid.js", ["client"]);
   api.addFiles("client/templates/products/productList/productList.html", ["client"]);
