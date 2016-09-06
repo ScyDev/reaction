@@ -18,7 +18,7 @@ Meteor.startup(() => {
 });
 
 
-Template.cartCheckout.onCreated(function () {
+Template.cartCheckout.onCreated(() => {
   if (ReactionCore.Subscriptions.Cart.ready()) {
     // make all steps available immediately
     Meteor.call("workflow/pushCartWorkflow", "coreCartWorkflow", "checkoutAddressBook");

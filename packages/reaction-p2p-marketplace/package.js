@@ -42,6 +42,7 @@ Package.onUse(function(api) {
   api.use("aldeed:template-extension");
 
   api.use("scydev:reaction-email-templates-custom@0.2.0");
+  api.imply("scydev:reaction-email-templates-custom");
 
   // i18n translations
   /* Due to Meteor builder bug (deduplication?!) private assets with the same CRC (regardless the filename) as ones in other packages are skipped from bundling */
@@ -138,7 +139,8 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/dashboard/orders/list/itemSeller/itemSeller.html", "client");
   api.addFiles("client/templates/dashboard/orders/list/itemSeller/itemSeller.js", "client");
 
-  api.imply("scydev:reaction-email-templates-custom");
+  api.addFiles("client/theme/dashboard/orders/index.css", "client");
+
 });
 
 Package.onTest(function(api) {
