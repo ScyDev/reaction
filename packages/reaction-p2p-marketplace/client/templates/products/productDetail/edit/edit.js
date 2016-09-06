@@ -6,11 +6,11 @@ Template.productDetailEdit.helpers({
 });
 
 
-Template.overrideEventHandler( "productDetailEdit", "change input,textarea", (event) => {
+Template.overrideEventHandler( "productDetailEdit", "change input,textarea", function (event) {
   const self = this;
   const productId = ReactionProduct.selectedProductId();
 
-  if( (self.field == "title" || self.field == "description")
+  if ((self.field == "title" || self.field == "description")
     && ReactionProduct.selectedProduct().isActive
     && !ReactionProduct.selectedProduct().soldOne ) {
     Alerts.toast(i18next.t("productDetail.needsReview", "Product changed, it needs to be activated again."), "info");

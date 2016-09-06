@@ -10,7 +10,10 @@ Template.wrapGlobalHelper = (helperName, wrapper) => {
 }
 
 Template.overrideEventHandler = (template, event, newHandler) => {
-  Template[template].__eventMaps.map( map => delete map[event] );
+  Template[template].__eventMaps.forEach((map, i) => {
+    delete map[event];
+    if(!Object.keys(map).length) Template[template].__eventMaps.splice(i, 1);
+  });
   Template[template].events({ [event]: newHandler });
 }
 

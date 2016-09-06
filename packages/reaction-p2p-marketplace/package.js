@@ -44,6 +44,12 @@ Package.onUse(function(api) {
   api.use("scydev:reaction-email-templates-custom@0.2.0");
   api.imply("scydev:reaction-email-templates-custom");
 
+  /* Should be before those files, which use events/helpers overrides */
+  api.addFiles("client/helpers/utilities/index.js", ["client"]);
+  api.addFiles("server/i18n.js", "server");
+  api.addAssets("private/data/shop.json", "server");
+  api.addFiles("server/init.js", "server");
+
   // i18n translations
   /* Due to Meteor builder bug (deduplication?!) private assets with the same CRC (regardless the filename) as ones in other packages are skipped from bundling */
   api.addAssets("private/i18n/ar.json", "server");
@@ -69,11 +75,6 @@ Package.onUse(function(api) {
   api.addAssets("private/i18n/tr.json", "server");
   api.addAssets("private/i18n/vi.json", "server");
   api.addAssets("private/i18n/nb.json", "server");
-
-  api.addFiles("server/i18n.js", "server");
-
-  api.addAssets("private/data/shop.json", "server");
-  api.addFiles("server/init.js", "server");
 
   api.addFiles("common/collections/collectionFS.js", ["client", "server"]);
   api.addFiles("common/schemas/schemas.js", ["client", "server"]);
@@ -120,7 +121,6 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/dropdown/dropdown.less", ["client"]);
 
   api.addFiles("client/collections/index.js", ["client"]);
-  api.addFiles("client/helpers/utilities/index.js", ["client"]);
   api.addFiles("client/helpers/globals.js", ["client"]);
   api.addFiles("client/helpers/i18n.js", ["client"]);
   api.addFiles("client/helpers/products.js", ["client"]);
