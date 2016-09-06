@@ -87,6 +87,7 @@ Package.onUse(function(api) {
   api.addFiles("server/methods/cart.js", ["server"]);
   api.addFiles("server/methods/checkout.js", ["server"]);
   api.addFiles("server/methods/orders.js", ["server"]);
+  api.addFiles("server/methods/hooks/cart.js", ["server"]);
 
   api.addFiles("server/publications/pub-utils.js", ["server"]);
   api.addFiles("server/publications/publicProducts.js", ["server"]);
