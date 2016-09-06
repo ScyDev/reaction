@@ -5,16 +5,14 @@ this.loadTranslationsFromModule = packageName => {
 
   const assetsPath = `${process.cwd()}/assets/packages/${packageName.replace(":", "_")}`;
   const i18nDir = `${assetsPath}/private/i18n/`;
-  console.log(assetsPath)
-  readFolder(i18nDir, function (err, files) {
-    if (err) throw new Meteor.Error("No translations found for import.", err);
-    for (const file of files) {
-      if (file.indexOf("json")) {
-        ReactionCore.Log.debug(`Importing translations from '${packageName}/${file}'`);
-        const json = Assets.getText("private/i18n/" + file);
-        ReactionImport.process(json, ["i18n"], ReactionImport.translation);
-      }
-    }
+  readFolder(i18nDir, (err, files) => {
+    if (err) return;
+    files.filter(f => f.indexOf('json')).forEach(f => {
+      ReactionCore.Log.info(`Importing translations from '${packageName}/${f}'`);
+      const json = Assets.getText(`private/i18n/${f}`);
+      ReactionImport.process(json, ["i18n"], ReactionImport.translation);
+    });
+    ReactionImport.flush();
   });
 };
 
@@ -22,7 +20,8 @@ this.loadTranslationsFromModule = packageName => {
  * Hook to setup core i18n imports during ReactionCore init
  */
 if (ReactionCore && ReactionCore.Hooks) {
-  ReactionCore.Hooks.Events.add("onCoreInit", () => {
-    loadTranslationsFromModule('scydev:reaction-p2p-marketplace');
-  });
+    ReactionCore.Hooks.Events.add("onCoreInit", (result, constant) => {
+      /* Delay start to be sure, the original import is already completed */
+      Meteor.setTimeout(() => loadTranslationsFromModule('scydev:reaction-p2p-marketplace'), 4000)
+    });
 }

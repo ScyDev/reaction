@@ -82,6 +82,7 @@ Package.onUse(function(api) {
   api.addFiles("server/register.js", ["server"]);
   api.addFiles("server/security.js", ["server"]);
 
+  api.addFiles("server/methods/utilities/index.js", "server");
   api.addFiles("server/methods/accounts.js", "server");
   api.addFiles("server/methods/cart.js", ["server"]);
   api.addFiles("server/methods/checkout.js", ["server"]);
@@ -114,6 +115,7 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/dropdown/dropdown.less", ["client"]);
 
   api.addFiles("client/collections/index.js", ["client"]);
+  api.addFiles("client/helpers/utilities/index.js", ["client"]);
   api.addFiles("client/helpers/globals.js", ["client"]);
   api.addFiles("client/helpers/products.js", ["client"]);
   api.addFiles("client/helpers/tags.js", ["client"]);
@@ -126,6 +128,8 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/dashboard/dashboard.js", "client");
   api.addFiles("client/templates/dashboard/settings/settings.html", "client");
   api.addFiles("client/templates/dashboard/settings/settings.js", "client");
+  api.addFiles("client/templates/dashboard/orders/orders.html", "client");
+  api.addFiles("client/templates/dashboard/orders/orders.js", "client");
   api.addFiles("client/templates/dashboard/orders/list/ordersList.html", "client");
   api.addFiles("client/templates/dashboard/orders/list/ordersList.js", "client");
   api.addFiles("client/templates/dashboard/orders/list/items/items.html", "client");
