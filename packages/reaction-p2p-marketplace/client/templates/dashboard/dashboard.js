@@ -44,7 +44,9 @@ Template.accountsDashboard.helpers({
             let account = ReactionCore.Collections.Accounts.findOne({_id: user._id || user.userId});
 
             member.role = "guest";
-            member.profileName = user.profile.name;
+            if (user.profile != null) {
+              member.profileName = user.profile.name;
+            }
             if (account && account.isSeller) { member.isSeller = "Seller" } else { member.isSeller = "Buyer" };
 
             if (account) {
