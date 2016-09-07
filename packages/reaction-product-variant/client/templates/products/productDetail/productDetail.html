@@ -7,8 +7,14 @@
         <div class="row">
           <span data-i18n="productDetail.productManagement">Product management:</span>
           {{#if isVisible}}
-            <a href="#" class="toggle-product-isVisible-link" data-i18n="productDetail.makeInvisible">Make invisible</a>
+            <a href="#" class="toggle-product-isVisible-link" data-i18n="productDetail.makeInvisible">Make invisible</a> |
           {{/if}}
+          {{#if isActive}}
+            <a href="#" class="toggle-product-isActive-link" data-i18n="productDetail.makeInactive">Deactivate</a> |
+          {{/if}}
+          {{#unless isActive}}
+            <a href="#" class="toggle-product-isActive-link" data-i18n="productDetail.makeActive">Activate</a> |
+          {{/unless}}
           {{#if hasAdminAccess}}
             <a href="#" class="delete-product-link" data-i18n="app.delete">Delete</a>
           {{/if}}
@@ -100,6 +106,10 @@
                   <div class="add-to-cart-text" data-i18n="productDetail.addToCart">Add to cart</div>
                 </div>
               </div>
+
+              <!--
+              <span id="forSaleOnDate" itemprop="forSaleOnDate">{{>fieldComponent field="forSaleOnDate" value=forSaleOnDate}}</span>
+              -->
 
             </div>
             <!-- END Right Side -->

@@ -7,38 +7,35 @@ Template.productDetailEdit.helpers({
 
 
 Template.overrideEventHandlers( "productDetailEdit", "change input,textarea", function (event) {
-  const self = this;
   const productId = ReactionProduct.selectedProductId();
 
-  if ((self.field == "title" || self.field == "description")
+  if ((this.field == "title" || this.field == "description")
     && ReactionProduct.selectedProduct().isActive
     && !ReactionProduct.selectedProduct().soldOne ) {
     Alerts.toast(i18next.t("productDetail.needsReview", "Product changed, it needs to be activated again."), "info");
   }
 
-  Meteor.call("products/updateProductField", productId, self.field,
+  Meteor.call("products/updateProductField", productId, this.field,
     $(event.currentTarget).val(), (error, result) => {
+      Alerts.removeSeen();
       if (error) {
-        Alerts.removeSeen();
         Alerts.removeType("error");
-        return Alerts.inline(`${i18next.t("productDetail."+ReactionCore.toI18nKey(error.reason))} `, "error", {
+        return Alerts.inline(`${i18next.t("productDetail." + ReactionCore.toI18nKey(error.reason))}`, "error", {
           placement: "productManagement",
           i18nKey: "productDetail.errorMsg",
-          id: self._id
+          id: this._id,
         });
       }
       if (result) {
-        Alerts.removeSeen();
-
         // redirect to new url on title change
-        if (self.field === "title")
+        if (this.field === "title")
           Meteor.call("products/setHandle", productId, (err, res) => {
             if (err) {
               Alerts.removeSeen();
               Alerts.inline(err.reason, "error", {
                 placement: "productManagement",
                 i18nKey: "productDetail.errorMsg",
-                id: self._id
+                id: this._id
               });
             }
             if (res) ReactionRouter.go("product", { handle: res });

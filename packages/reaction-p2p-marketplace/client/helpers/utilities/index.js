@@ -1,3 +1,6 @@
+const omit = (o, ...props) => props.reduce((r, p) => p in o ? r : {...r, [p]: o[p]}, {})
+
+
 Template.wrapGlobalHelper = (helperName, wrapper) => {
   const originalHelper = Blaze._globalHelpers[helperName];
   if(!originalHelper) return
@@ -6,37 +9,35 @@ Template.wrapGlobalHelper = (helperName, wrapper) => {
 
 
 /*
- Wraps the ALL existing handlers with the one new
-  Wrapper functions accepts (event, handlers) parameters
+  Wraps the ALL existing handlers with the one new
+  Wrapper functions accepts (event, instance, handlers) parameters
 */
-Template.wrapEventHandlers = (template, event, wrapper) => {
+Template.wrapEventHandlers = (template, eventName, wrapper, keepOriginal = true) => {
+  if (!template || !eventName || typeof wrapper !== 'function') return;
   let originalHandlers = [];
   Template[template].__eventMaps.forEach((map, i) => {
-    if (map[event]) originalHandlers.push(map[event]);
-    delete map[event];
+    if (!map[eventName]) return;
+    if (keepOriginal) originalHandlers.push(map[eventName]);
+    delete map[eventName];
     if(!Object.keys(map).length) Template[template].__eventMaps.splice(i, 1);
   });
-  const injector = function(event) {
-    let result
-    wrapper(event, event => originalHandlers.forEach(handler => {
-      result = handler(event) || result;
-    }));
-    return result;
+  const injector = function(event, instance) {
+    return wrapper.call(this, event, instance, () => {
+      let result;
+      originalHandlers.forEach((handler, i) => result = handler.call(instance.view, event) || result)
+      return result;
+    });
   }
-  Template[template].events({ [event]: injector });
+  Template[template].events({ [eventName]: injector });
 }
 
+
 /*
- Alias for Template.wrapEventHandlers()
+  Overrides the ALL existing handlers with the one new
+  Wrapper functions accepts (event, instance) parameters
  */
-Template.overrideEventHandlers = Template.wrapEventHandlers;
-// Template.overrideEventHandler = (template, event, newHandler) => {
-//   Template[template].__eventMaps.forEach((map, i) => {
-//     delete map[event];
-//     if(!Object.keys(map).length) Template[template].__eventMaps.splice(i, 1);
-//   });
-//   Template[template].events({ [event]: newHandler });
-// }
+Template.overrideEventHandlers = (template, event, newHandler) =>
+  Template.wrapEventHandlers(template, event, newHandler, false)
 
 
 Template.clone = (source, dest) => {
