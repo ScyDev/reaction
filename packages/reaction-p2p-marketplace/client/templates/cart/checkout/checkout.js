@@ -13,8 +13,8 @@ const proceedToCheckout = () => {
 }
 
 Meteor.startup(() => {
-  Template.overrideEventHandler("cartPanel", "click #btn-checkout", proceedToCheckout);
-  Template.overrideEventHandler("openCartDrawer", "click #btn-checkout", proceedToCheckout);
+  Template.overrideEventHandlers("cartPanel", "click #btn-checkout", proceedToCheckout);
+  Template.overrideEventHandlers("openCartDrawer", "click #btn-checkout", proceedToCheckout);
 });
 
 

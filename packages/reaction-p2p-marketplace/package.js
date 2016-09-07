@@ -109,6 +109,8 @@ Package.onUse(function(api) {
 
   api.addFiles("client/templates/products/productDetail/edit/edit.html", ["client"]);
   api.addFiles("client/templates/products/productDetail/edit/edit.js", ["client"]);
+  api.addFiles("client/templates/products/productDetail/images/productImageGallery.html", ["client"]);
+  api.addFiles("client/templates/products/productDetail/images/productImageGallery.js", ["client"]);
 
   api.addFiles("client/templates/products/productGrid/productGrid.html", ["client"]);
   api.addFiles("client/templates/products/productGrid/productGrid.js", ["client"]);

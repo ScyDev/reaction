@@ -6,7 +6,7 @@ Template.productDetailEdit.helpers({
 });
 
 
-Template.overrideEventHandler( "productDetailEdit", "change input,textarea", function (event) {
+Template.overrideEventHandlers( "productDetailEdit", "change input,textarea", function (event) {
   const self = this;
   const productId = ReactionProduct.selectedProductId();
 
