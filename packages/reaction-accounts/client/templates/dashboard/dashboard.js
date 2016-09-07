@@ -95,7 +95,9 @@ Template.accountsDashboard.helpers({
 
             member.role = "guest";
 
-            member.profileName = user.profile.name;
+            if (user.profile != null) {
+              member.profileName = user.profile.name;
+            }
             if (account.isSeller) { member.isSeller = "Seller" } else { member.isSeller = "Buyer" };
 
             member.createdAt = account.createdAt;
