@@ -54,3 +54,8 @@ function uploadHandler(event) {
 Template.overrideEventHandlers("productImageGallery", "dropped #galleryDropPane", uploadHandler);
 Template.overrideEventHandlers("imageUploader", "change #files", uploadHandler);
 Template.overrideEventHandlers("imageUploader", "dropped #dropzone", uploadHandler);
+
+/* Allow image delete only by product owner */
+Template.wrapEventHandlers("productImageGallery", "click .remove-image", (event, instance, handlers) => {
+  if (Blaze._globalHelpers.belongsToCurrentUser(ReactionProduct.selectedProductId())) handlers();
+});
