@@ -7,12 +7,12 @@ this.replaceMethod = (methodName, f) => {
   methodHandlers[methodName] = f;
 }
 
-
-ReactionCore.MethodHooks.wrapAfter = (helperName, wrapper) => {
-  const originalHelper = Blaze._globalHelpers[helperName];
-  if(!originalHelper) return
-  Template.registerHelper(helperName, (...options) => wrapper(originalHelper(...options)));
-}
+//
+// ReactionCore.MethodHooks.wrapAfter = (helperName, wrapper) => {
+//   const originalHelper = Blaze._globalHelpers[helperName];
+//   if(!originalHelper) return
+//   Template.registerHelper(helperName, (...options) => wrapper(originalHelper(...options)));
+// }
 
 
 /* Add new hook at the beginning of the list */
