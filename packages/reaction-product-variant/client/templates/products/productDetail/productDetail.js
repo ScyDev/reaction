@@ -1,17 +1,12 @@
 Template.productDetail.onCreated(function () {
-  // TODO: Determine why this template is created three times. 'this.templateId' helps to track this.
-  this.templateId = Math.random().toString().slice(2,10);
-  console.log("Template.productDetail.onCreated()", this.templateId);
   this.productId = () => ReactionRouter.getParam("handle");
   this.variantId = () => ReactionRouter.getParam("variantId");
-  // this.autorun(() => {
+  this.autorun(() => {
     this.subscribe("Product", this.productId());
     this.subscribe("Tags");
-  // });
+  });
 });
-Template.productDetail.onRendered(function () {
-  console.log("Template.productDetail.onRendered()", this.templateId);
-});
+
 /**
  * productDetail helpers
  * see helper/product.js for
@@ -20,16 +15,23 @@ Template.productDetail.onRendered(function () {
 Template.productDetail.helpers({
   product: function () {
     const instance = Template.instance();
-    return instance.subscriptionsReady() && ReactionProduct.setProduct(instance.productId(), instance.variantId());
+    if (instance.subscriptionsReady()) {
+      return ReactionProduct.setProduct(instance.productId(),
+        instance.variantId());
+    }
   },
   tags: function () {
     let product = ReactionProduct.selectedProduct();
     if (product) {
-      return _.map(product.hashtags, id => ReactionCore.Collections.Tags.findOne(id));
+      if (product.hashtags) {
+        return _.map(product.hashtags, function (id) {
+          return ReactionCore.Collections.Tags.findOne(id);
+        });
+      }
     }
   },
   tagsComponent: function () {
-    if (ReactionCore.hasPermission("createProduct") && Blaze._globalHelpers.belongsToCurrentUser(ReactionProduct.selectedProductId())) {
+    if (ReactionCore.hasPermission("createProduct")) {
       return Template.productTagInputForm;
     }
     return Template.productDetailTags;
@@ -45,13 +47,13 @@ Template.productDetail.helpers({
     }
   },
   fieldComponent: function () {
-    if (ReactionCore.hasPermission("createProduct") && Blaze._globalHelpers.belongsToCurrentUser(ReactionProduct.selectedProductId())) {
+    if (ReactionCore.hasPermission("createProduct")) {
       return Template.productDetailEdit;
     }
     return Template.productDetailField;
   },
   metaComponent: function () {
-    if (ReactionCore.hasPermission("createProduct") && Blaze._globalHelpers.belongsToCurrentUser(ReactionProduct.selectedProductId())) {
+    if (ReactionCore.hasPermission("createProduct")) {
       return Template.productMetaFieldForm;
     }
     return Template.productMetaField;
@@ -65,7 +67,7 @@ Template.productDetail.helpers({
 Template.productDetail.events({
   "click #price": function () {
     let formName;
-    if (ReactionCore.hasPermission("createProduct") && Blaze._globalHelpers.belongsToCurrentUser(ReactionProduct.selectedProductId())) {
+    if (ReactionCore.hasPermission("createProduct")) {
       let variant = ReactionProduct.selectedVariant();
       if (!variant) {
         return;
@@ -111,11 +113,6 @@ Template.productDetail.events({
     let currentVariant = ReactionProduct.selectedVariant();
     let currentProduct = ReactionProduct.selectedProduct();
 
-    // allow only logged in users to do that
-    if (!Blaze._globalHelpers.isLoggedIn(true)) {
-      return;
-    }
-
     if (currentVariant) {
       if (currentVariant.ancestors.length === 1) {
         const options = ReactionProduct.getVariants(currentVariant._id);
@@ -160,15 +157,6 @@ Template.productDetail.events({
             function (error) {
               if (error) {
                 ReactionCore.Log.error("Failed to add to cart.", error);
-
-                if (error.reason == "Not enough items in stock") {
-                  Alerts.inline("Sorry, can't add more items than available!", "warning", {
-                    placement: "productDetail",
-                    i18nKey: "productDetail.outOfStock",
-                    autoHide: 10000
-                  });
-                }
-
                 return error;
               }
             }
@@ -179,10 +167,9 @@ Template.productDetail.events({
         ReactionProduct.setCurrentVariant(null);
         qtyField.val(1);
         // scroll to top on cart add
-        $('html, body').animate({
-            scrollTop: $("#products-anchor").offset().top
-        }, "fast");
-
+        $("html,body").animate({
+          scrollTop: 0
+        }, 0);
         // slide out label
         let addToCartText = i18next.t("productDetail.addedToCart");
         let addToCartTitle = currentVariant.title || "";
@@ -236,31 +223,63 @@ Template.productDetail.events({
       });
     }
   },
-  "click .delete-product-link": function () {
-    if (!ReactionProduct.selectedProduct().soldOne) {
-      ReactionProduct.maybeDeleteProduct(this);
+  "click .toggle-product-isActive-link": function (event, template) {
+    let errorMsg = "";
+    const self = this;
+    if (!self.title) {
+      errorMsg += "Product title is required. ";
+      template.$(".title-edit-input").focus();
+    }
+    let variants = self.variants;
+    for (let variant of variants) {
+      let index = _.indexOf(variants, variant);
+      if (!variant.title) {
+        errorMsg += "Variant " + (index + 1) + " label is required. ";
+      }
+      if (!variant.price) {
+        errorMsg += "Variant " + (index + 1) + " price is required. ";
+      }
+    }
+    if (errorMsg.length > 0) {
+      Alerts.add(errorMsg, "danger", {
+        placement: "productManagement",
+        i18nKey: "productDetail.errorMsg"
+      });
+    } else {
+      Meteor.call("products/activateProduct", self._id, function (error) {
+        if (error) {
+          return Alerts.add(error.reason, "danger", {
+            placement: "productManagement",
+            id: self._id,
+            i18nKey: "productDetail.errorMsg"
+          });
+        }
+      });
     }
   },
+  "click .delete-product-link": function () {
+    ReactionProduct.maybeDeleteProduct(this);
+  },
   "click .fa-facebook": function () {
-    if (ReactionCore.hasPermission("createProduct") && Blaze._globalHelpers.belongsToCurrentUser(ReactionProduct.selectedProductId())) {
+    if (ReactionCore.hasPermission("createProduct")) {
       $(".facebookMsg-edit").fadeIn();
       return $(".facebookMsg-edit-input").focus();
     }
   },
   "click .fa-twitter": function () {
-    if (ReactionCore.hasPermission("createProduct") && Blaze._globalHelpers.belongsToCurrentUser(ReactionProduct.selectedProductId())) {
+    if (ReactionCore.hasPermission("createProduct")) {
       $(".twitterMsg-edit").fadeIn();
       return $(".twitterMsg-edit-input").focus();
     }
   },
   "click .fa-pinterest": function () {
-    if (ReactionCore.hasPermission("createProduct") && Blaze._globalHelpers.belongsToCurrentUser(ReactionProduct.selectedProductId())) {
+    if (ReactionCore.hasPermission("createProduct")) {
       $(".pinterestMsg-edit").fadeIn();
       return $(".pinterestMsg-edit-input").focus();
     }
   },
   "click .fa-google-plus": function () {
-    if (ReactionCore.hasPermission("createProduct") && Blaze._globalHelpers.belongsToCurrentUser(ReactionProduct.selectedProductId())) {
+    if (ReactionCore.hasPermission("createProduct")) {
       $(".googleplusMsg-edit").fadeIn();
       return $(".googleplusMsg-edit-input").focus();
     }
@@ -269,4 +288,8 @@ Template.productDetail.events({
     Session.set("editing-" + this.field, false);
     return $(".social-media-inputs > *").hide();
   }
+});
+
+Template.productDetail.onRendered(function(){
+  $('.rateit').rateit();
 });

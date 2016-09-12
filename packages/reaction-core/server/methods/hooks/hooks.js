@@ -80,15 +80,13 @@ ReactionCore.MethodHooks._initializeHook = function (mapping, methodName, hookFu
   ReactionCore.MethodHooks._originalMethodHandlers[methodName] = method;
 
   ReactionCore.MethodHooks._wrappers[methodName] = function () {
-    // Save `this` variable
-    const self = this;
     // Get arguments you can mutate
     let args = _.toArray(arguments);
     let beforeResult;
     // Call the before hooks
     let beforeHooks = ReactionCore.MethodHooks._beforeHooks[methodName];
-    _.each(beforeHooks, function (beforeHook, hooksProcessed) {
-      beforeResult = beforeHook.call(self, {
+    _.each(beforeHooks, (beforeHook, hooksProcessed) => {
+      beforeResult = beforeHook.call(this, {
         result: undefined,
         error: undefined,
         arguments: args,
@@ -109,15 +107,15 @@ ReactionCore.MethodHooks._initializeHook = function (mapping, methodName, hookFu
     // Call the main method body
     // check(args, Match.Any);
     try {
-      methodResult = ReactionCore.MethodHooks._originalMethodHandlers[methodName].apply(self, args);
+      methodResult = ReactionCore.MethodHooks._originalMethodHandlers[methodName].apply(this, args);
     } catch (error) {
       methodError = error;
     }
 
     // Call after hooks, providing the result and the original arguments
     let afterHooks = ReactionCore.MethodHooks._afterHooks[methodName];
-    _.each(afterHooks, function (afterHook, hooksProcessed) {
-      let hookResult = afterHook.call(self, {
+    _.each(afterHooks, (afterHook, hooksProcessed) => {
+      let hookResult = afterHook.call(this, {
         result: methodResult,
         error: methodError,
         arguments: args,

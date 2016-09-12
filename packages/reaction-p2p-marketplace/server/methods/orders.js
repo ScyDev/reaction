@@ -1,15 +1,6 @@
 const { Log } = ReactionCore;
 
 
-/* Replace method preserving the hooks */
-const replaceMethod = (methodName, f) => {
-  // Meteor.isClient ? Meteor.connection._methodHandlers : Meteor.server.method_handlers;
-  const hooks = ReactionCore.MethodHooks;
-  const methodHandlers = hooks._originalMethodHandlers[methodName] ? hooks._originalMethodHandlers : hooks._handlers;
-  methodHandlers[methodName] = f;
-}
-
-
 replaceMethod("orders/sendNotification", function (order) {
   check(order, Object);
   this.unblock();

@@ -1,0 +1,17 @@
+<template name="gridContentMarketplace">
+    <div class="grid-content">
+        <a href="{{pathFor 'product' handle=handle}}" data-event-category="grid" data-event-action="product-click" data-event-label="grid product click" data-event-value="{{_id}}">
+            <div class="overlay">
+                <div class="overlay-title">{{title}}</div>
+                <div class="currency-symbol">{{formatPrice displayPrice}}</div>
+                <div class="for-sale-on-date"><div class="info-icon fa fa-clock-o"></div> <div class="info-text">{{ prettifyDate forSaleOnDate }}</div></div>
+              {{#if location.address }}
+                  <div class="location-text"><div class="info-icon fa fa-map"></div> <div class="info-text">{{ location.address }}</div></div>
+              {{/if}}
+              {{#if copiedInventoryQuantity }}
+                  <div class="inventory-text"><div class="info-icon fa fa-pie-chart"></div> <div class="info-text">{{ copiedInventoryQuantity }} {{ i18n 'accountsUI.inventoryUnit' 'pieces' }}</div></div>
+              {{/if}}
+            </div>
+        </a>
+    </div>
+</template>
