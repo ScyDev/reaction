@@ -20,5 +20,23 @@ ReactionCore.registerPackage({
     label: "P2P Marketplace Settings",
     provides: "settings",
     container: "core"
+  }, {
+    route: "/account/seller/products",
+    template: "dashboardProductsList",
+    name: "account/seller/products",
+    label: "My Products",
+    icon: "fa fa-cutlery",
+    provides: "userAccountDropdown"
+  }, {
+    route: "/account/seller/sellerorders",
+    template: "sellerOrders",
+    name: "account/seller/sellerorders",
+    label: "My Orders",
+    icon: "fa fa-shopping-bag",
+    provides: "userAccountDropdown",
+    permissions: [{
+      label: "Seller Orders",
+      permission: "account/seller/sellerorders"
+    }]
   }],
 });

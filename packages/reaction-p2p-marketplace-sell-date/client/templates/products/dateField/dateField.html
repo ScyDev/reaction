@@ -2,7 +2,7 @@
   {{#with product}}
     <div class="row col-md-11">
       <h2><span class="forSaleOnDate-text" data-i18n="productDetail.forSaleOnDate">For sale on date</span></h2>
-      {{#if belongsToCurrentUser _id }}
+       {{#if belongsToCurrentUser _id "forSaleOnDate"}}
         <div class="input-group datetimepicker-forSaleOnDate">
           <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
           <!-- just dummy field for calendar -->
@@ -11,11 +11,11 @@
 
         <!-- this is the real, invisible input field -->
         <span id="forSaleOnDate" itemprop="forSaleOnDate" style="display:none;">
-          {{>fieldComponent field="forSaleOnDate" value=(prettifyDate forSaleOnDate) }}
+          {{>fieldComponent field="forSaleOnDate" value=(prettifyDate forSaleOnDate)}}
         </span>
       {{else}}
         <span id="forSaleOnDate" itemprop="forSaleOnDate">
-          {{>fieldComponent field="forSaleOnDate" value=(prettifyDate forSaleOnDate) }}
+          {{>fieldComponent field="forSaleOnDate" value=(prettifyDate forSaleOnDate)}}
         </span>
       {{/if}}
     </div>
@@ -24,7 +24,7 @@
       <h2><span class="pickupTime-text" data-i18n="productDetail.pickupTime">Pickup time</span></h2>
 
       <span class="pickupTime-label"><span data-i18n="productDetail.pickupTimeFrom">From</span>: </span><span id="pickupTimeFrom" itemprop="pickupTimeFrom">
-        {{#if belongsToCurrentUser _id }}
+        {{#if belongsToCurrentUser _id "pickupTimeFrom"}}
           <!-- just dummy field for time -->
           <input class="pickupTimeFrom-dummy-input form-control" type="text"/>
           <!-- this is the real, invisible input field -->
@@ -37,7 +37,7 @@
         {{/if}}
       </span>
       <span class="pickupTime-label"><span data-i18n="productDetail.pickupTimeTo">To</span>: </span><span id="pickupTimeTo" itemprop="pickupTimeTo">
-        {{#if belongsToCurrentUser _id }}
+        {{#if belongsToCurrentUser _id "pickupTimeTo"}}
           <!-- just dummy field for time -->
           <input class="pickupTimeTo-dummy-input form-control" type="text"/>
           <!-- this is the real, invisible input field -->

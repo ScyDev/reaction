@@ -89,3 +89,11 @@ ReactionProduct.maybeDeleteProduct = function (productOrArray) {
       }
     });
 };
+
+
+Template.registerHelper("belongsToCurrentUser", function (productId, callerName) {
+  if (_.isArray(productId) === true) productId = productId[0];
+  const result = !!(Template.instance().canEdit || typeof ReactionCore.Collections.SellerProducts.findOne({ _id: productId }) !== "undefined" || ReactionCore.hasAdminAccess());
+  // console.warn("belongsToCurrentUser", productId, callerName, result, typeof Template.instance().canEdit, typeof ReactionCore.Collections.SellerProducts.findOne({ _id: productId }), ReactionCore.hasAdminAccess());
+  return result;
+});

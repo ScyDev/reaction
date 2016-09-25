@@ -47,6 +47,7 @@ Template.productDetail.helpers({
     }
   },
   fieldComponent: function () {
+    console.log("variant/fieldComponent", ReactionCore.hasPermission("createProduct"))
     if (ReactionCore.hasPermission("createProduct")) {
       return Template.productDetailEdit;
     }

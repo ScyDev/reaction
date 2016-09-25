@@ -1,7 +1,7 @@
 
 
 function processRelativeTime(number, withoutSuffix, key, isFuture) {
-    var format = {
+    const format = {
         'm': ['eine Minute', 'einer Minute'],
         'h': ['eine Stunde', 'einer Stunde'],
         'd': ['ein Tag', 'einem Tag'],
@@ -14,7 +14,7 @@ function processRelativeTime(number, withoutSuffix, key, isFuture) {
     return withoutSuffix ? format[key][0] : format[key][1];
 }
 
-var dtpLocaleDe = moment.locale("de",
+const dtpLocaleDe = moment.locale("de",
 		{
 				months : 'Januar_Februar_März_April_Mai_Juni_Juli_August_September_Oktober_November_Dezember'.split('_'),
 				monthsShort : 'Jan._Febr._Mrz._Apr._Mai_Jun._Jul._Aug._Sept._Okt._Nov._Dez.'.split('_'),
@@ -60,7 +60,7 @@ var dtpLocaleDe = moment.locale("de",
 				}
 		}
 );
-var dtpTooltipsDe = {
+const dtpTooltipsDe = {
 		today: 'Heute anzeigen',
 		clear: 'Auswahl löschen',
 		close: 'Schliessen',
@@ -80,26 +80,20 @@ var dtpTooltipsDe = {
 function setLatestOrderMaxDate() {
   // set maxDate on latestOrderDate Datetimepicker
   const value = $('.forSaleOnDate-edit-input').val();
-  if( !value ) return;
+  const datePicker = $('.datetimepicker-latestOrderDate');
+  if(!value || !datePicker.length) return;
   let maxDate = moment(value, "DD.MM.YYYY").startOf('day');
   maxDate = moment(maxDate.format("DD.MM.YYYY")+" "+$(".pickupTimeFrom-edit-input").val(), "DD.MM.YYYY HH:mm");
   //maxDate = maxDate.subtract(1, "hour");
   console.log("setting max Date: "+maxDate.toString());
-  $('.datetimepicker-latestOrderDate').data("DateTimePicker").maxDate(maxDate);
+  datePicker.data("DateTimePicker").maxDate(maxDate);
 }
 
 function initDatepickers() {
-
 	// set date from real input field
 	let dateTimePickerDefaultDate_forSaleOnDate = $('.forSaleOnDate-edit-input').val();
-	//console.log("read dateTimePickerDefaultDate_forSaleOnDate: ",dateTimePickerDefaultDate_forSaleOnDate);
-	if (dateTimePickerDefaultDate_forSaleOnDate == null || dateTimePickerDefaultDate_forSaleOnDate == "") {
-		//dateTimePickerDefaultDate_forSaleOnDate = moment().add(1, 'days').hour(8)
-	}
-	else {
-		dateTimePickerDefaultDate_forSaleOnDate = moment(dateTimePickerDefaultDate_forSaleOnDate, "DD.MM.YYYY HH:mm")
-	}
-	//console.log("new dateTimePickerDefaultDate_forSaleOnDate: ",dateTimePickerDefaultDate_forSaleOnDate);
+	if (dateTimePickerDefaultDate_forSaleOnDate !== null && dateTimePickerDefaultDate_forSaleOnDate.length)
+		dateTimePickerDefaultDate_forSaleOnDate = moment(dateTimePickerDefaultDate_forSaleOnDate, "DD.MM.YYYY HH:mm");
 
   $('.datetimepicker-forSaleOnDate').datetimepicker({
     format: "dddd DD.MM.YYYY", //
@@ -206,38 +200,23 @@ Template.productDetailDateField.inheritsHelpersFrom(["productDetail", "productDe
 Template.productDetailDateField.inheritsEventsFrom(["productDetail", "productDetailEdit"]);
 Template.productDetailDateField.inheritsHooksFrom(["productDetail", "productDetailEdit"]);
 
-Template.productDetailDateField.onCreated(
-  function() {
-    Template.instance().autorun(function() {
-      //initDatepickers();
-    });
+Template.productDetailDateField.onRendered(() => {
+    if (!Blaze._globalHelpers.belongsToCurrentUser(ReactionProduct.selectedProductId())) return;
+
+    const _init = () => {
+      const placeholder = $('.forSaleOnDate-edit-input');
+      if (placeholder.length) initDatepickers();
+      else Meteor.setTimeout(_init, 200);
+    };
+    _init();
   }
 );
 
-Template.productDetailDateField.onRendered(
-  function() {
-    Meteor.setTimeout(function() { // what the?!? document doesn't seem to be ready immediately when this event is fired...
-      initDatepickers();
-    }, 100);
-
-    Meteor.setTimeout(function() { // what the?!? document doesn't seem to be ready immediately when this event is fired...
-      initDatepickers();
-    }, 1000);
-
-    Meteor.setTimeout(function() { // what the?!? document doesn't seem to be ready immediately when this event is fired...
-      initDatepickers();
-    }, 2000);
-
-  }
-);
-
-Template.registerHelpers(
-  {
+Template.registerHelpers({
     prettifyDate: function(inDate) {
 			return moment(inDate).locale("de").format('dddd DD.MM.YYYY');
     },
     prettifyDateTime: function(inDate) {
       return moment(inDate).locale("de").format('dddd DD.MM.YYYY HH:mm');
     }
-  }
-);
+});
