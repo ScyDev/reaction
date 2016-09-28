@@ -1,16 +1,9 @@
 
-function camelize(str) {
-  return str.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, function(match, index) {
-    if (+match === 0) return ""; // or if (/\s+/.test(match)) for white spaces
-    return index == 0 ? match.toLowerCase() : match.toUpperCase();
-  });
-}
-
 /**
  To translate messages from packages that do not send i18n keys
  */
 ReactionCore.toI18nKey = function(text) {
-  return camelize(text.replace(/[0-9]/g,'').replace(/\./g,'').replace(",", "").replace("'", "").replace("\"", "").replace("!", "").replace("?", "").replace("(", "").replace(")", ""));
+  return text.replace(/[^A-Z a-z]/g,'').replace(/\s+(.)/g, (_, c) => c.toUpperCase()).replace(/^(.)/, (_, c) => c.toLowerCase())
 }
 
 
