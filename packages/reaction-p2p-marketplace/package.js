@@ -39,7 +39,6 @@ Package.onUse(function(api) {
   api.use("reactive-var");
 
   api.use("utilities:spin");
-  api.use("scydev:reaction-search@0.0.2");
 
   api.use("aldeed:template-extension");
 
@@ -152,6 +151,8 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/dashboard/orders/list/items/items.js", "client");
   api.addFiles("client/templates/dashboard/orders/list/itemSeller/itemSeller.html", "client");
   api.addFiles("client/templates/dashboard/orders/list/itemSeller/itemSeller.js", "client");
+
+  api.addFiles("client/templates/search/searchBox.html", "client");
 
   api.addFiles("client/theme/dashboard/orders/index.css", "client");
 
