@@ -41,7 +41,6 @@ Package.onUse(function(api) {
   api.use("reactioncommerce:reaction-product-variant");
   api.use("reactioncommerce:reaction-layout");
 
-
   api.addFiles("client/collections/index.js", ["client"]);
   api.addFiles("client/helpers/filters.js", ["client"]);
   api.addFiles("client/helpers/globals.js", ["client"]);
@@ -195,6 +194,8 @@ Package.onUse(function(api) {
   api.addFiles('client/templates/userDecision/userDecision.html', 'client');
   api.addFiles('client/templates/userDecision/userDecision.js', 'client');
   api.addFiles('client/templates/userDecision/userDecision.less', 'client');
+
+  api.addFiles("client/templates/search/searchBox.html", "client");
 
   api.addFiles("client/theme/dashboard/orders/index.css", "client");
 
