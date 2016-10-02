@@ -40,6 +40,7 @@ Package.onUse(function(api) {
   api.use('rzymek:moment-locale-de');
 
   api.use("reactioncommerce:core");
+  api.use("scydev:reaction-p2p-marketplace");
 
   api.addFiles([
                 'reaction-p2p-marketplace-sell-date.js',

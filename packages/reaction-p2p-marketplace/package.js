@@ -49,8 +49,8 @@ Package.onUse(function(api) {
   api.addFiles("client/helpers/tags.js", ["client"]);
   api.addFiles('client/helpers/validation.js', 'client');
 
-  api.use("scydev:reaction-p2p-marketplace-sell-date");
-  api.use("scydev:reaction-search");
+  // api.use("scydev:reaction-p2p-marketplace-sell-date");
+  // api.use("scydev:reaction-search");
   api.use("scydev:reaction-email-templates-custom");
   api.imply("scydev:reaction-email-templates-custom");
 
@@ -125,10 +125,10 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/dropdown/dropdown.js", ["client"]);
   api.addFiles("client/templates/dropdown/dropdown.less", ["client"]);
 
-  api.addFiles("client/templates/cart/checkout/checkout.html", "client");
-  api.addFiles("client/templates/cart/checkout/checkout.js", "client");
   api.addFiles("client/templates/cart/checkout/completed/completed.html", "client");
   api.addFiles("client/templates/cart/checkout/completed/completed.js", "client");
+  api.addFiles("client/templates/cart/checkout/checkout.html", "client");
+  api.addFiles("client/templates/cart/checkout/checkout.js", "client");
 
   api.addFiles("client/templates/dashboard/dashboard.js", "client");
   api.addFiles("client/templates/dashboard/orders/orders.html", "client");
@@ -137,12 +137,12 @@ Package.onUse(function(api) {
   api.addFiles('client/templates/dashboard/orders/details/detail.html', 'client');
   api.addFiles('client/templates/dashboard/orders/details/detail.js', 'client');
 
-  api.addFiles("client/templates/dashboard/orders/list/ordersList.html", "client");
-  api.addFiles("client/templates/dashboard/orders/list/ordersList.js", "client");
   api.addFiles("client/templates/dashboard/orders/list/items/items.html", "client");
   api.addFiles("client/templates/dashboard/orders/list/items/items.js", "client");
   api.addFiles("client/templates/dashboard/orders/list/itemSeller/itemSeller.html", "client");
   api.addFiles("client/templates/dashboard/orders/list/itemSeller/itemSeller.js", "client");
+  api.addFiles("client/templates/dashboard/orders/list/ordersList.html", "client");
+  api.addFiles("client/templates/dashboard/orders/list/ordersList.js", "client");
 
   api.addFiles('client/templates/dashboard/orders/sellerOrders.html', 'client');
   api.addFiles('client/templates/dashboard/orders/sellerOrders.js', 'client');
@@ -163,22 +163,22 @@ Package.onUse(function(api) {
   api.addFiles("client/templates/products/productsMarketplace.js", ["client"]);
   api.addFiles("client/templates/products/products.less", ["client"]);
 
-  api.addFiles('client/templates/products/productDetail/productDetail.html', 'client');
-  api.addFiles("client/templates/products/productDetail/productDetail.js", ["client"]);
-  api.addFiles('client/templates/products/productDetail/productDetail.less', 'client');
   api.addFiles("client/templates/products/productDetail/edit/edit.html", ["client"]);
   api.addFiles("client/templates/products/productDetail/edit/edit.js", ["client"]);
   api.addFiles("client/templates/products/productDetail/images/productImageGallery.html", ["client"]);
   api.addFiles("client/templates/products/productDetail/images/productImageGallery.js", ["client"]);
   api.addFiles('client/templates/products/productDetail/variants/variantForm/variantForm.html', 'client');
   api.addFiles('client/templates/products/productDetail/variants/variantForm/variantForm.js', 'client');
+  api.addFiles('client/templates/products/productDetail/productDetail.html', 'client');
+  api.addFiles("client/templates/products/productDetail/productDetail.js", ["client"]);
+  api.addFiles('client/templates/products/productDetail/productDetail.less', 'client');
 
-  api.addFiles("client/templates/products/productGrid/productGrid.html", ["client"]);
-  api.addFiles("client/templates/products/productGrid/productGrid.js", ["client"]);
   api.addFiles("client/templates/products/productGrid/content/content.html", ["client"]);
   api.addFiles("client/templates/products/productGrid/content/content.js", ["client"]);
   api.addFiles("client/templates/products/productGrid/controls/controls.html", ["client"]);
   api.addFiles("client/templates/products/productGrid/controls/controls.js", ["client"]);
+  api.addFiles("client/templates/products/productGrid/productGrid.html", ["client"]);
+  api.addFiles("client/templates/products/productGrid/productGrid.js", ["client"]);
 
   api.addFiles("client/templates/products/productList/productList.html", ["client"]);
   api.addFiles("client/templates/products/productList/productList.js", ["client"]);

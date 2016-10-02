@@ -62,6 +62,7 @@ Template.productDetail.onRendered(function() {
 Template.productDetail.helpers({
   product: () => {
     const self = Template.instance();
+    ReactionProduct.setProduct(self.productId(), self.variantId()); // To be used in 'productImageGallery' template later
     return self.subscriptionsReady() && self.collection && self.collection.findOne({_id: self.productId()});
   },
   tagsComponent: function () {
