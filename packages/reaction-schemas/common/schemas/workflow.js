@@ -8,7 +8,7 @@ ReactionCore.Schemas.Workflow = new SimpleSchema({
   status: {
     type: String,
     defaultValue: "new",
-    index: 1
+    index: 0
   },
   workflow: {
     type: [String],

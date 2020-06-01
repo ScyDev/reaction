@@ -93,7 +93,7 @@ ReactionCore.Schemas.Registry = new SimpleSchema({
 ReactionCore.Schemas.PackageConfig = new SimpleSchema({
   shopId: {
     type: String,
-    index: 1,
+    index: 0,
     // see: https://github.com/reactioncommerce/reaction/issues/646#issuecomment-169351842
     // autoValue: ReactionCore.shopIdAutoValue,
     label: "PackageConfig ShopId",
@@ -101,7 +101,7 @@ ReactionCore.Schemas.PackageConfig = new SimpleSchema({
   },
   name: {
     type: String,
-    index: 1
+    index: 0
   },
   enabled: {
     type: Boolean,

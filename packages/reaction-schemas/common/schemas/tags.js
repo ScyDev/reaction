@@ -9,7 +9,7 @@ ReactionCore.Schemas.Tag = new SimpleSchema({
   },
   name: {
     type: String,
-    index: 1
+    index: 0
   },
   slug: {
     type: String
@@ -21,14 +21,14 @@ ReactionCore.Schemas.Tag = new SimpleSchema({
   relatedTagIds: {
     type: [String],
     optional: true,
-    index: 1
+    index: 0
   },
   isTopLevel: {
     type: Boolean
   },
   shopId: {
     type: String,
-    index: 1,
+    index: 0,
     autoValue: ReactionCore.shopIdAutoValue,
     label: "Tag shopId"
   },

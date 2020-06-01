@@ -59,7 +59,7 @@ ReactionCore.Schemas.Discounts = new SimpleSchema({
   shopId: {
     type: String,
     autoValue: ReactionCore.shopIdAutoValue,
-    index: 1
+    index: 0
   },
   beginDate: {
     type: Date,

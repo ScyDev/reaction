@@ -158,7 +158,7 @@ ReactionCore.Schemas.Shop = new SimpleSchema({
   },
   "name": {
     type: String,
-    index: 1
+    index: 0
   },
   "description": {
     type: String,
@@ -175,7 +175,7 @@ ReactionCore.Schemas.Shop = new SimpleSchema({
   "domains": {
     type: [String],
     defaultValue: ["localhost"],
-    index: 1
+    index: 0
   },
   "emails": {
     type: [ReactionCore.Schemas.Email],

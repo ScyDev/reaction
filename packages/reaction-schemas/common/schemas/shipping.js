@@ -125,11 +125,11 @@ ReactionCore.Schemas.ShipmentItem = new SimpleSchema({
   },
   productId: {
     type: String,
-    index: 1
+    index: 0
   },
   shopId: {
     type: String,
-    index: 1,
+    index: 0,
     label: "Shipment Item ShopId",
     optional: true
   },
@@ -276,7 +276,7 @@ ReactionCore.Schemas.ShippingProvider = new SimpleSchema({
 ReactionCore.Schemas.Shipping = new SimpleSchema({
   shopId: {
     type: String,
-    index: 1,
+    index: 0,
     autoValue: ReactionCore.shopIdAutoValue,
     label: "Shipping ShopId"
   },

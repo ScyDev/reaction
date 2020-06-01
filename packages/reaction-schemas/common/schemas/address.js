@@ -93,19 +93,19 @@ ReactionCore.Schemas.Address = new SimpleSchema({
 //   "userId": {
 //     type: String,
 //     regEx: SimpleSchema.RegEx.Id,
-//     index: 1,
+//     index: 0,
 //     label: "Accounts ShopId"
 //   },
 //   "sessions": {
 //     type: [String],
 //     optional: true,
-//     index: 1
+//     index: 0
 //   },
 //   "shopId": {
 //     type: String,
 //     autoValue: ReactionCore.shopIdAutoValue,
 //     regEx: SimpleSchema.RegEx.Id,
-//     index: 1
+//     index: 0
 //   },
 //   "emails": {
 //     type: [ReactionCore.Schemas.Email],
