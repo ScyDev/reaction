@@ -56,6 +56,7 @@ RUN mkdir -p "/data/db"
 VOLUME /data/db
 
 RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 7F0CEB10
+RUN apt-key adv --keyserver keyserver.ubuntu.com --recv 9ECBEC467F0CEB10
 RUN echo "deb http://repo.mongodb.org/apt/debian wheezy/mongodb-org/3.0 main" | tee /etc/apt/sources.list.d/mongodb-org-3.0.list
 RUN apt-get update && apt-get -qq -y install --no-install-recommends adduser mongodb-org-server
 
@@ -73,6 +74,7 @@ ENV MONGO_URL mongodb://127.0.0.1:27017/meteor
 ENV NODE nodemon
 ENV PACKAGE_DIRS "packages"
 ENV DEBIAN_FRONTEND noninteractive
+ENV METEOR_ALLOW_SUPERUSER true
 
 # 80 is the default meteor production port, while 3000 is development mode
 EXPOSE 80
