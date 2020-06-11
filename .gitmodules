@@ -19,3 +19,6 @@
 [submodule "packages/meteor-bootstrap3-datetimepicker"]
 	path = packages/meteor-bootstrap3-datetimepicker
 	url = https://github.com/ScyDev/meteor-bootstrap3-datetimepicker
+[submodule "packages/reaction-filtration"]
+	path = packages/reaction-filtration
+	url = ../../ramusus/reaction-filtration
