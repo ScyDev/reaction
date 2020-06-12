@@ -43,6 +43,8 @@
 FROM debian:jessie
 MAINTAINER Aaron Judd <hello@reactioncommerce.com>
 
+ARG GITHUB_AT
+
 # Install git, curl, python, etc
 # Install graphicsmagick for Reaction image handling)
 RUN apt-get -qq update && apt-get install -qq -y build-essential libssl-dev git-all python graphicsmagick curl
